@@ -20,7 +20,7 @@ class YamlConn(object):
         self.configfilename = os.path.join(HERE, "config_2.yaml")
         self.config = yaml.load(open(self.configfilename,'rb'))
         self.queries = yaml.load(open(os.path.join(HERE, self.config['query_file']), 'rb'))
-        
+
 
     def sql_connect(self):
         """ connects to the sql server database"""
@@ -39,7 +39,7 @@ class YamlConn(object):
         try:
             self.lite3conn = sqlite3.connect(lite3db)
             self.lite3cur = self.lite3conn.cursor()
-        
+
         except sqlite3.Error as e:
             if self.lite3conn:
                 self.lite3con.rollback()
@@ -47,3 +47,22 @@ class YamlConn(object):
             print("Error : ",e.args[0])
             sys.exit(1)
         return self.lite3conn, self.lite3cur
+
+class BasicQC(object):
+    """ This class provides basic functions for computing plot/stand scale metrics.
+
+    The methods provided here do ...
+
+    """
+
+    def get_interval(self, list_live_years, dead_year):
+        """ returns [prior_year, subsequent year
+
+        The bisect right function determines the windowing years from a given list around a given input year. For mortality plots, this tells us from which year to which year we need to aggregate.
+
+        :list_of_live_years: a list of years when checks were performed that were not mortality only
+        :dead_year: the year of the mortality check to be aggregated to a selection from list_of_live_years
+        """
+        list_live_years = []
+        i = bisect.bisect_right(list_live_years,dead_year)
+        return list_live_years[i-1:i+1]

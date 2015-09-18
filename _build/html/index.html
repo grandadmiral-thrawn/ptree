@@ -77,6 +77,104 @@ states are the [year, dbh, status, dbh_code]</p>
 
 </dd></dl>
 
+<span class="target" id="module-biomass_basis"></span><dl class="function">
+<dt id="biomass_basis.as_biopak">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>x</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_biopak" title="Permalink to this definition">¶</a></dt>
+<dd><p>shapes a biomass equation based on inputs of b1, b2 and wood density onto the variable x which is for the dbh. does not use height or wood density directly</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.as_chinq_biopak">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_chinq_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>x</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_chinq_biopak" title="Permalink to this definition">¶</a></dt>
+<dd><p>shapes a biomass equation based on inputs of h1, h2, h3, b1, b2, and b3, plus wood density onto the variable x which is for the dbh. uses pretty much all the inputs directly and calculates volume. chinquapin.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.as_compbio">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_compbio</code><span class="sig-paren">(</span><em>x</em>, <em>parameter_rows</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_compbio" title="Permalink to this definition">¶</a></dt>
+<dd><p>shapes a biomass equation based on the inputs of b1, b2, and wood density onto the variable x which is the dbh. adds the components from each row in the table it needs. only works with a few trees.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.as_d2ht">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_d2ht</code><span class="sig-paren">(</span><em>woodden</em>, <em>x</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_d2ht" title="Permalink to this definition">¶</a></dt>
+<dd><p>shapes a biomass equation based on inputs of h1, h2, h3, and b1 and wood density onto the variable x which is for the dbh</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.as_d2htcasc">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_d2htcasc</code><span class="sig-paren">(</span><em>woodden</em>, <em>x</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_d2htcasc" title="Permalink to this definition">¶</a></dt>
+<dd><p>shapes a biomass equation based on inputs of b1, b2, b3, and wood density onto the variable x which is for the dbh. cascades variety does not need height or the adjustment by m2</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.as_lnln">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_lnln</code><span class="sig-paren">(</span><em>woodden</em>, <em>x</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_lnln" title="Permalink to this definition">¶</a></dt>
+<dd><p>shapes a biomass equation based on inputs of b1, b2, b3, and wood density onto variable x which is for the dbh</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.as_oak_biopak">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_oak_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>x</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_oak_biopak" title="Permalink to this definition">¶</a></dt>
+<dd><p>shapes a biomass equation based on inputs of h1, h2, h3, b1, b2, and b3, plus wood density onto the variable x which is for the dbh. uses pretty much all the inputs directly and calculates volume. things in quercus family.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.maxref">
+<code class="descclassname">biomass_basis.</code><code class="descname">maxref</code><span class="sig-paren">(</span><em>dbh</em>, <em>species</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.maxref" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if an instance of dbh and species is bigger than the max. the max was found from the upper 1 percent ( I think!) per tree</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.which_fx">
+<code class="descclassname">biomass_basis.</code><code class="descname">which_fx</code><span class="sig-paren">(</span><em>function_string</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.which_fx" title="Permalink to this definition">¶</a></dt>
+<dd><p>find the correct function for doing the biomass in the lookup table</p>
+</dd></dl>
+
+<span class="target" id="module-poptree_basis"></span><dl class="class">
+<dt id="poptree_basis.BasicQC">
+<em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">BasicQC</code><a class="headerlink" href="#poptree_basis.BasicQC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class provides basic functions for computing plot/stand scale metrics.</p>
+<p>The methods provided here do ...</p>
+<dl class="method">
+<dt id="poptree_basis.BasicQC.get_interval">
+<code class="descname">get_interval</code><span class="sig-paren">(</span><em>list_live_years</em>, <em>dead_year</em><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.BasicQC.get_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns [prior_year, subsequent year</p>
+<p>The bisect right function determines the windowing years from a given list around a given input year. For mortality plots, this tells us from which year to which year we need to aggregate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">List_of_live_years:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">a list of years when checks were performed that were not mortality only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Dead_year:</th><td class="field-body">the year of the mortality check to be aggregated to a selection from list_of_live_years</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="poptree_basis.YamlConn">
+<em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">YamlConn</code><a class="headerlink" href="#poptree_basis.YamlConn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>connects to the yaml configuration file, config_2.yaml</p>
+<dl class="method">
+<dt id="poptree_basis.YamlConn.lite3_connect">
+<code class="descname">lite3_connect</code><span class="sig-paren">(</span><em>database</em><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.YamlConn.lite3_connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="poptree_basis.YamlConn.sql_connect">
+<code class="descname">sql_connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.YamlConn.sql_connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>connects to the sql server database</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
