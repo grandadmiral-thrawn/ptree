@@ -15,7 +15,7 @@ poptree_basis.py contains the classes for connecting to the databases and refere
 """
 
 class YamlConn(object):
-    """ This class connects to a yaml configuration file, here named config_2.yaml
+    """ This class connects to the YAML files containing the configuration to run the ptree program, including the database connection in the Config File and the Queries in the Query File.
 
     :Example:
     >>> import sys
@@ -50,21 +50,21 @@ class YamlConn(object):
         cur = conn.cursor()
         return conn, cur
 
-    def lite3_connect(self, database):
-        self.lite3conn = None
+    def lite3_connect(self):
+        lite3conn = None
 
         lite3db = self.config['litedb']
         try:
-            self.lite3conn = sqlite3.connect(lite3db)
-            self.lite3cur = self.lite3conn.cursor()
+            lite3conn = sqlite3.connect(lite3db)
+            lite3cur = lite3conn.cursor()
 
         except sqlite3.Error as e:
-            if self.lite3conn:
-                self.lite3con.rollback()
+            if lite3conn:
+                lite3con.rollback()
 
             print("Error : ",e.args[0])
             sys.exit(1)
-        return self.lite3conn, self.lite3cur
+        return lite3conn, lite3cur
 
 class BasicQC(object):
     """ This class provides basic functions for computing plot/stand scale metrics.
@@ -72,9 +72,12 @@ class BasicQC(object):
     The methods provided here do ...
 
     """
+    def __init__(self):
+        self.pconn, self.pcur = YamlConn().lite3_connect()
+        self.queries = YamlConn().queries
 
     def get_interval(self, list_live_years, dead_year):
-        """ returns [prior_year, subsequent year
+        """ Returns [prior_year, subsequent year]
 
         The bisect right function determines the windowing years from a given list around a given input year. For mortality plots, this tells us from which year to which year we need to aggregate.
 

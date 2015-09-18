@@ -34,14 +34,16 @@ class Tree(object):
 
     """
 
-    def __init__(self, cur, tid):
+    def __init__(self, cur, pcur, queries, tid):
 
         self.tid = str(tid).strip().lower()
         self.cur = cur
-        self.tree_query = DATABASE_CONNECTION.queries['tree']['sql_1tree']
-        self.eqn_query = DATABASE_CONNECTION.queries['tree']['sql_1tree_eqn']
+        self.pcur = pcur
+        self.tree_query = queries['tree']['sql_1tree']
+        self.eqn_query = queries['tree']['sql_1tree_eqn']
+        self.is_detail = queries['plot']['lite_plot_dtl']
         self.species = ""
-        self.state = []
+        self.state = ()
         self.eqns = {}
         self.woodden = 0.0
 
@@ -52,9 +54,9 @@ class Tree(object):
         """
         sql = self.tree_query.format(tid=self.tid)
 
-        cur.execute(sql)
+        self.cur.execute(sql)
 
-        for index,row in enumerate(cur):
+        for index,row in enumerate(self.cur):
             if index == 0:
                 self.species = str(row[1]).strip().lower()
                 self.standid = str(row[2]).strip().lower()
@@ -72,9 +74,9 @@ class Tree(object):
         sql_2 = self.eqn_query.format(species=self.species)
 
         # note : f = lambda x : biomass_basis.which_fx('as_d2htcasc')(0.5, x, 5, 6, 7, 2, 3)
-        cur.execute(sql_2)
+        self.cur.execute(sql_2)
 
-        for row in cur:
+        for row in self.cur:
             # identify the form of the equation -- as long as its not comp bio we just extract it -- if it's comp bio we need to get each reference. in some cases the equation might cross the 'big' barrier so we need to index it by this
             form = str(row[2]).strip().lower()
             try:
@@ -123,25 +125,66 @@ class Tree(object):
                 this_eqn = lambda x: biomass_basis.which_fx('as_biopak')(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
                 self.eqns.update({str(row[12]):this_eqn})
 
-        def compute_biomasses(self):
-            """ compute biomass from equations : bio, vol, jenkins, woodden"""
+    def compute_biomasses(self):
+        """ Compute biomass, volume, Jenkins' biomass and wood density from equations
+        """
+        try:
             list_of_biomasses = [self.eqns[biomass_basis.maxref(x, self.species)](x) for (_,x,_,_) in self.state]
+        except Exception as e:
+            try:
+                list_of_biomasses = [self.eqns['normal'](x) for (_,x,_,_) in self.state]
+            
+            except Exception as e2:
+                # if the final dbh is missing and the tree is dead or missing, take the final year from that missing value and give it the biomass, volume, and jenkins of the prior value
+                if self.state[-1][1:3] == [None,'6'] or self.state[-1][1:3] == [None,'9']:
+                    final_year = self.state[-1][0]
+                    
+                    list_of_biomasses = [self.eqns[biomass_basis.maxref(x, self.species)](x) for (_,x,_,_) in self.state[:-1]]
+                    
+                    final_biomasses = list_of_biomasses[-1]
+                    list_of_biomasses.append(final_biomasses)
 
-        def compute_basal_area(self):
-            """ compute basal area from equations"""
-            basal = [round(0.00007854*float(x),3) for (_,x,_,_) in self.state]
-            return basal
+                else:
+                    # new errors to debug
+                    import pdb; pdb.set_trace()
 
-        def output_tree(self):
-            ###
+        return list_of_biomasses
 
-            #you are here!
-            ###
-            #[[x,y,z,c,b] for (x,y,z,c) in A.state for b in basal if z =='1']
-            pass
+    def compute_basal_area(self):
+        """ compute basal area from equations"""
+        basal = [round(0.00007854*float(x),3) for (_,x,_,_) in self.state]
+        return basal
+
+    def is_detail(self, standid, plot, year):
+        """ Returns true if the plot is a detail plot and the tree has a dbh which is less than 15 but greater than the minimum dbh listed. Otherwise, return false
+
+        :standid: the stand of a tree object
+        :plot: the plotid attribute of a tree object
+        :dbh: the dbh attribute of a tree object
+        :year: the year attribute of a tree object
+        """
+        self.pcur.execute(self.queries['plot']['lite_plot_dtl'].format(standid=self.standid, plot=self.plot, year=year))
+        for row in self.pcur:
+            if str(row[0]) == "T":
+                return True
+            else:
+                return False
+
+    def output_tree(self):
+        ###
+
+        #you are here!
+        ###
+        #[[x,y,z,c,b] for (x,y,z,c) in A.state for b in basal if z =='1']
+        pass
 
 if __name__ == "__main__":
+
     DATABASE_CONNECTION = poptree_basis.YamlConn()
     conn, cur = DATABASE_CONNECTION.sql_connect()
-    # lite3db for eqns and plots -- these will be removed when we go to the main database --
-    pconn, pcur = DATABASE_CONNECTION.lite3_connect('plots')
+    pconn, pcur = DATABASE_CONNECTION.lite3_connect()
+    queries = DATABASE_CONNECTION.queries
+    A = Tree(cur, pcur, queries, 'NCNA000100014')
+    h = A.compute_biomasses()
+    print(h)
+    print("end!")

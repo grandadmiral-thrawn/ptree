@@ -52,7 +52,7 @@ def maxref(dbh, species):
             "TSME": 140.,}
         if maxlookup[species.upper()] <= float(dbh):
             return "big"
-        else: 
+        else:
             return "normal"
 
 def as_lnln(woodden, x, b1, b2, b3, j1, j2, *args):
@@ -114,7 +114,7 @@ def as_oak_biopak(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3):
     try:
         height = 1.37+h1*(1-math.exp(h2*x))**h3
         jbio = round(0.001*math.exp(j1 + j2*math.log(round(x,2))),4)
-        biomass = round(math.exp(b1 + b2*math.log(0.01*x) + b3*math.log(height)),4)    
+        biomass = round(math.exp(b1 + b2*math.log(0.01*x) + b3*math.log(height)),4)
         volume = round(biomass/woodden,4)
         return (biomass, volume, jbio, woodden)
     except ValueError:
@@ -141,7 +141,7 @@ def as_compbio(x, parameter_rows):
 
 def which_fx(function_string):
     """ find the correct function for doing the biomass in the lookup table"""
-    
+
     lookup = {'as_lnln': as_lnln,
     'as_compbio': as_compbio,
     'as_oak_biopak': as_oak_biopak,
