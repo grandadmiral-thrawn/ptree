@@ -11,27 +11,36 @@ DATABASE_CONNECTION is a global connection object which doesn''t need to get cal
 """
 
 class Tree(object):
-    """ 
-    ex. A = Tree(cur, 'NCNA001800216')
-    A.tid = 'ncna001800216'
-    A.cur = <pymssql.cursor>
-    A.tree_query= "SELECT <columns> from ..."
-    A.eqn_query = "SELECT <columns> from ..."
-    A.species = "TSHE"
-    A.state = [[1942, 16.0, '1', 'G'], [1945, 17.9, '1','G']]
-    A.eqns = {'normal' : lambda x :<function 039459x342>}
-    A.woodden = 0.44
-    states are the [year, dbh, status, dbh_code]
+    """ A Tree object contains the required metrics and functions to compute biomass, Jenkins' biomass, volume, and basal area for any one tree over any of the years of its remeasurement.
+
+    :Example:
+    >>> import tps
+    >>> import poptree_basis
+    >>> import biomass_basis
+    >>> A = Tree(cur, 'NCNA001800216')
+    >>> A.tid = 'ncna001800216'
+    >>> A.cur = <pymssql.cursor>
+    >>> A.tree_query= "SELECT <columns> from ..."
+    >>> A.eqn_query = "SELECT <columns> from ..."
+    >>> A.species = "TSHE"
+    >>> A.state = [[1942, 16.0, '1', 'G'], [1945, 17.9, '1','G']]
+    >>> A.eqns = {'normal' : lambda x :<function 039459x342>}
+    >>> A.woodden = 0.44
+
+    .. note :: A.state contains [year, dbh, status, dbh_code]
+    .. warning:: A.cur must be created in an external variable
+
+    **METHODS**
 
     """
- 
+
     def __init__(self, cur, tid):
 
         self.tid = str(tid).strip().lower()
         self.cur = cur
         self.tree_query = DATABASE_CONNECTION.queries['tree']['sql_1tree']
         self.eqn_query = DATABASE_CONNECTION.queries['tree']['sql_1tree_eqn']
-        self.species = "" 
+        self.species = ""
         self.state = []
         self.eqns = {}
         self.woodden = 0.0
@@ -39,11 +48,12 @@ class Tree(object):
         self.get_a_tree()
 
     def get_a_tree(self):
-        """ get a single tree and all of its history"""
+        """ get a single tree and all of its history
+        """
         sql = self.tree_query.format(tid=self.tid)
-        
+
         cur.execute(sql)
-        
+
         for index,row in enumerate(cur):
             if index == 0:
                 self.species = str(row[1]).strip().lower()
@@ -108,7 +118,7 @@ class Tree(object):
             if form != 'as_compbio':
                 this_eqn = lambda x : biomass_basis.which_fx(form)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
                 self.eqns.update({str(row[1]):this_eqn})
-            
+
             elif form == 'as_compbio':
                 this_eqn = lambda x: biomass_basis.which_fx('as_biopak')(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
                 self.eqns.update({str(row[12]):this_eqn})
@@ -116,12 +126,12 @@ class Tree(object):
         def compute_biomasses(self):
             """ compute biomass from equations : bio, vol, jenkins, woodden"""
             list_of_biomasses = [self.eqns[biomass_basis.maxref(x, self.species)](x) for (_,x,_,_) in self.state]
-        
+
         def compute_basal_area(self):
             """ compute basal area from equations"""
             basal = [round(0.00007854*float(x),3) for (_,x,_,_) in self.state]
             return basal
-            
+
         def output_tree(self):
             ###
 

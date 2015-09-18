@@ -15,7 +15,25 @@ poptree_basis.py contains the classes for connecting to the databases and refere
 """
 
 class YamlConn(object):
-    """ connects to the yaml configuration file, config_2.yaml """
+    """ This class connects to a yaml configuration file, here named config_2.yaml
+
+    :Example:
+    >>> import sys
+    >>> import os
+    >>> import yaml
+    >>> import pymssql
+    >>> import sqlite3
+    >>> A = YamlConn()
+    >>> A.configfilename = "config_2.yaml"
+    >>> A.config = <class 'dict'>
+    >>> A.queries= <class 'dict'>
+    >>> <pymssql.connection, pymssql.cursor> = A.sql_connect()
+
+    .. warning:: pymssql dependency.
+
+    METHODS
+
+    """
     def __init__(self):
         self.configfilename = os.path.join(HERE, "config_2.yaml")
         self.config = yaml.load(open(self.configfilename,'rb'))

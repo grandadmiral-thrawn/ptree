@@ -59,16 +59,38 @@
 <dt id="tps.Tree">
 <em class="property">class </em><code class="descclassname">tps.</code><code class="descname">Tree</code><span class="sig-paren">(</span><em>cur</em>, <em>tid</em><span class="sig-paren">)</span><a class="headerlink" href="#tps.Tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>ex. A = Tree(cur, &#8216;NCNA001800216&#8217;)
-A.tid = &#8216;ncna001800216&#8217;
-A.cur = &lt;pymssql.cursor&gt;
-A.tree_query= &#8220;SELECT &lt;columns&gt; from ...&#8221;
-A.eqn_query = &#8220;SELECT &lt;columns&gt; from ...&#8221;
-A.species = &#8220;TSHE&#8221;
-A.state = [[1942, 16.0, &#8216;1&#8217;, &#8216;G&#8217;], [1945, 17.9, &#8216;1&#8217;,&#8217;G&#8217;]]
-A.eqns = {&#8216;normal&#8217; : lambda x :&lt;function 039459x342&gt;}
-A.woodden = 0.44
-states are the [year, dbh, status, dbh_code]</p>
+<p>A Tree object contains the required metrics and functions to compute biomass, Jenkins&#8217; biomass, volume, and basal area for any one tree over any of the years of its remeasurement.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">poptree_basis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">biomass_basis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">cur</span><span class="p">,</span> <span class="s">&#39;NCNA001800216&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">tid</span> <span class="o">=</span> <span class="s">&#39;ncna001800216&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">cur</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">pymssql</span><span class="o">.</span><span class="n">cursor</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">tree_query</span><span class="o">=</span> <span class="s">&quot;SELECT &lt;columns&gt; from ...&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">eqn_query</span> <span class="o">=</span> <span class="s">&quot;SELECT &lt;columns&gt; from ...&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="s">&quot;TSHE&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1942</span><span class="p">,</span> <span class="mf">16.0</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">,</span> <span class="s">&#39;G&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1945</span><span class="p">,</span> <span class="mf">17.9</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">,</span><span class="s">&#39;G&#39;</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">eqns</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;normal&#39;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span><span class="o">&lt;</span><span class="n">function</span> <span class="mo">03</span><span class="mi">9459</span><span class="n">x342</span><span class="o">&gt;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">woodden</span> <span class="o">=</span> <span class="mf">0.44</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A.state contains [year, dbh, status, dbh_code]</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">A.cur must be created in an external variable</p>
+</div>
+<p><strong>METHODS</strong></p>
 <dl class="method">
 <dt id="tps.Tree.get_a_tree">
 <code class="descname">get_a_tree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps.Tree.get_a_tree" title="Permalink to this definition">¶</a></dt>
@@ -161,7 +183,32 @@ states are the [year, dbh, status, dbh_code]</p>
 <dt id="poptree_basis.YamlConn">
 <em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">YamlConn</code><a class="headerlink" href="#poptree_basis.YamlConn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>connects to the yaml configuration file, config_2.yaml</p>
+<p>This class connects to a yaml configuration file, here named config_2.yaml</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; import sys
+&gt;&gt;&gt; import os
+&gt;&gt;&gt; import yaml
+&gt;&gt;&gt; import pymssql
+&gt;&gt;&gt; import sqlite3
+&gt;&gt;&gt; A = YamlConn()
+&gt;&gt;&gt; A.configfilename = &quot;config_2.yaml&quot;
+&gt;&gt;&gt; A.config = &lt;class &#39;dict&#39;&gt;
+&gt;&gt;&gt; A.queries= &lt;class &#39;dict&#39;&gt;
+&gt;&gt;&gt; &lt;pymssql.connection, pymssql.cursor&gt; = A.sql_connect()
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">pymssql dependency.</p>
+</div>
+<p>METHODS</p>
 <dl class="method">
 <dt id="poptree_basis.YamlConn.lite3_connect">
 <code class="descname">lite3_connect</code><span class="sig-paren">(</span><em>database</em><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.YamlConn.lite3_connect" title="Permalink to this definition">¶</a></dt>
