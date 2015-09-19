@@ -155,21 +155,40 @@ class Tree(object):
         basal = [round(0.00007854*float(x),3) for (_,x,_,_) in self.state]
         return basal
 
-    def is_detail(self, standid, plot, year):
+    def is_detail(self, Xfactor, standid, plot, year):
         """ Returns true if the plot is a detail plot and the tree has a dbh which is less than 15 but greater than the minimum dbh listed. Otherwise, return false
 
+        :Xfactor: is an instance of the detail plot object, used for reference here.
         :standid: the stand of a tree object
         :plot: the plotid attribute of a tree object
         :dbh: the dbh attribute of a tree object
         :year: the year attribute of a tree object
         """
-        self.pcur.execute(self.queries['plot']['lite_plot_dtl'].format(standid=self.standid, plot=self.plot, year=year))
-        for row in self.pcur:
-            if str(row[0]) == "T":
-                return True
-            else:
-                return False
+        small_tree_search = [year for (year,_,_,_) in self.state if dbh < 15.]
 
+        # test that the tree is counted to detail during the given year
+        if small_tree_search == []:
+            return False
+        
+        else:
+            ### YOU ARE HERE
+
+            # test that the year is a detail plot year, and that the tree does exceed the minimum dbh required for counting
+            for each_year in small_tree_search:
+                if each_year 
+            Xfactor.detail_reference[self.standid][year]['T_plots'] for year in small_tree_search
+            
+
+            ### MONDAY
+
+    def determine_detail_to_large(self):
+        """ Using the stand and the year, determine the weight of a detail plot by computing the sum of the areas of the detail plots versus the sum of the areas of all the plots
+
+        .. math:: (1 Tree / Plot m2) * (sum of DtPlot m2/sum of all plots m2)
+
+
+        """
+        self.queries['tree']['lite_1tree_context_dtl'].format(standid=standid, year=year)
     def output_tree(self):
         ###
 
@@ -184,6 +203,9 @@ if __name__ == "__main__":
     conn, cur = DATABASE_CONNECTION.sql_connect()
     pconn, pcur = DATABASE_CONNECTION.lite3_connect()
     queries = DATABASE_CONNECTION.queries
+
+    # creates lookups for expansion factors
+    Xfactor = poptree_basis.DetailCapture()
     A = Tree(cur, pcur, queries, 'NCNA000100014')
     h = A.compute_biomasses()
     print(h)

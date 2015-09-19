@@ -7,7 +7,6 @@ stand:
             ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00103.treeid \
             WHERE fsdbdata.dbo.tp00101.standid like '%s' \
             ORDER BY fsdbdata.dbo.tp00103.treeid ASC"
-
     query: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, \
             fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, \
             fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, \
@@ -16,7 +15,6 @@ stand:
             ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid \
             WHERE fsdbdata.dbo.tp00101.standid like '%s' \
             ORDER BY fsdbdata.dbo.tp00102.treeid ASC" 
-
     query_sm: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, \
             fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, \
             fsdbdata.dbo.tp00103.dbh_last, \
@@ -26,17 +24,8 @@ stand:
             WHERE fsdbdata.dbo.tp00101.standid like '%s' \
             AND fsdbdata.dbo.tp00101.species like '%s' \
             ORDER BY fsdbdata.dbo.tp00103.treeid ASC"
-
-    query_s: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, \
-            fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, \
-            fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, \
-            fsdbdata.dbo.tp00102.year, fsdbdata.dbo.tp00102.dbh_code FROM fsdbdata.dbo.tp00101 \
-            LEFT JOIN fsdbdata.dbo.tp00102 \
-            ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid \
-            WHERE fsdbdata.dbo.tp00101.standid like '%s' \
-            AND fsdbdata.dbo.tp00101.species like '%s' \
-            ORDER BY fsdbdata.dbo.tp00102.treeid ASC" 
-
+    lite_context_dtl: "SELECT distinct(STANDID) from plotAreas where detailPlot like 'T'"
+    lite_context_dtl_2: "SELECT plot, year, detailplot, area_m2_corr, mindbh_cm_dbh from plotAreas where standid like '{standid}'"
 plot:
     query: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, \
             fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, \
@@ -53,9 +42,9 @@ plot:
             LEFT JOIN fsdbdata.dbo.tp00103 \
             ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00103.treeid \
             WHERE fsdbdata.dbo.tp00101.plotid like '%s'"
-    lite_plot_dtl: "SELECT detailPlot from plotAreas where standID like '{standid}' and plot like '{plot}' and year like '{year}'"
     query_spec: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101. species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00103.dbh_last, fsdbdata.dbo.tp00103.year FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00103 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00103.treeid WHERE fsdbdata.dbo.tp00101.plotid like '{plotid}' AND fsdbdata.dbo.tp00101.species like '{species}'"
 tree:
     sql_1tree: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, fsdbdata.dbo.tp00102.year, fsdbdata.dbo.tp00102.dbh_code FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00102 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid WHERE fsdbdata.dbo.tp00101.treeid like '{tid}' ORDER BY fsdbdata.dbo.tp00102.year ASC" 
     sql_1tree_eqn: "SELECT SPECIES, EQNSET, FORM, H1, H2, H3, B1, B2, B3, J1, J2, WOODDENSITY, PROXY from fsdbdata.dbo.tp00110 where SPECIES like '{species}'"
     lite_1tree_dtl: "SELECT detailPlot from plotAreas where standID like '{standid}' and plot like '{plot}' and year like '{year}' and minDBH_cm_dbh <= '{dbh}'"
+    lite_1tree_context_dtl: "SELECT Area_m2_corr, detailPlot from plotAreas where standID like '{standid}' and year like '{year}'"
