@@ -41,16 +41,15 @@ class Tree(object):
         self.pcur = pcur
         self.tree_query = queries['tree']['sql_1tree']
         self.eqn_query = queries['tree']['sql_1tree_eqn']
-        self.is_detail = queries['plot']['lite_plot_dtl']
         self.species = ""
-        self.state = ()
+        self.state =[]
         self.eqns = {}
         self.woodden = 0.0
 
         self.get_a_tree()
 
     def get_a_tree(self):
-        """ get a single tree and all of its history
+        """ Retrieve a single tree and assign its species, standid, and plot; create a list of tuples for each year of its life. Gather the equations it needs to have its biomass computed. 
         """
         sql = self.tree_query.format(tid=self.tid)
 
@@ -84,35 +83,35 @@ class Tree(object):
             except:
                 woodden = None
             try:
-                h1 = round(float(str(row[3])),3)
+                h1 = round(float(str(row[3])),6)
             except:
                 h1 = None
             try:
-                h2 = round(float(str(row[4])),3)
+                h2 = round(float(str(row[4])),6)
             except:
                 h2 = None
             try:
-                h3 = round(float(str(row[5])),3)
+                h3 = round(float(str(row[5])),6)
             except:
                 h3 = None
             try:
-                b1 = round(float(str(row[6])),3)
+                b1 = round(float(str(row[6])),6)
             except:
                 b1 = None
             try:
-                b2 = round(float(str(row[7])),3)
+                b2 = round(float(str(row[7])),6)
             except:
                 b2 = None
             try:
-                b3 = round(float(str(row[8])),3)
+                b3 = round(float(str(row[8])),6)
             except:
                 b3 = None
             try:
-                j1 = round(float(str(row[9])),3)
+                j1 = round(float(str(row[9])),6)
             except:
                 j1 = None
             try:
-                j2 = round(float(str(row[10])),3)
+                j2 = round(float(str(row[10])),6)
             except:
                 j2 = None
 
@@ -155,7 +154,7 @@ class Tree(object):
         basal = [round(0.00007854*float(x),3) for (_,x,_,_) in self.state]
         return basal
 
-    def is_detail(self, Xfactor, standid, plot, year):
+    def is_detail(self, Xfactor):
         """ Returns true if the plot is a detail plot and the tree has a dbh which is less than 15 but greater than the minimum dbh listed. Otherwise, return false
 
         :Xfactor: is an instance of the detail plot object, used for reference here.
@@ -164,22 +163,27 @@ class Tree(object):
         :dbh: the dbh attribute of a tree object
         :year: the year attribute of a tree object
         """
-        small_tree_search = [year for (year,_,_,_) in self.state if dbh < 15.]
 
-        # test that the tree is counted to detail during the given year
-        if small_tree_search == []:
+        if self.standid not in Xfactor.detail_reference.keys():
             return False
-        
         else:
-            ### YOU ARE HERE
+            small_tree_search = [year for (year,_,_,_) in self.state if dbh != None and dbh < 15.]
 
-            # test that the year is a detail plot year, and that the tree does exceed the minimum dbh required for counting
-            for each_year in small_tree_search:
-                if each_year 
-            Xfactor.detail_reference[self.standid][year]['T_plots'] for year in small_tree_search
+            # test that the tree is counted to detail during the given year
+            if small_tree_search == []:
+                return False
             
+            else:
+                ### YOU ARE HERE
+                pass
+                # test that the year is a detail plot year, and that the tree does exceed the minimum dbh required for counting
+                for each_year in small_tree_search:
+                    integer_plot = int(A.plotid[4:])
+                    
+                    if integer_plot in Xfactor.detail_reference[self.standid][year]['T_plots']:
+                        expansion_factor = Xfactor.expansion[self.standid][year]
 
-            ### MONDAY
+                return expansion_factor
 
     def determine_detail_to_large(self):
         """ Using the stand and the year, determine the weight of a detail plot by computing the sum of the areas of the detail plots versus the sum of the areas of all the plots
@@ -189,13 +193,64 @@ class Tree(object):
 
         """
         self.queries['tree']['lite_1tree_context_dtl'].format(standid=standid, year=year)
+    
+        pass
     def output_tree(self):
         ###
-
+        import csv
+        csv.writer('basic_tree_output.csv','wb') as writefile
         #you are here!
         ###
         #[[x,y,z,c,b] for (x,y,z,c) in A.state for b in basal if z =='1']
         pass
+
+class Plot(object):
+    """The Plot object aggregates the biomasses...
+    """
+    def __init__(self, standid, plotid):
+        self.standid = standid
+        self.plotid = plotid
+        self.is_detail = False
+        self.big_trees ={'bio':None,'jbio':None,'vol':None,'TPA':None}
+        self.small_trees={'bio':None,'jbio':None,'vol':None,'TPA':None}
+
+    def is_detail(self, Xfactor):
+    """ Returns true if the plot is a detail plot and the tree has a dbh which is less than 15 but greater than the minimum dbh listed. Otherwise, return false
+
+    :Xfactor: is an instance of the detail plot object, used for reference here.
+    :standid: the stand of a tree object
+    :plot: the plotid attribute of a tree object
+    :dbh: the dbh attribute of a tree object
+    :year: the year attribute of a tree object
+    """
+
+    if self.standid not in Xfactor.detail_reference.keys():
+        return False
+    else:
+        small_tree_search = [year for (year,_,_,_) in self.state if dbh != None and dbh < 15.]
+
+        # test that the tree is counted to detail during the given year
+        if small_tree_search == []:
+            return False
+        
+        else:
+            ### YOU ARE HERE
+            pass
+            # test that the year is a detail plot year, and that the tree does exceed the minimum dbh required for counting
+            for each_year in small_tree_search:
+                integer_plot = int(A.plotid[4:])
+                
+                if integer_plot in Xfactor.detail_reference[self.standid][year]['T_plots']:
+                    expansion_factor = Xfactor.expansion[self.standid][year]
+
+            return expansion_factor 
+
+class Stand(object):
+    """
+    """
+    def __init__(self, standid):
+        self.standid = standid
+        self.plotref = {}
 
 if __name__ == "__main__":
 
@@ -206,6 +261,7 @@ if __name__ == "__main__":
 
     # creates lookups for expansion factors
     Xfactor = poptree_basis.DetailCapture()
+    import pdb; pdb.set_trace();
     A = Tree(cur, pcur, queries, 'NCNA000100014')
     h = A.compute_biomasses()
     print(h)
