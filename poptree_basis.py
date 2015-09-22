@@ -18,11 +18,7 @@ class YamlConn(object):
     """ This class connects to the YAML files containing the configuration to run the ptree program, including the database connection in the Config File and the Queries in the Query File.
 
     :Example:
-    >>> import sys
-    >>> import os
-    >>> import yaml
-    >>> import pymssql
-    >>> import sqlite3
+    
     >>> A = YamlConn()
     >>> A.configfilename = "config_2.yaml"
     >>> A.config = <class 'dict'>
@@ -41,7 +37,10 @@ class YamlConn(object):
 
 
     def sql_connect(self):
-        """ connects to the sql server database"""
+        """ Connects to the MS SQL server database
+
+        Configuration parameters are in config_2.yaml file. 
+        """
         sql_server = self.config['server']
         sql_user = self.config['user']
         sql_pw = self.config['password']
@@ -51,6 +50,10 @@ class YamlConn(object):
         return conn, cur
 
     def lite3_connect(self):
+        """ Connects to the SQLite3 database
+
+        Configuration parameters are in config_2.yaml file. 
+        """
         lite3conn = None
 
         lite3db = self.config['litedb']
@@ -67,15 +70,11 @@ class YamlConn(object):
         return lite3conn, lite3cur
 
 class DetailCapture(object):
-    """ This class encapsulates a dictionary for if a plot is a detail plot, when, which stand it is in, and the minimum dbh from that plot. 
+    """ This class creates a dictionary for stands and plots to reference if a plot is a detail plot, when it is a detail plot, which stand it is in, and the minimum dbh from that plot, which is the threshold for it being included in the main inventory or not. 
 
     The detail_reference dictionary is extended, which the expansion dictionary is condensed. This is mostly beacuse I''m not sure which will be the most useful yet. Call this dictionary ahead of calling anything from plots, trees, or stands to save big time. Otherwise there are so many queries
 
     :Example:
-    >>> import sys
-    >>> import os
-    >>> import yaml
-    >>> import pymssql
     >>> import poptree_basis
     >>> H = A.detail_reference
     >>> H.keys()
@@ -84,6 +83,21 @@ class DetailCapture(object):
     >>> dict_keys([1971, 1988, 2005, 2009, 1976, 1993, 1978, 1983, 1999])
     >>> H['RS02'][1993]
     >>> {'all_areas': [625, 625, 625, 625, 625, 625, 625, 625, 625, 625, 625, 625, 625, 625, 625, 625], 'all_mins': [15.0, 15.0, 5.0, 15.0, 15.0, 5.0, 15.0, 15.0, 15.0, 15.0, 5.0, 15.0, 5.0, 5.0, 5.0, 5.0], 'all_plots': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], 'T_areas': [625, 625, 625, 625, 625, 625, 625], 'T_plots': [3, 6, 11, 13, 14, 15, 16]}
+    >>> J = A.expansion
+    >>> J.keys()
+    >>> dict_keys(['AV14', 'RS31', 'AM16', 'RS30', 'AE10', 'RS32', 'AR07', 'RS28', 'RS29', 'TO04', 'AB08', 'RS01', 'RS02', 'AV06', 'AG05', 'TO11', 'TB13', 'AX15', 'PP17'])
+    >>> J.expansion['RS02'][1993]
+    >>> 2.29
+
+    :H: is an instance of the detail_reference object, used for reference here.
+    :H[standid]: the stand of a tree object, containing the years that stand was measured as its keys
+    :H[standid][year]['all_areas']: contains the area of each plot on that stand 
+    :H[standid][year]['all_plots']: contains the plot numbers for all the plots
+    :H[standid][year]['T_areas']: contains the areas of the detail plots
+    :H[standid][year]['T_plots']: contains the areas of the detail plots
+
+    :J: is an instance of the expansion object, used for reference here
+    :J[standid][year]: the expansion factor for that particular plot and year
 
     """
     def __init__(self):

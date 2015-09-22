@@ -11,7 +11,13 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-.. automodule:: tps
+.. automodule:: tps_Tree
+   :members:
+   :undoc-members:
+   :inherited-members:
+   :show-inheritance:
+
+.. automodule:: tps_Stand
    :members:
    :undoc-members:
    :inherited-members:
