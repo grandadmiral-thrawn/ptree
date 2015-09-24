@@ -322,7 +322,8 @@ if __name__ == "__main__":
     Xfactor = poptree_basis.DetailCapture()
     
     # creates the Biomasses/Basal Areas and the Detail plot expansions
-    A = Tree(cur, pcur, queries, 'TO11000200005')
+    # A = Tree(cur, pcur, queries, 'TO11000200005')
+    A = Tree(cur, pcur, queries, 'AB08000100005')
     Bios = A.compute_biomasses()
     Details = A.is_detail(Xfactor)
     Checks = A.check_trees()

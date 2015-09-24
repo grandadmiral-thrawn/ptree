@@ -12,7 +12,9 @@ stand:
     lite_context_dtl_2: "SELECT plot, year, detailplot, area_m2_corr, mindbh_cm_dbh from plotAreas where standid like '{standid}'"
     query_trees: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00103.dbh_last, fsdbdata.dbo.tp00103.year FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00103 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00103.treeid WHERE fsdbdata.dbo.tp00101.standid like '{standid}' ORDER BY fsdbdata.dbo.tp00103.treeid ASC"
     query: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, fsdbdata.dbo.tp00102.year, fsdbdata.dbo.tp00102.dbh_code FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00102 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid WHERE fsdbdata.dbo.tp00101.standid like '{standid}' ORDER BY fsdbdata.dbo.tp00102.treeid ASC"
-    query_species: "SELECT DISTINCT(fsdbdata.dbo.tp00101.species) from fsdbdata.dbo.tp00101 WHERE fsdbdata.dbo.tp00101.standid like '{standid}'"  
+    query_species: "SELECT DISTINCT(fsdbdata.dbo.tp00101.species) from fsdbdata.dbo.tp00101 WHERE fsdbdata.dbo.tp00101.standid like '{standid}'"
+    query_unusual_plot: "SELECT standid, plot, year, area_m2_corr from plotAreas where area_m2_corr not like '625' group by standid, plot,year"
+    query_unusual_plot_minimums: "select standid, plot, year, minDBH_cm_dbh from plotAreas where detailPlot not like 'T' and minDBH_cm_dbh < 15.0 group by standid, plot, year" 
 plot:
     query: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, \
             fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, \
