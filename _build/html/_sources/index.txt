@@ -3,21 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to ptree's documentation!
+Welcome to the TPS documentation!
 =================================
+
+TPS (Tree, Plot, Stand) is a simple set of Python3 scripts for processing the TP001 dataset into the required Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg/Ha ), NPP ( Mg/Ha/yr ), Volume ( m\ :sup:`3` ) , and Basal Area ( m\ :sup:`2` ) outputs for live trees, dead trees, and ingrowth by individual tree, stand, species, and year. 
+
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-.. automodule:: tps_Tree
-   :members:
-   :undoc-members:
-   :inherited-members:
-   :show-inheritance:
-
-.. automodule:: tps_Stand
+.. automodule:: poptree_basis
    :members:
    :undoc-members:
    :inherited-members:
@@ -29,7 +26,13 @@ Contents:
     :inherited-members:
     :show-inheritance:
 
-.. automodule:: poptree_basis
+.. automodule:: tps_Tree
+   :members:
+   :undoc-members:
+   :inherited-members:
+   :show-inheritance:
+
+.. automodule:: tps_Stand
    :members:
    :undoc-members:
    :inherited-members:

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to ptree’s documentation! &mdash; ptree 0.1 documentation</title>
+    <title>Welcome to the TPS documentation! &mdash; ptree 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -48,19 +48,498 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="welcome-to-ptree-s-documentation">
-<h1>Welcome to ptree&#8217;s documentation!<a class="headerlink" href="#welcome-to-ptree-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="welcome-to-the-tps-documentation">
+<h1>Welcome to the TPS documentation!<a class="headerlink" href="#welcome-to-the-tps-documentation" title="Permalink to this headline">¶</a></h1>
+<p>TPS (Tree, Plot, Stand) is a simple set of Python3 scripts for processing the TP001 dataset into the required Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg/Ha ), NPP ( Mg/Ha/yr ), Volume ( m<sup>3</sup> ) , and Basal Area ( m<sup>2</sup> ) outputs for live trees, dead trees, and ingrowth by individual tree, stand, species, and year.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul class="simple">
 </ul>
 </div>
+<span class="target" id="module-poptree_basis"></span><dl class="class">
+<dt id="poptree_basis.Capture">
+<em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">Capture</code><a class="headerlink" href="#poptree_basis.Capture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class contains dictionaries to be used in Stand computations for indexing the unique cases of minimum dbh&#8217;s, stand areas, and detail plot expansions. Stands interact with an instance of Capture when the default case of area 625 m<sup>2</sup>,  minimum dbh 15.0 cm, detailPlot is False does not apply.</p>
+<p>Here is a brief display of the common usage of Capture attributes within TPS.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">poptree_basis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">detail_reference</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;AB08&#39;</span><span class="p">,</span> <span class="s">&#39;AV14&#39;</span><span class="p">,</span> <span class="s">&#39;AR07&#39;</span><span class="p">,</span> <span class="s">&#39;RS01&#39;</span><span class="p">,</span> <span class="s">&#39;TO11&#39;</span><span class="p">,</span> <span class="s">&#39;AM16&#39;</span><span class="p">,</span> <span class="s">&#39;AX15&#39;</span><span class="p">,</span> <span class="s">&#39;RS29&#39;</span><span class="p">,</span> <span class="s">&#39;RS02&#39;</span><span class="p">,</span> <span class="s">&#39;RS30&#39;</span><span class="p">,</span> <span class="s">&#39;RS28&#39;</span><span class="p">,</span> <span class="s">&#39;TB13&#39;</span><span class="p">,</span> <span class="s">&#39;RS32&#39;</span><span class="p">,</span> <span class="s">&#39;AG05&#39;</span><span class="p">,</span> <span class="s">&#39;TO04&#39;</span><span class="p">,</span> <span class="s">&#39;AE10&#39;</span><span class="p">,</span> <span class="s">&#39;RS31&#39;</span><span class="p">,</span> <span class="s">&#39;PP17&#39;</span><span class="p">,</span> <span class="s">&#39;AV06&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;AV14&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1984</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">1990</span><span class="p">,</span> <span class="mi">2008</span><span class="p">,</span> <span class="mi">1978</span><span class="p">,</span> <span class="mi">1995</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;AV14&#39;</span><span class="p">][</span><span class="mi">1984</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;AV14&#39;</span><span class="p">][</span><span class="mi">1984</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="s">&#39;detail&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">&#39;area&#39;</span><span class="p">:</span> <span class="mi">625</span><span class="p">,</span> <span class="s">&#39;min&#39;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">umins_reference</span><span class="p">[</span><span class="s">&#39;HR02&#39;</span><span class="p">][</span><span class="mi">1984</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">5.0</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">uplot_areas</span><span class="p">[</span><span class="s">&#39;MH03&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1952</span><span class="p">,</span> <span class="mi">1989</span><span class="p">,</span> <span class="mi">1994</span><span class="p">,</span> <span class="mi">1965</span><span class="p">,</span> <span class="mi">1934</span><span class="p">,</span> <span class="mi">1999</span><span class="p">,</span> <span class="mi">1971</span><span class="p">,</span> <span class="mi">2005</span><span class="p">,</span> <span class="mi">1945</span><span class="p">,</span> <span class="mi">1939</span><span class="p">,</span> <span class="mi">1930</span><span class="p">,</span> <span class="mi">1983</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">uplot_areas</span><span class="p">[</span><span class="s">&#39;MH03&#39;</span><span class="p">][</span><span class="mi">1952</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">uplot_areas</span><span class="p">[</span><span class="s">&#39;MH03&#39;</span><span class="p">][</span><span class="mi">1952</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">4047.0</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">expansion</span><span class="p">[</span><span class="s">&#39;RS32&#39;</span><span class="p">][</span><span class="mi">2006</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">4.0</span>
+</pre></div>
+</div>
+<p><strong>METHODS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">A:</th><td class="field-body">in this example, an instance of the Capture class.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">A.detail_reference.keys():</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the standids that contain detail plots for at least 1 plot in 1 remeasurement.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.[standid]:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the years that <cite>standid</cite> contains at least 1 detail plot</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">A.detail_reference.[standid][year]:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the <cite>plotnos</cite> on that stand and year when at least 1 plot is a detail plot</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;detail&#8217;]:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Boolean True or False if a detail plot on that stand and plot and year</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;area&#8217;]:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the area of that plot</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;min&#8217;]:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the minimum dbh on that detail plot</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">A.umins_reference.[standid]:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">stands whose minimum dbhs in at least 1 year are not 15.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">A.umins_reference.[standid][year]:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the plots on that stand and year when at least 1 plot has a minimum dbh that is not 15</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">A.umins_reference[standid][year][plotno]:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the minimum dbh for that stand, plot, and year, which is not 15.0</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">A.uplots_areas[standid]:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">stands whose areas in at least 1 year are not 625 m2</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">A.uplots_areas[standid][year]:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the plots on that stand and year when at least 1 plot has an area not 625 m2</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">A.uplots_areas[standid][year][plotno]:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the area for the stand, year, and plot that is not 625</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">A.expansion[standid][year][plotid]:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the expansion factor for the stand, year, and plot which will not be 1.0</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="poptree_basis.Capture.condense_detail_reference">
+<code class="descname">condense_detail_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.condense_detail_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Condenses the detail reference into a readable dictionary of expansion factors by plot</p>
+<p>The expansion factor only applies to trees whose dbhs are greater than the minimum dbh (usually 5.0 cm) and less than the smallest dbh for the not-detail plots (usually 15.0 cm). The terms <cite>large</cite> and <cite>small</cite> are used casually throughout the program to refer to these size groups.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p><cite>Given stand attribute * (area of all plots / area of all detail plots) = Representative stand attribute</cite></p>
+<p>10 Mg Biomass in small trees on detail plots * (10000 m2 all plots / 2000 m2 detail plots) = 50 Mg Biomass on detail plots</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">expansion</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;RS32&#39;</span><span class="p">,</span> <span class="s">&#39;AG05&#39;</span><span class="p">,</span> <span class="s">&#39;RS02&#39;</span><span class="p">,</span> <span class="s">&#39;RS01&#39;</span><span class="p">,</span> <span class="s">&#39;TO04&#39;</span><span class="p">,</span> <span class="s">&#39;AV14&#39;</span><span class="p">,</span> <span class="s">&#39;AR07&#39;</span><span class="p">,</span> <span class="s">&#39;TB13&#39;</span><span class="p">,</span> <span class="s">&#39;AE10&#39;</span><span class="p">,</span> <span class="s">&#39;TO11&#39;</span><span class="p">,</span> <span class="s">&#39;PP17&#39;</span><span class="p">,</span> <span class="s">&#39;AM16&#39;</span><span class="p">,</span> <span class="s">&#39;RS31&#39;</span><span class="p">,</span> <span class="s">&#39;RS28&#39;</span><span class="p">,</span> <span class="s">&#39;AB08&#39;</span><span class="p">,</span> <span class="s">&#39;AX15&#39;</span><span class="p">,</span> <span class="s">&#39;RS29&#39;</span><span class="p">,</span> <span class="s">&#39;AV06&#39;</span><span class="p">,</span> <span class="s">&#39;RS30&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">expansion</span><span class="p">[</span><span class="s">&#39;RS32&#39;</span><span class="p">][</span><span class="mi">2006</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">4.0</span>
+</pre></div>
+</div>
+<p><strong>PROPERTIES</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Capture.expansion:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the name of the lookup table created, which can be referenced as an attribute of the Capture object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="poptree_basis.Capture.contains_unusual_plots">
+<code class="descname">contains_unusual_plots</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.contains_unusual_plots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a lookup table for stands, plots, and years which have areas other than 625 m<sup>2</sup></p>
+<p>While many of the plots have the same area, those that do not can be called from the database explicitly. It is then easier to add all the plots together to get the total area of the stand, or to apply this area to the individual trees per hectare method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">uplot_areas</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;YBNF&#39;</span><span class="p">,</span> <span class="s">&#39;GP04&#39;</span><span class="p">,</span> <span class="s">&#39;CH10&#39;</span><span class="p">,</span> <span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">uplot_areas</span><span class="p">[</span><span class="s">&#39;GP04&#39;</span><span class="p">][</span><span class="mi">1957</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">4047.0</span>
+</pre></div>
+</div>
+<p><strong>PROPERTIES</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Capture.uplot_areas:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the name of the lookup table created, which can be referenced as an attribute of the Capture object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="poptree_basis.Capture.create_detail_reference">
+<code class="descname">create_detail_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.create_detail_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a reference for detail plots that any instance of Tree (called by tps_Tree) or Stand (calld by tps_Stand) can use.</p>
+<p>Here is a case where the stand, year, and plot in question is NOT a detail plot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">Capture</span><span class="o">.</span><span class="n">detail_reference</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;AB08&#39;</span><span class="p">,</span> <span class="s">&#39;AV14&#39;</span><span class="p">,</span> <span class="s">&#39;AR07&#39;</span><span class="p">,</span> <span class="s">&#39;RS01&#39;</span><span class="p">,</span> <span class="s">&#39;TO11&#39;</span><span class="p">,</span> <span class="s">&#39;AM16&#39;</span><span class="p">,</span> <span class="s">&#39;AX15&#39;</span><span class="p">,</span> <span class="s">&#39;RS29&#39;</span><span class="p">,</span> <span class="s">&#39;RS02&#39;</span><span class="p">,</span> <span class="s">&#39;RS30&#39;</span><span class="p">,</span> <span class="s">&#39;RS28&#39;</span><span class="p">,</span> <span class="s">&#39;TB13&#39;</span><span class="p">,</span> <span class="s">&#39;RS32&#39;</span><span class="p">,</span> <span class="s">&#39;AG05&#39;</span><span class="p">,</span> <span class="s">&#39;TO04&#39;</span><span class="p">,</span> <span class="s">&#39;AE10&#39;</span><span class="p">,</span> <span class="s">&#39;RS31&#39;</span><span class="p">,</span> <span class="s">&#39;PP17&#39;</span><span class="p">,</span> <span class="s">&#39;AV06&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1976</span><span class="p">,</span> <span class="mi">1971</span><span class="p">,</span> <span class="mi">1988</span><span class="p">,</span> <span class="mi">2009</span><span class="p">,</span> <span class="mi">1992</span><span class="p">,</span> <span class="mi">2004</span><span class="p">,</span> <span class="mi">1978</span><span class="p">,</span> <span class="mi">1998</span><span class="p">,</span> <span class="mi">1983</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s">&#39;area&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">625</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s">&#39;detail&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s">&#39;min&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">15.0</span>
+</pre></div>
+</div>
+<p>Here is a case where the stand, year, and plot in question is a detail plot.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="s">&#39;area&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">625</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="s">&#39;detail&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="s">&#39;min&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">5.0</span>
+</pre></div>
+</div>
+<p><strong>PROPERTIES</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Capture.detail_reference:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the name of the lookup table created, which can be referenced as an attribute of the Capture object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="poptree_basis.Capture.create_unusual_mins_reference">
+<code class="descname">create_unusual_mins_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.create_unusual_mins_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a lookup for plots that do not have minimums of 15, but are not detail plots.</p>
+<p><cite>create_unusual_mins_reference</cite> queries the database to create a reference for plots where detailPlot is not &#8216;T&#8217; and minimum DBH is not 15.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">umins_reference</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;YBNF&#39;</span><span class="p">,</span> <span class="s">&#39;SRNF&#39;</span><span class="p">,</span> <span class="s">&#39;MRNA&#39;</span><span class="p">,</span> <span class="s">&#39;CH10&#39;</span><span class="p">,</span><span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">umins_reference</span><span class="p">[</span><span class="s">&#39;PF28&#39;</span><span class="p">][</span><span class="mi">1959</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">10.0</span>
+</pre></div>
+</div>
+<p><strong>PROPERTIES</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Capture.umins_reference:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the name of the lookup table created, which can be referenced as an attribute of the Capture object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="poptree_basis.LogRef">
+<em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">LogRef</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.LogRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>The LogRef class creates a log to map Exceptions to reasonable strings using a lookup table that is part of its namespace. It opens and protects a .csv file that contains the Tree or Stand ID, the exception number, the exception meaning, the year in question, and the calling function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">L</span> <span class="o">=</span> <span class="n">LogRef</span><span class="p">(</span><span class="s">&quot;fox_log_1.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last"><cite>csv</cite> dependency. Recall that in Python3, <cite>csv</cite> has a different syntax than in Python &lt; 3.</p>
+</div>
+<p>METHODS</p>
+<dl class="method">
+<dt id="poptree_basis.LogRef.createcsv">
+<code class="descname">createcsv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.LogRef.createcsv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens a .csv file to log exceptions given by the routine</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">L</span><span class="o">=</span><span class="n">LogRef</span><span class="p">(</span><span class="s">&quot;fox_log_1.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="poptree_basis.YamlConn">
+<em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">YamlConn</code><a class="headerlink" href="#poptree_basis.YamlConn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class connects to the YAML files containing the configuration to run the ptree program, including the database connection in the Config File and the Queries in the Query File.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; A = YamlConn()
+&gt;&gt;&gt; A.configfilename = &quot;config_2.yaml&quot;
+&gt;&gt;&gt; A.config = &lt;class &#39;dict&#39;&gt;
+&gt;&gt;&gt; A.queries= &lt;class &#39;dict&#39;&gt;
+&gt;&gt;&gt; &lt;pymssql.connection, pymssql.cursor&gt; = A.sql_connect()
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">pymssql dependency. pymssql is required to connect to FSDB.</p>
+</div>
+<p><strong>METHODS</strong></p>
+<dl class="method">
+<dt id="poptree_basis.YamlConn.lite3_connect">
+<code class="descname">lite3_connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.YamlConn.lite3_connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects to the SQLite3 database</p>
+<p>Configuration parameters are in config_2.yaml file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="poptree_basis.YamlConn.sql_connect">
+<code class="descname">sql_connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.YamlConn.sql_connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects to the MS SQL server database</p>
+<p>Configuration parameters are in config_2.yaml file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-biomass_basis"></span><dl class="function">
+<dt id="biomass_basis.as_biopak">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_biopak" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates biomass equations based on inputs of b1, b2, b3 and wood density for dbh, in cm.</p>
+<p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
+<p>The BioPak method computes Biomass explicitly, rather than from volume. In most cases, the original output was in grams, but in this case, it is converted into Megagrams.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Woodden:</th><td class="field-body">wood density,</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">cm diameter at breast height</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B1:</th><td class="field-body">first biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">B2:</th><td class="field-body">second biomass parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B3:</th><td class="field-body">third biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">J1:</th><td class="field-body">first Jenkins parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">J2:</th><td class="field-body">second Jenkins parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Args:</th><td class="field-body">the remainder of arguments passed to the function, which are not called in this case</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.as_chinq_biopak">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_chinq_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_chinq_biopak" title="Permalink to this definition">¶</a></dt>
+<dd><p>shapes a biomass equation based on inputs of h1, h2, h3, b1, b2, and b3, plus wood density onto the variable dbh which is for the dbh. uses pretty much all the inputs directly and calculates volume. chinquapin.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.as_compbio">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_compbio</code><span class="sig-paren">(</span><em>dbh</em>, <em>parameter_rows</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_compbio" title="Permalink to this definition">¶</a></dt>
+<dd><p>shapes a biomass equation based on the inputs of b1, b2, and wood density onto the variable dbh which is the dbh. adds the components from each row in the table it needs. only works with a few trees.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.as_d2ht">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_d2ht</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_d2ht" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates biomass equations based on inputs of b1, b2, b3, h1, h2, and h3 and wood density for dbh, in cm.</p>
+<p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Woodden:</th><td class="field-body">wood density,</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">cm diameter at breast height</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B1:</th><td class="field-body">first biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">B2:</th><td class="field-body">second biomass parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B3:</th><td class="field-body">third biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">J1:</th><td class="field-body">first Jenkins parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">J2:</th><td class="field-body">second Jenkins parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">H1:</th><td class="field-body">first height parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">H2:</th><td class="field-body">second height parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">H3:</th><td class="field-body">third height parameter</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.as_d2htcasc">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_d2htcasc</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_d2htcasc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates biomass equations based on inputs of b1, b2, b3 and wood density for dbh, in cm.</p>
+<p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Woodden:</th><td class="field-body">wood density,</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">cm diameter at breast height</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B1:</th><td class="field-body">first biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">B2:</th><td class="field-body">second biomass parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B3:</th><td class="field-body">third biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">J1:</th><td class="field-body">first Jenkins parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">J2:</th><td class="field-body">second Jenkins parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Args:</th><td class="field-body">the remainder of arguments passed to the function, which are not called in this case</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.as_lnln">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_lnln</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_lnln" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates biomass equations based on inputs of b1, b2, b3, and wood density for dbh, in cm.</p>
+<p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Woodden:</th><td class="field-body">wood density,</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">cm diameter at breast height</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B1:</th><td class="field-body">first biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">B2:</th><td class="field-body">second biomass parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B3:</th><td class="field-body">third biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">J1:</th><td class="field-body">first Jenkins parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">J2:</th><td class="field-body">second Jenkins parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Args:</th><td class="field-body">the remainder of arguments passed to the function, which are not called in this case</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.as_oak_biopak">
+<code class="descclassname">biomass_basis.</code><code class="descname">as_oak_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_oak_biopak" title="Permalink to this definition">¶</a></dt>
+<dd><p>shapes a biomass equation based on inputs of h1, h2, h3, b1, b2, and b3, plus wood density onto the variable dbh which is for the dbh. uses pretty much all the inputs directly and calculates volume. things in quercus family.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.maxref">
+<code class="descclassname">biomass_basis.</code><code class="descname">maxref</code><span class="sig-paren">(</span><em>dbh</em>, <em>species</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.maxref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if given dbh and given species is bigger than the maximum for that combination. The max was found from determining the top 1 percent of dbh&#8217;s for each species.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Dbh:</th><td class="field-body">the tree&#8217;s dbh, in cm</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Species:</th><td class="field-body">the tree&#8217;s species, a four character code. If the database provides a longer code, it will be converted to a lowercase four letter code.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">maxref</span><span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="s">&#39;ABAM&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&quot;normal&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.which_fx">
+<code class="descclassname">biomass_basis.</code><code class="descname">which_fx</code><span class="sig-paren">(</span><em>function_string</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.which_fx" title="Permalink to this definition">¶</a></dt>
+<dd><p>find the correct function for doing the biomass in the lookup table</p>
+</dd></dl>
+
 <span class="target" id="module-tps_Tree"></span><dl class="class">
 <dt id="tps_Tree.Tree">
 <em class="property">class </em><code class="descclassname">tps_Tree.</code><code class="descname">Tree</code><span class="sig-paren">(</span><em>cur</em>, <em>pcur</em>, <em>queries</em>, <em>tid</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>A Tree object contains the required metrics and functions to compute biomass, Jenkins&#8217; biomass, volume, and basal area for any one tree over any of the years of its remeasurement.</p>
-<p>Tree objects are independent of the years : that is, each tree object contains all the years of that tree&#8217;s existance.</p>
+<p>A Tree object contains the required metrics and functions to compute Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Volume ( m<sup>3</sup> ) , and Basal Area ( m<sup>2</sup> ) for any one tree. Tree objects also create a check file for data quality.</p>
+<p>Tree objects are independent of the years; that is, each Tree object contains all the years of that tree&#8217;s existance.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -82,14 +561,6 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">eqns</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;normal&#39;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span><span class="o">&lt;</span><span class="n">function</span> <span class="mo">03</span><span class="mi">9459</span><span class="n">x342</span><span class="o">&gt;</span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">woodden</span> <span class="o">=</span> <span class="mf">0.44</span>
 </pre></div>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">A.state contains [year, dbh, status, dbh_code]</p>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">A.cur must be created in an external variable</p>
 </div>
 <p><strong>METHODS</strong></p>
 <dl class="method">
@@ -142,7 +613,9 @@
 <dt id="tps_Tree.Tree.determine_detail_to_large">
 <code class="descname">determine_detail_to_large</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.determine_detail_to_large" title="Permalink to this definition">¶</a></dt>
 <dd><p>Using the stand and the year, determine the weight of a detail plot by computing the sum of the areas of the detail plots versus the sum of the areas of all the plots</p>
-</dd></dl>
+<div class="math">
+<p><img src="_images/math/6bd222789498ea07b44f690fb4af616a345cda14.png" alt="(1 Tree / Plot m2) * (sum of DtPlot m2/sum of all plots m2)"/></p>
+</div></dd></dl>
 
 <dl class="method">
 <dt id="tps_Tree.Tree.get_a_tree">
@@ -152,13 +625,13 @@
 
 <dl class="method">
 <dt id="tps_Tree.Tree.is_detail">
-<code class="descname">is_detail</code><span class="sig-paren">(</span><em>Xfactor</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.is_detail" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_detail</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.is_detail" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns true if the plot is a detail plot and the tree has a dbh which is less than 15 but greater than the minimum dbh listed. Otherwise, return false</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Xfactor:</th><td class="field-body">is an instance of the detail plot object, used for reference here.</td>
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">is an instance of the detail plot object, used for reference here.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Standid:</th><td class="field-body">the stand of a tree object</td>
 </tr>
@@ -182,88 +655,103 @@
 
 <span class="target" id="module-tps_Stand"></span><dl class="class">
 <dt id="tps_Stand.Stand">
-<em class="property">class </em><code class="descclassname">tps_Stand.</code><code class="descname">Stand</code><span class="sig-paren">(</span><em>cur</em>, <em>pcur</em>, <em>standid</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tps_Stand.</code><code class="descname">Stand</code><span class="sig-paren">(</span><em>cur</em>, <em>pcur</em>, <em>Xfactor</em>, <em>queries</em>, <em>standid</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Stands contain a list of plots by year, as well as summary of biomass, volume,</p>
+<p>Stands contain several plots, grouped by year and species. Stand produce outputs of biomass, volume, jenkins, trees/ha, and basal areas per hectare. Also, a number of checks are performed.</p>
+<ol class="arabic simple">
+<li>&#8220;Tree in remeasurement not in master&#8221; - a tree id appears in one measurement not in the former</li>
+<li>&#8220;Tree in master not remeasured&#8221; - a tree id disappears from one measurement to the next</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Stand</span><span class="p">(</span><span class="n">cur</span><span class="p">,</span> <span class="n">pcur</span><span class="p">,</span> <span class="n">Xfactor</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="s">&#39;NCNA&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">state</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[[</span><span class="mi">1979</span><span class="p">,</span> <span class="mf">47.5</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">,</span> <span class="s">&#39;G&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1981</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;6&#39;</span><span class="p">,</span> <span class="s">&#39;M&#39;</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">compute_biomasses</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="mf">1.2639</span><span class="p">,</span> <span class="mf">2.8725</span><span class="p">,</span> <span class="mf">1.14323</span><span class="p">,</span> <span class="mf">0.44</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.2639</span><span class="p">,</span> <span class="mf">2.8725</span><span class="p">,</span> <span class="mf">1.14323</span><span class="p">,</span> <span class="mf">0.44</span><span class="p">)]</span>
+</pre></div>
+</div>
 <dl class="method">
-<dt id="tps_Stand.Stand.check_details">
-<code class="descname">check_details</code><span class="sig-paren">(</span><em>Xfactor</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.check_details" title="Permalink to this definition">¶</a></dt>
-<dd><p>If the stand is in the Xfactor list, we need to check for detail plots, otherwise, don&#8217;t</p>
+<dt id="tps_Stand.Stand.check_mort">
+<code class="descname">check_mort</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.check_mort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the year is a mortality year, and if so, bisect it into the subsequent live year</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Stand.compute_normal_biomasses">
+<code class="descname">compute_normal_biomasses</code><span class="sig-paren">(</span><em>Xfactor</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.compute_normal_biomasses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the biomass, volume, jenkins. Use for &#8220;normal&#8221; stands.</p>
+<p>First use X factor to tell if a fancy computation needs to be performed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Xfactor:</th><td class="field-body">a Capture object containing the detail plots, minimum dbhs, etc.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Xfactor.detail_reference:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">plots which are detail plots and when</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Xfactor.stands_with_unusual_mins:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">plots which have minimums that are not 15 and are not detail plots</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Xfactor.unusual_plot_areas:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">plots whose areas are not 625m</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Stand.compute_special_biomasses">
+<code class="descname">compute_special_biomasses</code><span class="sig-paren">(</span><em>Xfactor</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.compute_special_biomasses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the biomass, volume, jenkins. Use for stands with alternate minimums, areas, or detail plots</p>
+<dl class="docutils">
+<dt>First use the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.</dt>
+<dd>Load in the appropriate parameters for this computation. Separate &#8220;small&#8221; trees from &#8220;large&#8221; ones so that small ones can get the expansion factor. If they aren&#8217;t on a detail plot, this number will just be &#8220;1&#8221;.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Xfactor:</th><td class="field-body">a Capture object containing the detail plots, minimum dbhs, etc.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Xfactor.detail_reference:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">plots which are detail plots and when</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Xfactor.stands_with_unusual_mins:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">plots which have minimums that are not 15 and are not detail plots</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Xfactor.unusual_plot_areas:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">plots whose areas are not 625m</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.get_all_trees">
 <code class="descname">get_all_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.get_all_trees" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the trees and sort them by year and plot</p>
+<dd><p>Get the trees and sort them by year, plot, live or dead, and species</p>
 </dd></dl>
 
-</dd></dl>
-
-<span class="target" id="module-biomass_basis"></span><dl class="function">
-<dt id="biomass_basis.as_biopak">
-<code class="descclassname">biomass_basis.</code><code class="descname">as_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>x</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_biopak" title="Permalink to this definition">¶</a></dt>
-<dd><p>shapes a biomass equation based on inputs of b1, b2 and wood density onto the variable x which is for the dbh. does not use height or wood density directly</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="biomass_basis.as_chinq_biopak">
-<code class="descclassname">biomass_basis.</code><code class="descname">as_chinq_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>x</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_chinq_biopak" title="Permalink to this definition">¶</a></dt>
-<dd><p>shapes a biomass equation based on inputs of h1, h2, h3, b1, b2, and b3, plus wood density onto the variable x which is for the dbh. uses pretty much all the inputs directly and calculates volume. chinquapin.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="biomass_basis.as_compbio">
-<code class="descclassname">biomass_basis.</code><code class="descname">as_compbio</code><span class="sig-paren">(</span><em>x</em>, <em>parameter_rows</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_compbio" title="Permalink to this definition">¶</a></dt>
-<dd><p>shapes a biomass equation based on the inputs of b1, b2, and wood density onto the variable x which is the dbh. adds the components from each row in the table it needs. only works with a few trees.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="biomass_basis.as_d2ht">
-<code class="descclassname">biomass_basis.</code><code class="descname">as_d2ht</code><span class="sig-paren">(</span><em>woodden</em>, <em>x</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_d2ht" title="Permalink to this definition">¶</a></dt>
-<dd><p>shapes a biomass equation based on inputs of h1, h2, h3, and b1 and wood density onto the variable x which is for the dbh</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="biomass_basis.as_d2htcasc">
-<code class="descclassname">biomass_basis.</code><code class="descname">as_d2htcasc</code><span class="sig-paren">(</span><em>woodden</em>, <em>x</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_d2htcasc" title="Permalink to this definition">¶</a></dt>
-<dd><p>shapes a biomass equation based on inputs of b1, b2, b3, and wood density onto the variable x which is for the dbh. cascades variety does not need height or the adjustment by m2</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="biomass_basis.as_lnln">
-<code class="descclassname">biomass_basis.</code><code class="descname">as_lnln</code><span class="sig-paren">(</span><em>woodden</em>, <em>x</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_lnln" title="Permalink to this definition">¶</a></dt>
-<dd><p>shapes a biomass equation based on inputs of b1, b2, b3, and wood density onto variable x which is for the dbh</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="biomass_basis.as_oak_biopak">
-<code class="descclassname">biomass_basis.</code><code class="descname">as_oak_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>x</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_oak_biopak" title="Permalink to this definition">¶</a></dt>
-<dd><p>shapes a biomass equation based on inputs of h1, h2, h3, b1, b2, and b3, plus wood density onto the variable x which is for the dbh. uses pretty much all the inputs directly and calculates volume. things in quercus family.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="biomass_basis.maxref">
-<code class="descclassname">biomass_basis.</code><code class="descname">maxref</code><span class="sig-paren">(</span><em>dbh</em>, <em>species</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.maxref" title="Permalink to this definition">¶</a></dt>
-<dd><p>check if an instance of dbh and species is bigger than the max. the max was found from the upper 1 percent ( I think!) per tree</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="biomass_basis.which_fx">
-<code class="descclassname">biomass_basis.</code><code class="descname">which_fx</code><span class="sig-paren">(</span><em>function_string</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.which_fx" title="Permalink to this definition">¶</a></dt>
-<dd><p>find the correct function for doing the biomass in the lookup table</p>
-</dd></dl>
-
-<span class="target" id="module-poptree_basis"></span><dl class="class">
-<dt id="poptree_basis.BasicQC">
-<em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">BasicQC</code><a class="headerlink" href="#poptree_basis.BasicQC" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class provides basic functions for computing plot/stand scale metrics.</p>
-<p>The methods provided here do ...</p>
 <dl class="method">
-<dt id="poptree_basis.BasicQC.get_interval">
-<code class="descname">get_interval</code><span class="sig-paren">(</span><em>list_live_years</em>, <em>dead_year</em><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.BasicQC.get_interval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns [prior_year, subsequent year]</p>
-<p>The bisect right function determines the windowing years from a given list around a given input year. For mortality plots, this tells us from which year to which year we need to aggregate.</p>
+<dt id="tps_Stand.Stand.select_eqns">
+<code class="descname">select_eqns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.select_eqns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get only the equations you need based on the species on that plot</p>
+<p>Queries the database for individual species that will be on this stand and makes an equation table</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Stand.update_mort">
+<code class="descname">update_mort</code><span class="sig-paren">(</span><em>is_mort</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.update_mort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new dbh dictionary for the stand based on whether or not a year is a mortality year. If it is not a mortality year, the dictionary is the same as the original. If it is a mortality year, the dead trees are shifted to the subsequent year.</p>
+<p>The bisect right function determines the windowing years from a given list around a given input year.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -273,120 +761,26 @@
 </tr>
 <tr class="field-even field"><th class="field-name">Dead_year:</th><td class="field-body">the year of the mortality check to be aggregated to a selection from list_of_live_years</td>
 </tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="poptree_basis.DetailCapture">
-<em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">DetailCapture</code><a class="headerlink" href="#poptree_basis.DetailCapture" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class creates a dictionary for stands and plots to reference if a plot is a detail plot, when it is a detail plot, which stand it is in, and the minimum dbh from that plot, which is the threshold for it being included in the main inventory or not.</p>
-<p>The detail_reference dictionary is extended, which the expansion dictionary is condensed. This is mostly beacuse I&#8217;&#8216;m not sure which will be the most useful yet. Call this dictionary ahead of calling anything from plots, trees, or stands to save big time. Otherwise there are so many queries</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+<tr class="field-odd field"><th class="field-name">Is_mort:</th><td class="field-body">Boolean value of whether or not we should update mortality. If it was not a mortality year, we shifted the original output into the shifted dictionary using check_mort, without changing a value!</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">poptree_basis</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">detail_reference</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;AB08&#39;</span><span class="p">,</span> <span class="s">&#39;AE10&#39;</span><span class="p">,</span> <span class="s">&#39;RS01&#39;</span><span class="p">,</span> <span class="s">&#39;PP17&#39;</span><span class="p">,</span> <span class="s">&#39;RS02&#39;</span><span class="p">,</span> <span class="s">&#39;AV06&#39;</span><span class="p">,</span> <span class="s">&#39;AR07&#39;</span><span class="p">,</span> <span class="s">&#39;TO04&#39;</span><span class="p">,</span> <span class="s">&#39;RS28&#39;</span><span class="p">,</span> <span class="s">&#39;TB13&#39;</span><span class="p">,</span> <span class="s">&#39;AM16&#39;</span><span class="p">,</span> <span class="s">&#39;AG05&#39;</span><span class="p">,</span> <span class="s">&#39;RS31&#39;</span><span class="p">,</span> <span class="s">&#39;RS29&#39;</span><span class="p">,</span> <span class="s">&#39;AX15&#39;</span><span class="p">,</span> <span class="s">&#39;AV14&#39;</span><span class="p">,</span> <span class="s">&#39;RS30&#39;</span><span class="p">,</span> <span class="s">&#39;RS32&#39;</span><span class="p">,</span> <span class="s">&#39;TO11&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="p">[</span><span class="s">&#39;RS02&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1971</span><span class="p">,</span> <span class="mi">1988</span><span class="p">,</span> <span class="mi">2005</span><span class="p">,</span> <span class="mi">2009</span><span class="p">,</span> <span class="mi">1976</span><span class="p">,</span> <span class="mi">1993</span><span class="p">,</span> <span class="mi">1978</span><span class="p">,</span> <span class="mi">1983</span><span class="p">,</span> <span class="mi">1999</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="p">[</span><span class="s">&#39;RS02&#39;</span><span class="p">][</span><span class="mi">1993</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="s">&#39;all_areas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">],</span> <span class="s">&#39;all_mins&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">15.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">],</span> <span class="s">&#39;all_plots&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="s">&#39;T_areas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="mi">625</span><span class="p">],</span> <span class="s">&#39;T_plots&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">]}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">J</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">expansion</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">J</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;AV14&#39;</span><span class="p">,</span> <span class="s">&#39;RS31&#39;</span><span class="p">,</span> <span class="s">&#39;AM16&#39;</span><span class="p">,</span> <span class="s">&#39;RS30&#39;</span><span class="p">,</span> <span class="s">&#39;AE10&#39;</span><span class="p">,</span> <span class="s">&#39;RS32&#39;</span><span class="p">,</span> <span class="s">&#39;AR07&#39;</span><span class="p">,</span> <span class="s">&#39;RS28&#39;</span><span class="p">,</span> <span class="s">&#39;RS29&#39;</span><span class="p">,</span> <span class="s">&#39;TO04&#39;</span><span class="p">,</span> <span class="s">&#39;AB08&#39;</span><span class="p">,</span> <span class="s">&#39;RS01&#39;</span><span class="p">,</span> <span class="s">&#39;RS02&#39;</span><span class="p">,</span> <span class="s">&#39;AV06&#39;</span><span class="p">,</span> <span class="s">&#39;AG05&#39;</span><span class="p">,</span> <span class="s">&#39;TO11&#39;</span><span class="p">,</span> <span class="s">&#39;TB13&#39;</span><span class="p">,</span> <span class="s">&#39;AX15&#39;</span><span class="p">,</span> <span class="s">&#39;PP17&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">J</span><span class="o">.</span><span class="n">expansion</span><span class="p">[</span><span class="s">&#39;RS02&#39;</span><span class="p">][</span><span class="mi">1993</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="mf">2.29</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">H:</th><td class="field-body">is an instance of the detail_reference object, used for reference here.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">H[standid]:</th><td class="field-body">the stand of a tree object, containing the years that stand was measured as its keys</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">H[standid][year][&#8216;all_areas&#8217;]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">contains the area of each plot on that stand</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">H[standid][year][&#8216;all_plots&#8217;]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">contains the plot numbers for all the plots</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">H[standid][year][&#8216;T_areas&#8217;]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">contains the areas of the detail plots</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">H[standid][year][&#8216;T_plots&#8217;]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">contains the areas of the detail plots</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">J:</th><td class="field-body">is an instance of the expansion object, used for reference here</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">J[standid][year]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the expansion factor for that particular plot and year</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="poptree_basis.DetailCapture.condense_detail_reference">
-<code class="descname">condense_detail_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.DetailCapture.condense_detail_reference" title="Permalink to this definition">¶</a></dt>
-<dd><p>Condenses the detail reference dictionary into a readable dictionary of expansion factors by plot</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="poptree_basis.DetailCapture.create_detail_reference">
-<code class="descname">create_detail_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.DetailCapture.create_detail_reference" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function creates a lookup for detail plots that any tree or stand can use</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="poptree_basis.YamlConn">
-<em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">YamlConn</code><a class="headerlink" href="#poptree_basis.YamlConn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class connects to the YAML files containing the configuration to run the ptree program, including the database connection in the Config File and the Queries in the Query File.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; A = YamlConn()
-&gt;&gt;&gt; A.configfilename = &quot;config_2.yaml&quot;
-&gt;&gt;&gt; A.config = &lt;class &#39;dict&#39;&gt;
-&gt;&gt;&gt; A.queries= &lt;class &#39;dict&#39;&gt;
-&gt;&gt;&gt; &lt;pymssql.connection, pymssql.cursor&gt; = A.sql_connect()
-</pre></div>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">pymssql dependency.</p>
-</div>
-<p>METHODS</p>
-<dl class="method">
-<dt id="poptree_basis.YamlConn.lite3_connect">
-<code class="descname">lite3_connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.YamlConn.lite3_connect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Connects to the SQLite3 database</p>
-<p>Configuration parameters are in config_2.yaml file.</p>
-</dd></dl>
+<dt id="tps_Stand.Stand.write_stand_dead">
+<code class="descname">write_stand_dead</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_dead" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
-<dt id="poptree_basis.YamlConn.sql_connect">
-<code class="descname">sql_connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.YamlConn.sql_connect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Connects to the MS SQL server database</p>
-<p>Configuration parameters are in config_2.yaml file.</p>
-</dd></dl>
+<dt id="tps_Stand.Stand.write_stand_ingrowth">
+<code class="descname">write_stand_ingrowth</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_ingrowth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Stand.write_stand_live">
+<code class="descname">write_stand_live</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_live" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -408,7 +802,7 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Welcome to ptree&#8217;s documentation!</a></li>
+<li><a class="reference internal" href="#">Welcome to the TPS documentation!</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 

@@ -274,7 +274,7 @@ class Stand(object):
 
         First use X factor to tell if a fancy computation needs to be performed.
 
-        :Xfactor: a DetailCapture object containing the detail plots, minimum dbhs, etc.
+        :Xfactor: a Capture object containing the detail plots, minimum dbhs, etc.
         :Xfactor.detail_reference: plots which are detail plots and when
         :Xfactor.stands_with_unusual_mins: plots which have minimums that are not 15 and are not detail plots
         :Xfactor.unusual_plot_areas: plots whose areas are not 625m
@@ -386,11 +386,11 @@ class Stand(object):
     def compute_special_biomasses(self, Xfactor):
         """ Compute the biomass, volume, jenkins. Use for stands with alternate minimums, areas, or detail plots 
 
-        First use the DetailCapture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.
+        First use the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.
             Load in the appropriate parameters for this computation. Separate "small" trees from "large" ones so that small ones can get the expansion factor. If they aren't on a detail plot, this number will just be "1".
 
 
-        :Xfactor: a DetailCapture object containing the detail plots, minimum dbhs, etc.
+        :Xfactor: a Capture object containing the detail plots, minimum dbhs, etc.
         :Xfactor.detail_reference: plots which are detail plots and when
         :Xfactor.stands_with_unusual_mins: plots which have minimums that are not 15 and are not detail plots
         :Xfactor.unusual_plot_areas: plots whose areas are not 625m
@@ -619,7 +619,7 @@ if __name__ == "__main__":
     queries = DATABASE_CONNECTION.queries
 
     # creates lookups for expansion factors
-    Xfactor = poptree_basis.DetailCapture()
+    Xfactor = poptree_basis.Capture()
 
 
     test_stands = ['AV06','WI01','NCNA']
