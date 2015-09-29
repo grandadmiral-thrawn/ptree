@@ -138,7 +138,7 @@ def as_compbio(x, parameter_rows):
             bio_1, vol_1,_,_ = as_biopak(b1, b2, woodden, x)
             biomass += bio_1
             volume += vol_1
-        return (biomass, volume, jbio, woodden)
+        return (biomass, volume, jbio, woodden)i
     except ValueError:
         return (0.,0.,0.,woodden)
 
@@ -155,3 +155,4 @@ def which_fx(function_string):
 
     return lookup[function_string]
 
+def augment_fx(function_string):
