@@ -176,10 +176,10 @@ class Capture(object):
 
         for each_stand in stands_with_details:
 
-            if each_stand not in self.detail_reference:
-                self.detail_reference[each_stand] = {}
+            if each_stand.rstrip().lower() not in self.detail_reference:
+                self.detail_reference[each_stand.rstrip().lower()] = {}
 
-            elif each_stand in self.detail_reference:
+            elif each_stand.rstrip().lower() in self.detail_reference:
                 pass
 
             sql = YamlConn().queries['stand']['lite_context_dtl_2'].format(standid=each_stand)
@@ -202,14 +202,14 @@ class Capture(object):
                 except Exception:
                     mindbh = 5.0
 
-                if year not in self.detail_reference[each_stand] and detail == 'T':
-                    self.detail_reference[each_stand][year]={plotno:{'area': area, 'detail': True, 'min': mindbh}}
-                elif year in self.detail_reference[each_stand] and detail == 'T':
-                    self.detail_reference[each_stand][year][plotno] = {'area': area, 'detail': True, 'min': mindbh}
-                elif year not in self.detail_reference[each_stand] and detail != 'T':
-                    self.detail_reference[each_stand][year]={plotno:{'area':area, 'detail': False, 'min': mindbh}}
-                elif year in self.detail_reference[each_stand] and detail !='T':
-                    self.detail_reference[each_stand][year][plotno] = {'area':area, 'detail':False, 'min':mindbh}
+                if year not in self.detail_reference[each_stand.rstrip().lower()] and detail == 'T':
+                    self.detail_reference[each_stand.rstrip().lower()][year]={plotno:{'area': area, 'detail': True, 'min': mindbh}}
+                elif year in self.detail_reference[each_stand.rstrip().lower()] and detail == 'T':
+                    self.detail_reference[each_stand.rstrip().lower()][year][plotno] = {'area': area, 'detail': True, 'min': mindbh}
+                elif year not in self.detail_reference[each_stand.rstrip().lower()] and detail != 'T':
+                    self.detail_reference[each_stand.rstrip().lower()][year]={plotno:{'area':area, 'detail': False, 'min': mindbh}}
+                elif year in self.detail_reference[each_stand.rstrip().lower()] and detail !='T':
+                    self.detail_reference[each_stand.rstrip().lower()][year][plotno] = {'area':area, 'detail':False, 'min':mindbh}
 
                 else:
                     pass
@@ -244,20 +244,22 @@ class Capture(object):
                 mindbh = 5.0
 
             try:
-            
-                if str(row[0]) not in self.umins_reference:
-                    self.umins_reference[str(row[0])] = {int(row[2]) :{int(row[1]): mindbh}}
 
-                elif str(row[0]) in self.umins_reference:
-                    if int(row[2]) not in self.umins_reference[str(row[0])]:
-                        self.umins_reference[str(row[0])][int(row[2])] = {int(row[1]) :mindbh}
+                if str(row[0]).rstrip().lower() not in self.umins_reference:
+                    self.umins_reference[str(row[0]).rstrip().lower()] = {int(row[2]): {int(row[1]): mindbh}}
 
-                    elif int(row[2]) in self.umins_reference[str(row[0])]:
-                        if int(row[1]) not in self.umins_reference[str(row[0])][int(row[2])]:
-                            self.umins_reference[str(row[0])][int(row[2])][int(row[1])] = mindbh
+                elif str(row[0]).rstrip().lower() in self.umins_reference:
+                    if int(row[2]) not in self.umins_reference[str(row[0]).rstrip().lower()]:
+                        self.umins_reference[str(row[0]).rstrip().lower()][int(row[2])] = {int(row[1]):mindbh}
+
+                    elif int(row[2]) in self.umins_reference[str(row[0]).rstrip().lower()]:
+                        if int(row[1]) not in self.umins_reference[str(row[0]).rstrip().lower()][int(row[2])]:
+                            self.umins_reference[str(row[0]).rstrip().lower()][int(row[2])][int(row[1])] = mindbh
                         else:
+
                             print("some error has occurred in finding unusual minimums on not-detail plots")
             except Exception as e17:
+                # any errors here can be passed, and the site will get the default values
                 pass
 
     def condense_detail_reference(self):
@@ -306,11 +308,11 @@ class Capture(object):
                 except Exception as e4:
                     expansion_factor_to_stand = 1.
 
-                if each_stand not in self.expansion:
-                    self.expansion[each_stand] = {each_year:expansion_factor_to_stand}
-                elif each_stand in self.expansion:
-                    if each_year not in self.expansion[each_stand]:
-                        self.expansion[each_stand][each_year] = expansion_factor_to_stand
+                if each_stand.rstrip().lower() not in self.expansion:
+                    self.expansion[each_stand.rstrip().lower()] = {each_year:expansion_factor_to_stand}
+                elif each_stand.rstrip().lower() in self.expansion:
+                    if each_year not in self.expansion[each_stand.rstrip().lower()]:
+                        self.expansion[each_stand.rstrip().lower()][each_year] = expansion_factor_to_stand
                     else:
                         pass
 
@@ -348,13 +350,13 @@ class Capture(object):
                 plot = None
 
             try:
-                if str(row[0]) not in self.uplot_areas:
-                    self.uplot_areas[str(row[0])]={plot:{int(row[1]): area}}
-                elif str(row[0]) in self.uplot_areas:
-                    if plot not in self.uplot_areas[str(row[0])]:
-                        self.uplot_areas[str(row[0])][plot] = {int(row[1]): area}
-                    elif plot in self.uplot_areas[str(row[0])]: 
-                        self.uplot_areas[str(row[0])][plot].update({int(row[1]): area})
+                if str(row[0]).rstrip().lower() not in self.uplot_areas:
+                    self.uplot_areas[str(row[0]).rstrip().lower()]={plot:{int(row[1]): area}}
+                elif str(row[0].rstrip().lower()) in self.uplot_areas:
+                    if plot not in self.uplot_areas[str(row[0]).rstrip().lower()]:
+                        self.uplot_areas[str(row[0]).rstrip().lower()][plot] = {int(row[1]): area}
+                    elif plot in self.uplot_areas[str(row[0]).rstrip().lower()]: 
+                        self.uplot_areas[str(row[0]).rstrip().lower()][plot].update({int(row[1]): area})
             except Exception as e9:
                 pass
 
@@ -382,7 +384,8 @@ class LogRef(object):
         "e3": "pass",
         "e4": "pass",
         "e5": "Species is not listed in biomass_basis.maxref reference.",
-        "e6": "Biomass can not be computed based on the keyword given to the max reference"}
+        "e6": "Biomass can not be computed based on the keyword given to the max reference",
+        "e17": "Unable to find unusual plot minimums"}
 
         self.createcsv()
 

@@ -67,7 +67,7 @@ def maxref(dbh, species):
                 return "normal"
 
         except Exception as e5:
-            print(e5)
+            
             return "normal"
 
 def as_lnln(woodden, dbh, b1, b2, b3, j1, j2, *args):
@@ -90,7 +90,7 @@ def as_lnln(woodden, dbh, b1, b2, b3, j1, j2, *args):
         jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),5)
         return (biomass, volume, jbio, woodden)
     except ValueError as e1:
-        print(e1)
+        
         return (0., 0., 0., woodden)
 
 
@@ -117,7 +117,7 @@ def as_d2ht(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
         volume = round(biomass/woodden,4)
         return (biomass, volume, jbio, woodden)
     except ValueError as e1:
-        print(e1)
+        
         return (0., 0., 0., woodden)
 
 def as_d2htcasc(woodden, dbh, b1, b2, b3, j1, j2, *args):
@@ -140,7 +140,7 @@ def as_d2htcasc(woodden, dbh, b1, b2, b3, j1, j2, *args):
         volume = round(biomass/woodden,4)
         return (biomass, volume, jbio, woodden)
     except ValueError as e1:
-        print(e1)
+        
         return (0., 0., 0., woodden)
 
 
@@ -166,7 +166,7 @@ def as_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
         volume = round(biomass/woodden,4)
         return (biomass, volume, jbio, woodden)
     except ValueError as e1:
-        print(e1)
+        
         return (0., 0., 0., woodden)
 
 def as_chinq_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
@@ -194,7 +194,7 @@ def as_chinq_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
         volume = round(biomass/woodden,4)
         return (biomass, volume, jbio, woodden)
     except ValueError as e1:
-        print(e1)
+        
         return (0., 0., 0., woodden)
 
 def as_oak_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
@@ -222,7 +222,7 @@ def as_oak_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
         volume = round(biomass/woodden,4)
         return (biomass, volume, jbio, woodden)
     except ValueError as e1:
-        print(e1)
+        
         return (0., 0., 0., woodden)
 
 def as_compbio(dbh, component_dict):
@@ -248,18 +248,14 @@ def as_compbio(dbh, component_dict):
         volume = 0.
 
         for index, each_component in enumerate(list(component_dict.keys())):
-            if index == 0:
-                jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),5)
-            else:
-                pass
-
             # compute biomass and volume - jenkin's is not needed for each component!
-            bio_1, vol_1,_,_ = component_dict[each_component](dbh)
+            bio_1, vol_1, jbio, woodden = component_dict[each_component](dbh)
             biomass += bio_1
             volume += vol_1
         return (biomass, volume, jbio, woodden)
+    
     except ValueError as e1:
-        print(e1)
+        
         return (0.,0.,0.,woodden)
 
 def which_fx(function_string):

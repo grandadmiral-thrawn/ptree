@@ -400,13 +400,69 @@
 <dl class="function">
 <dt id="biomass_basis.as_chinq_biopak">
 <code class="descclassname">biomass_basis.</code><code class="descname">as_chinq_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_chinq_biopak" title="Permalink to this definition">¶</a></dt>
-<dd><p>shapes a biomass equation based on inputs of h1, h2, h3, b1, b2, and b3, plus wood density onto the variable dbh which is for the dbh. uses pretty much all the inputs directly and calculates volume. chinquapin.</p>
+<dd><p>Generates biomass equations based on inputs of b1, b2, b3, h1, h2, h3  and wood density for dbh, in cm.</p>
+<p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
+<p>Unlike many other BioPak methods, the chinquapin functions usually need height.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Woodden:</th><td class="field-body">wood density,</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">cm diameter at breast height</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B1:</th><td class="field-body">first biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">B2:</th><td class="field-body">second biomass parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B3:</th><td class="field-body">third biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">J1:</th><td class="field-body">first Jenkins parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">J2:</th><td class="field-body">second Jenkins parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">H1:</th><td class="field-body">first height parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">H2:</th><td class="field-body">second height parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">H3:</th><td class="field-body">third height parameter</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="biomass_basis.as_compbio">
-<code class="descclassname">biomass_basis.</code><code class="descname">as_compbio</code><span class="sig-paren">(</span><em>dbh</em>, <em>parameter_rows</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_compbio" title="Permalink to this definition">¶</a></dt>
-<dd><p>shapes a biomass equation based on the inputs of b1, b2, and wood density onto the variable dbh which is the dbh. adds the components from each row in the table it needs. only works with a few trees.</p>
+<code class="descclassname">biomass_basis.</code><code class="descname">as_compbio</code><span class="sig-paren">(</span><em>dbh</em>, <em>component_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_compbio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates biomass equations based on inputs of dbh and the parameter &#8220;rows&#8221; for ACCI.</p>
+<p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
+<p>Unlike many other BioPak methods, the chinquapin functions usually need height.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Woodden:</th><td class="field-body">wood density,</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">cm diameter at breast height</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B1:</th><td class="field-body">first biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">B2:</th><td class="field-body">second biomass parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B3:</th><td class="field-body">third biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">J1:</th><td class="field-body">first Jenkins parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">J2:</th><td class="field-body">second Jenkins parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">H1:</th><td class="field-body">first height parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">H2:</th><td class="field-body">second height parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">H3:</th><td class="field-body">third height parameter</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -503,7 +559,35 @@
 <dl class="function">
 <dt id="biomass_basis.as_oak_biopak">
 <code class="descclassname">biomass_basis.</code><code class="descname">as_oak_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_oak_biopak" title="Permalink to this definition">¶</a></dt>
-<dd><p>shapes a biomass equation based on inputs of h1, h2, h3, b1, b2, and b3, plus wood density onto the variable dbh which is for the dbh. uses pretty much all the inputs directly and calculates volume. things in quercus family.</p>
+<dd><p>Generates biomass equations based on inputs of b1, b2, b3, h1, h2, h3  and wood density for dbh, in cm.</p>
+<p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
+<p>Species in the Quercus family almost uniquely use this form in BioPak for doing the dbh.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Woodden:</th><td class="field-body">wood density,</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">cm diameter at breast height</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B1:</th><td class="field-body">first biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">B2:</th><td class="field-body">second biomass parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B3:</th><td class="field-body">third biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">J1:</th><td class="field-body">first Jenkins parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">J2:</th><td class="field-body">second Jenkins parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">H1:</th><td class="field-body">first height parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">H2:</th><td class="field-body">second height parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">H3:</th><td class="field-body">third height parameter</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -531,126 +615,8 @@
 <dl class="function">
 <dt id="biomass_basis.which_fx">
 <code class="descclassname">biomass_basis.</code><code class="descname">which_fx</code><span class="sig-paren">(</span><em>function_string</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.which_fx" title="Permalink to this definition">¶</a></dt>
-<dd><p>find the correct function for doing the biomass in the lookup table</p>
-</dd></dl>
-
-<span class="target" id="module-tps_Tree"></span><dl class="class">
-<dt id="tps_Tree.Tree">
-<em class="property">class </em><code class="descclassname">tps_Tree.</code><code class="descname">Tree</code><span class="sig-paren">(</span><em>cur</em>, <em>pcur</em>, <em>queries</em>, <em>tid</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>A Tree object contains the required metrics and functions to compute Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Volume ( m<sup>3</sup> ) , and Basal Area ( m<sup>2</sup> ) for any one tree. Tree objects also create a check file for data quality.</p>
-<p>Tree objects are independent of the years; that is, each Tree object contains all the years of that tree&#8217;s existance.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tps</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">poptree_basis</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">biomass_basis</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">cur</span><span class="p">,</span> <span class="s">&#39;NCNA001800216&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">tid</span> <span class="o">=</span> <span class="s">&#39;ncna001800216&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">cur</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">pymssql</span><span class="o">.</span><span class="n">cursor</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">tree_query</span><span class="o">=</span> <span class="s">&quot;SELECT &lt;columns&gt; from ...&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">eqn_query</span> <span class="o">=</span> <span class="s">&quot;SELECT &lt;columns&gt; from ...&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="s">&quot;TSHE&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1942</span><span class="p">,</span> <span class="mf">16.0</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">,</span> <span class="s">&#39;G&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1945</span><span class="p">,</span> <span class="mf">17.9</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">,</span><span class="s">&#39;G&#39;</span><span class="p">]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">eqns</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;normal&#39;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span><span class="o">&lt;</span><span class="n">function</span> <span class="mo">03</span><span class="mi">9459</span><span class="n">x342</span><span class="o">&gt;</span><span class="p">}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">woodden</span> <span class="o">=</span> <span class="mf">0.44</span>
-</pre></div>
-</div>
-<p><strong>METHODS</strong></p>
-<dl class="method">
-<dt id="tps_Tree.Tree.check_trees">
-<code class="descname">check_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.check_trees" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performance checks on tree &#8216;state&#8217;</p>
-<ul class="simple">
-<li>A tree should not have more than one death</li>
-<li>A tree should not die and then re-appear</li>
-<li>A tree should not go missing and then re-appear</li>
-<li>A tree should not grow more than 30 percent between re-measurements unless it is smaller than 8.0 cm on the first of those measurements (because scaling)</li>
-<li>A tree should not decrease in size by more than 30 percent between re-measurements</li>
-<li>this method shouldn&#8217;t be called in the case where there is only one state</li>
-</ul>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Intervals:</th><td class="field-body">are the string representation of the intervals between two measurements</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Tc:</th><td class="field-body">a dictionary of &#8216;tree checks&#8217;, referenced by the string containing the interval between two measurements</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Tree.Tree.compute_biomasses">
-<code class="descname">compute_biomasses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.compute_biomasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute biomass, volume, Jenkins&#8217; biomass and wood density from equations</p>
-<p>If a tree is in it&#8217;s death year, the dbh from the previous measurement is used.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">cur</span><span class="p">,</span> <span class="n">pcur</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="s">&#39;NCNA000100014&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">state</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">[[</span><span class="mi">1979</span><span class="p">,</span> <span class="mf">47.5</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">,</span> <span class="s">&#39;G&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1981</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;6&#39;</span><span class="p">,</span> <span class="s">&#39;M&#39;</span><span class="p">]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">compute_biomasses</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="mf">1.2639</span><span class="p">,</span> <span class="mf">2.8725</span><span class="p">,</span> <span class="mf">1.14323</span><span class="p">,</span> <span class="mf">0.44</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.2639</span><span class="p">,</span> <span class="mf">2.8725</span><span class="p">,</span> <span class="mf">1.14323</span><span class="p">,</span> <span class="mf">0.44</span><span class="p">)]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Tree.Tree.determine_detail_to_large">
-<code class="descname">determine_detail_to_large</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.determine_detail_to_large" title="Permalink to this definition">¶</a></dt>
-<dd><p>Using the stand and the year, determine the weight of a detail plot by computing the sum of the areas of the detail plots versus the sum of the areas of all the plots</p>
-<div class="math">
-<p><img src="_images/math/6bd222789498ea07b44f690fb4af616a345cda14.png" alt="(1 Tree / Plot m2) * (sum of DtPlot m2/sum of all plots m2)"/></p>
-</div></dd></dl>
-
-<dl class="method">
-<dt id="tps_Tree.Tree.get_a_tree">
-<code class="descname">get_a_tree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.get_a_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve a single tree and assign its species, standid, and plot; create a list of tuples for each year of its life. Gather the equations it needs to have its biomass computed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Tree.Tree.is_detail">
-<code class="descname">is_detail</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.is_detail" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns true if the plot is a detail plot and the tree has a dbh which is less than 15 but greater than the minimum dbh listed. Otherwise, return false</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">is an instance of the detail plot object, used for reference here.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Standid:</th><td class="field-body">the stand of a tree object</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Plot:</th><td class="field-body">the plotid attribute of a tree object</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">the dbh attribute of a tree object</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Year:</th><td class="field-body">the year attribute of a tree object</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Tree.Tree.output_tree">
-<code class="descname">output_tree</code><span class="sig-paren">(</span><em>Bios</em>, <em>Details</em>, <em>Checks</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.output_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes 2 csv files, one containing the tree measurements for the individual trees and the second containing the checks about status</p>
-</dd></dl>
-
+<dd><p>Find the correct function for doing the biomass, volume, Jenkins, and wood density in the lookup table.
+The keys for the lookup table are the same as the FORM field in FSDB</p>
 </dd></dl>
 
 <span class="target" id="module-tps_Stand"></span><dl class="class">
