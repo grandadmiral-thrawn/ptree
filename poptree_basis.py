@@ -74,7 +74,8 @@ class Capture(object):
 
     Here is a brief display of the common usage of Capture attributes within TPS.
 
-    :Example:
+    .. Example:
+
     >>> import poptree_basis
     >>> A = poptree_basis.Capture()
 
@@ -119,6 +120,7 @@ class Capture(object):
     :A.uplots_areas[standid][year][plotno]: the area for the stand, year, and plot that is not 625
 
     :A.expansion[standid][year][plotid]: the expansion factor for the stand, year, and plot which will not be 1.0
+
     """
     def __init__(self):
         self.pconn, self.pcur = YamlConn().lite3_connect()
@@ -137,7 +139,8 @@ class Capture(object):
 
         Here is a case where the stand, year, and plot in question is NOT a detail plot.
 
-        :Example: 
+        .. Example: 
+
         >>> H = Capture.detail_reference.keys()
         >>> dict_keys(['AB08', 'AV14', 'AR07', 'RS01', 'TO11', 'AM16', 'AX15', 'RS29', 'RS02', 'RS30', 'RS28', 'TB13', 'RS32', 'AG05', 'TO04', 'AE10', 'RS31', 'PP17', 'AV06'])
         >>> H.detail_reference['RS01'].keys()
@@ -220,6 +223,7 @@ class Capture(object):
         `create_unusual_mins_reference` queries the database to create a reference for plots where detailPlot is not 'T' and minimum DBH is not 15. 
 
         .. Example:
+        
         >>> H = poptree_basis.Capture()
         >>> H.umins_reference.keys()
         >>> dict_keys(['YBNF', 'SRNF', 'MRNA', 'CH10',...
@@ -231,6 +235,7 @@ class Capture(object):
         :Capture.umins_reference: the name of the lookup table created, which can be referenced as an attribute of the Capture object.
 
         .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
+
         """
         
         sql = YamlConn().queries['stand']['query_unusual_plot_minimums']
@@ -256,7 +261,6 @@ class Capture(object):
                         if int(row[1]) not in self.umins_reference[str(row[0]).rstrip().lower()][int(row[2])]:
                             self.umins_reference[str(row[0]).rstrip().lower()][int(row[2])][int(row[1])] = mindbh
                         else:
-
                             print("some error has occurred in finding unusual minimums on not-detail plots")
             except Exception as e17:
                 # any errors here can be passed, and the site will get the default values
@@ -267,13 +271,14 @@ class Capture(object):
 
         The expansion factor only applies to trees whose dbhs are greater than the minimum dbh (usually 5.0 cm) and less than the smallest dbh for the not-detail plots (usually 15.0 cm). The terms `large` and `small` are used casually throughout the program to refer to these size groups.
         
-        :Example:
+        .. Example:
 
         `Given stand attribute * (area of all plots / area of all detail plots) = Representative stand attribute`
 
         10 Mg Biomass in small trees on detail plots * (10000 m2 all plots / 2000 m2 detail plots) = 50 Mg Biomass on detail plots
 
-        :Example:
+        .. Example:
+
         >>> H = poptree_basis.Capture()
         >>> H.expansion.keys()
         >>> dict_keys(['RS32', 'AG05', 'RS02', 'RS01', 'TO04', 'AV14', 'AR07', 'TB13', 'AE10', 'TO11', 'PP17', 'AM16', 'RS31', 'RS28', 'AB08', 'AX15', 'RS29', 'AV06', 'RS30'])
@@ -321,7 +326,8 @@ class Capture(object):
 
         While many of the plots have the same area, those that do not can be called from the database explicitly. It is then easier to add all the plots together to get the total area of the stand, or to apply this area to the individual trees per hectare method.
         
-        :Example:
+        .. Example:
+
         >>> H = poptree_basis.Capture()
         >>> H.uplot_areas.keys()
         >>> dict_keys(['YBNF', 'GP04', 'CH10', ...
