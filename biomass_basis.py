@@ -64,7 +64,7 @@ def maxref(dbh, species):
             "thpl": 150.,
             "tsme": 140.,}
         try:
-            if maxlookup[species.rstrip().lower()] <= float(dbh):
+            if maxlookup[species.rstrip().lower()] <= float(dbh): 
                 return "big"
             
             else:
@@ -89,9 +89,9 @@ def as_lnln(woodden, dbh, b1, b2, b3, j1, j2, *args):
     :args: the remainder of arguments passed to the function, which are not called in this case
     """
     try:
-        biomass = round(b1*woodden*(b2*dbh**b3),4)
-        volume = round(biomass/woodden,4)
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),5)
+        biomass = round(b1*woodden*(b2*dbh**b3),7)
+        volume = round(biomass/woodden,7)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
         return (biomass, volume, jbio, woodden)
     except ValueError as e1:
         
@@ -116,9 +116,9 @@ def as_d2ht(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     """
     try:
         height = 1.37+ h1*(1-math.exp(h2*dbh))**h3
-        biomass =  round(woodden*(height*b1*(0.01*dbh)**2),4)
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),5)
-        volume = round(biomass/woodden,4)
+        biomass =  round(woodden*(height*b1*(0.01*dbh)**2),7)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
+        volume = round(biomass/woodden,7)
         return (biomass, volume, jbio, woodden)
     except ValueError as e1:
         
@@ -139,9 +139,9 @@ def as_d2htcasc(woodden, dbh, b1, b2, b3, j1, j2, *args):
     :args: the remainder of arguments passed to the function, which are not called in this case
     """
     try:
-        biomass = round(b1*woodden*(b2*dbh**b3),4)
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),5)
-        volume = round(biomass/woodden,4)
+        biomass = round(b1*woodden*(b2*dbh**b3),7)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
+        volume = round(biomass/woodden,7)
         return (biomass, volume, jbio, woodden)
     except ValueError as e1:
         
@@ -165,9 +165,9 @@ def as_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
     :args: the remainder of arguments passed to the function, which are not called in this case
     """
     try:
-        biomass = round(1.*10**(-6)*math.exp(b1 + b2 * math.log(dbh)),4)
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),5)
-        volume = round(biomass/woodden,4)
+        biomass = round(1.*10**(-6)*math.exp(b1 + b2 * math.log(dbh)),7)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
+        volume = round(biomass/woodden,7)
         return (biomass, volume, jbio, woodden)
     except ValueError as e1:
         
@@ -193,9 +193,9 @@ def as_chinq_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     """
     try:
         height = 1.37 + h1*(1-math.exp(h2*dbh))**h3
-        biomass =  round(woodden*height**b1*b2*(dbh)**b3,4)
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),5)
-        volume = round(biomass/woodden,4)
+        biomass =  round(woodden*height**b1*b2*(dbh)**b3,7)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
+        volume = round(biomass/woodden,7)
         return (biomass, volume, jbio, woodden)
     except ValueError as e1:
         
@@ -221,9 +221,9 @@ def as_oak_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     """
     try:
         height = 1.37+h1*(1-math.exp(h2*dbh))**h3
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),4)
-        biomass = round(math.exp(b1 + b2*math.log(0.01*dbh) + b3*math.log(height)),4)
-        volume = round(biomass/woodden,4)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
+        biomass = round(math.exp(b1 + b2*math.log(0.01*dbh) + b3*math.log(height)),7)
+        volume = round(biomass/woodden,7)
         return (biomass, volume, jbio, woodden)
     except ValueError as e1:
         
