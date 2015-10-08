@@ -7,7 +7,6 @@ def maxref(dbh, species):
     """ Check if given dbh and given species is bigger than the maximum for that combination. The max was found from determining the top 1 percent of dbh's for each species.
 
     ** INPUTS **
-
     :dbh: the tree's dbh, in cm
     :species: the tree's species, a four character code. If the database provides a longer code, it will be converted to a lowercase four letter code.
 
@@ -79,6 +78,8 @@ def as_lnln(woodden, dbh, b1, b2, b3, j1, j2, *args):
 
     Generates Jenkin's biomass equations based on inputs of j1 and j2 for dbh, also in cm. 
 
+    **INPUTS**
+
     :woodden: wood density, 
     :dbh: cm diameter at breast height
     :b1: first biomass parameter
@@ -102,6 +103,8 @@ def as_d2ht(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     """ Generates biomass equations based on inputs of b1, b2, b3, h1, h2, and h3 and wood density for dbh, in cm.
 
     Generates Jenkin's biomass equations based on inputs of j1 and j2 for dbh, also in cm.
+
+    **INPUTS**
 
     :woodden: wood density, 
     :dbh: cm diameter at breast height
@@ -129,6 +132,8 @@ def as_d2htcasc(woodden, dbh, b1, b2, b3, j1, j2, *args):
 
     Generates Jenkin's biomass equations based on inputs of j1 and j2 for dbh, also in cm. 
 
+    **INPUTS**
+
     :woodden: wood density, 
     :dbh: cm diameter at breast height
     :b1: first biomass parameter
@@ -155,6 +160,8 @@ def as_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
 
     The BioPak method computes Biomass explicitly, rather than from volume. In most cases, the original output was in grams, but in this case, it is converted into Megagrams.
 
+    **INPUTS**
+
     :woodden: wood density, 
     :dbh: cm diameter at breast height
     :b1: first biomass parameter
@@ -179,6 +186,8 @@ def as_chinq_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     Generates Jenkin's biomass equations based on inputs of j1 and j2 for dbh, also in cm. 
 
     Unlike many other BioPak methods, the chinquapin functions usually need height. 
+
+    **INPUTS**
 
     :woodden: wood density, 
     :dbh: cm diameter at breast height
@@ -208,6 +217,8 @@ def as_oak_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
 
     Species in the Quercus family almost uniquely use this form in BioPak for doing the dbh.
 
+    **INPUTS**
+
     :woodden: wood density, 
     :dbh: cm diameter at breast height
     :b1: first biomass parameter
@@ -235,6 +246,8 @@ def as_compbio(dbh, component_dict):
     Generates Jenkin's biomass equations based on inputs of j1 and j2 for dbh, also in cm. 
 
     Unlike many other BioPak methods, the chinquapin functions usually need height. 
+
+    **INPUTS**
 
     :woodden: wood density, 
     :dbh: cm diameter at breast height
@@ -266,6 +279,14 @@ def which_fx(function_string):
     """ Find the correct function for doing the biomass, volume, Jenkins, and wood density in the lookup table.
     The keys for the lookup table are the same as the FORM field in FSDB
 
+    **INTERNAL VARIABLES**
+    :as_lnln: function call for the lnln form 
+    :as_compbio: function call for the component-biomass form
+    :as_oak_biopak: function call for the oak biomass form
+    :as_biopak: function call for the biopak form
+    :as_d2htcasc: function call for the d2ht, Cascades-variety, form
+    :as_d2ht: function call for the d2ht form
+
     .. warning: requires pymssql
     """
 
@@ -278,5 +299,3 @@ def which_fx(function_string):
     'as_d2ht': as_d2ht}
 
     return lookup[function_string]
-
-#def augment_fx(function_string):

@@ -363,47 +363,5 @@ class Capture(object):
                         self.uplot_areas[str(row[0]).rstrip().lower()][plot] = {int(row[1]): area}
                     elif plot in self.uplot_areas[str(row[0]).rstrip().lower()]: 
                         self.uplot_areas[str(row[0]).rstrip().lower()][plot].update({int(row[1]): area})
-            except Exception as e9:
+            except Exception:
                 pass
-
-class LogRef(object):
-    """ The LogRef class creates a log to map Exceptions to reasonable strings using a lookup table that is part of its namespace. It opens and protects a .csv file that contains the Tree or Stand ID, the exception number, the exception meaning, the year in question, and the calling function.
-
-
-    .. warning : This class has not yet been implemented in the program! 
-
-    :Example:
-    
-    >>> L = LogRef("fox_log_1.csv")
-
-    .. warning:: `csv` dependency. Recall that in Python3, `csv` has a different syntax than in Python < 3.
-
-    METHODS
-
-    """
-    def __init__(self, filename):
-        self.filename = os.path.join( HERE, filename )
-        self.lookup = { 
-        "e": "sqlite3 exception if a connection cannot be created",
-        "e1": "equation form assigned by biomass_basis failed for some reason, and 0.0 was returned instead.",
-        "e2": "pass",
-        "e3": "pass",
-        "e4": "pass",
-        "e5": "Species is not listed in biomass_basis.maxref reference.",
-        "e6": "Biomass can not be computed based on the keyword given to the max reference",
-        "e17": "Unable to find unusual plot minimums"}
-
-        self.createcsv()
-
-    def createcsv(self):
-        """ Opens a .csv file to log exceptions given by the routine
-
-        >>> L=LogRef("fox_log_1.csv")
-
-        """
-        with open(self.filename,'wt') as writefile:
-            writer = csv.writer(writefile,delimiter=",", quoting=csv.QUOTE_NONNUMERIC)
-            headers = ['RUNTIME','ANALYSIS', 'ID', 'YEAR', 'EXCEPTION', 'THROWN_BY', 'ACTION_TAKEN','IMPORTANCE']
-            writer.writerow(headers)
-           
-
