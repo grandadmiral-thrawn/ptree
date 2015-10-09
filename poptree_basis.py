@@ -10,10 +10,6 @@ import sqlite3
 HERE = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, os.path.join(HERE))
 
-"""
-poptree_basis.py contains a YamlConn connecting to the databases and reference files via configurations specified in config_2.yaml. It also contains a Capture object, which reduces the amount of data that tps_Stand and tps_Tree need to load in order to compute biomasses and other metrics. 
-"""
-
 class YamlConn(object):
     """ This class connects to the YAML files containing the configuration to run the ptree program, including the database connection in the Config File and the Queries in the Query File.
 
@@ -70,7 +66,7 @@ class YamlConn(object):
         return lite3conn, lite3cur
 
 class Capture(object):
-    """ This class contains dictionaries to be used in Stand computations for indexing the unique cases of minimum dbh's, stand areas, and detail plot expansions. Stands interact with an instance of Capture when the default case of area 625 m\ :sup:`2`,  minimum dbh 15.0 cm, detailPlot is False does not apply.
+    """ This class contains dictionaries to be used in Stand computations for indexing the unique cases of minimum dbh's, stand areas, and detail plot expansions. Stands use the parameters in Capture to do specific calculations when the default case of area 625 m\ :sup:`2`,  minimum dbh 15.0 cm, detailPlot is False does not apply.
 
     Here is a brief display of the common usage of Capture attributes within TPS.
 
@@ -128,11 +124,13 @@ class Capture(object):
         self.expansion = {}
         self.uplot_areas = {}
         self.umins_reference = {}
+        self.total_areas = {}
 
         self.create_detail_reference()
         self.condense_detail_reference()
         self.contains_unusual_plots()
         self.create_unusual_mins_reference()
+        self.get_total_stand_area()
 
     def create_detail_reference(self):
         """ Creates a reference for detail plots that any instance of Tree (called by tps_Tree) or Stand (calld by tps_Stand) can use.
@@ -163,7 +161,7 @@ class Capture(object):
         >>> H.detail_reference['RS01'][2004][3]['min']
         >>> 5.0
 
-        **PROPERTIES**
+        **RETURNS**
 
         :Capture.detail_reference: the name of the lookup table created, which can be referenced as an attribute of the Capture object.
 
@@ -230,7 +228,7 @@ class Capture(object):
         >>> H.umins_reference['PF28'][1959][3]
         >>> 10.0
 
-        **PROPERTIES**
+        **RETURNS**
 
         :Capture.umins_reference: the name of the lookup table created, which can be referenced as an attribute of the Capture object.
 
@@ -285,7 +283,7 @@ class Capture(object):
         >>> H.expansion['RS32'][2006]
         >>> 4.0
 
-        **PROPERTIES**
+        **RETURNS**
 
         :Capture.expansion: the name of the lookup table created, which can be referenced as an attribute of the Capture object.
 
@@ -334,7 +332,7 @@ class Capture(object):
         >>> H.uplot_areas['GP04'][1957][1]
         >>> 4047.0
 
-        **PROPERTIES**
+        **RETURNS**
 
         :Capture.uplot_areas: the name of the lookup table created, which can be referenced as an attribute of the Capture object.
 
@@ -347,7 +345,7 @@ class Capture(object):
         for row in self.pcur:
             try: 
                 area = round(float(row[3]),2)
-            except Exception as e8:
+            except Exception:
                 area = None
 
             try:
@@ -363,5 +361,56 @@ class Capture(object):
                         self.uplot_areas[str(row[0]).rstrip().lower()][plot] = {int(row[1]): area}
                     elif plot in self.uplot_areas[str(row[0]).rstrip().lower()]: 
                         self.uplot_areas[str(row[0]).rstrip().lower()][plot].update({int(row[1]): area})
+            except Exception:
+                pass
+
+    def get_total_stand_area(self):
+        """ Creates a lookup table for stands total areas in m\ :sup:`2`
+
+        The sum of the areas of each plots is calculated in the sql, i.e. "select year, standid, sum(area_m2_corr) from plotAreas group by standid, year"
+
+        It's faster to just have this here then do it for each one of the stands individually if you are running this in bulk.
+        
+        .. Example:
+
+        >>> H = poptree_basis.Capture()
+        >>> H.total_areas.keys()
+        >>> dict_keys(['YBNF', 'GP04', 'CH10', ...
+        >>> H.total_areas['sp06'][2001]
+        >>> 2500.0
+
+        **RETURNS**
+
+        :Capture.uplot_areas: the name of the lookup table created, which can be referenced as an attribute of the Capture object.
+
+        .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
+        """
+        sql = YamlConn().queries['stand']['query_total_stand']
+        self.pcur.execute(sql)
+
+        for row in self.pcur:
+            try: 
+                area = round(float(row[2]),2)
+            except Exception:
+                area = None
+
+            try:
+                stand = str(row[1])
+            except Exception:
+                stand = "None"
+
+            try:
+                year = int(row[0])
+            except Exception:
+                year = None
+
+            try:
+                if stand.rstrip().lower() not in self.total_areas:
+                    self.total_areas[stand.rstrip().lower()]={year: area}
+                elif str(stand.rstrip().lower()) in self.total_areas:
+                    if year not in self.total_areas[stand.rstrip().lower()]:
+                        self.total_areas[stand.rstrip().lower()][year] = area
+                    elif year in self.total_areas[stand.rstrip().lower()]: 
+                        print("error in assembling total areas - this should never be called")
             except Exception:
                 pass

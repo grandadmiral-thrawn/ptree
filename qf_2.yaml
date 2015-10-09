@@ -16,6 +16,7 @@ stand:
     query_species: "SELECT DISTINCT(fsdbdata.dbo.tp00101.species) from fsdbdata.dbo.tp00101 WHERE fsdbdata.dbo.tp00101.standid like '{standid}'"
     query_unusual_plot: "SELECT standid, plot, year, area_m2_corr from plotAreas where area_m2_corr not like '625' group by standid, plot,year"
     query_total_plot: "SELECT year, sum(area_m2_corr) from plotAreas where standid like '{standid}' group by year"
+    query_total_stand: "select year, standid, sum(area_m2_corr) from plotAreas group by standid, year"
     query_unusual_plot_minimums: "select standid, plot, year, minDBH_cm_dbh from plotAreas where detailPlot not like 'T' and minDBH_cm_dbh < 15.0 group by standid, plot, year" 
 plot:
     query_dist_plots: "select standid, year, plot from plotAreas where standid like '{standid}' and year like '{year}'"

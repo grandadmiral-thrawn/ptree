@@ -51,6 +51,7 @@
   <div class="section" id="welcome-to-the-tps-documentation">
 <h1>Welcome to the TPS documentation!<a class="headerlink" href="#welcome-to-the-tps-documentation" title="Permalink to this headline">¶</a></h1>
 <p>TPS (Tree, Plot, Stand) is a simple set of Python3 scripts for processing the TP001 dataset into the required Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg/Ha ), NPP ( Mg/Ha/yr ), Volume ( m<sup>3</sup> ) , and Basal Area ( m<sup>2</sup> ) outputs for live trees, dead trees, and ingrowth by individual tree, stand, species, and year.</p>
+<p>TPS can be run in &#8220;tree&#8221;, &#8220;stand&#8221;, or &#8220;qc&#8221; modes from the command line interface in :tps_cli:.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul class="simple">
@@ -60,7 +61,7 @@
 <dt id="poptree_basis.Capture">
 <em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">Capture</code><a class="headerlink" href="#poptree_basis.Capture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class contains dictionaries to be used in Stand computations for indexing the unique cases of minimum dbh&#8217;s, stand areas, and detail plot expansions. Stands interact with an instance of Capture when the default case of area 625 m<sup>2</sup>,  minimum dbh 15.0 cm, detailPlot is False does not apply.</p>
+<p>This class contains dictionaries to be used in Stand computations for indexing the unique cases of minimum dbh&#8217;s, stand areas, and detail plot expansions. Stands use the parameters in Capture to do specific calculations when the default case of area 625 m<sup>2</sup>,  minimum dbh 15.0 cm, detailPlot is False does not apply.</p>
 <p>Here is a brief display of the common usage of Capture attributes within TPS.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">poptree_basis</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
@@ -154,7 +155,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">4.0</span>
 </pre></div>
 </div>
-<p><strong>PROPERTIES</strong></p>
+<p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -178,7 +179,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">4047.0</span>
 </pre></div>
 </div>
-<p><strong>PROPERTIES</strong></p>
+<p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -216,7 +217,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">5.0</span>
 </pre></div>
 </div>
-<p><strong>PROPERTIES</strong></p>
+<p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -240,7 +241,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">10.0</span>
 </pre></div>
 </div>
-<p><strong>PROPERTIES</strong></p>
+<p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -252,36 +253,29 @@
 </table>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="poptree_basis.LogRef">
-<em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">LogRef</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.LogRef" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>The LogRef class creates a log to map Exceptions to reasonable strings using a lookup table that is part of its namespace. It opens and protects a .csv file that contains the Tree or Stand ID, the exception number, the exception meaning, the year in question, and the calling function.</p>
+<dl class="method">
+<dt id="poptree_basis.Capture.get_total_stand_area">
+<code class="descname">get_total_stand_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.get_total_stand_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a lookup table for stands total areas in m<sup>2</sup></p>
+<p>The sum of the areas of each plots is calculated in the sql, i.e. &#8220;select year, standid, sum(area_m2_corr) from plotAreas group by standid, year&#8221;</p>
+<p>It&#8217;s faster to just have this here then do it for each one of the stands individually if you are running this in bulk.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">total_areas</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;YBNF&#39;</span><span class="p">,</span> <span class="s">&#39;GP04&#39;</span><span class="p">,</span> <span class="s">&#39;CH10&#39;</span><span class="p">,</span> <span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">total_areas</span><span class="p">[</span><span class="s">&#39;sp06&#39;</span><span class="p">][</span><span class="mi">2001</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">2500.0</span>
+</pre></div>
+</div>
+<p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+<tr class="field-odd field"><th class="field-name" colspan="2">Capture.uplot_areas:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the name of the lookup table created, which can be referenced as an attribute of the Capture object.</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">L</span> <span class="o">=</span> <span class="n">LogRef</span><span class="p">(</span><span class="s">&quot;fox_log_1.csv&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last"><cite>csv</cite> dependency. Recall that in Python3, <cite>csv</cite> has a different syntax than in Python &lt; 3.</p>
-</div>
-<p>METHODS</p>
-<dl class="method">
-<dt id="poptree_basis.LogRef.createcsv">
-<code class="descname">createcsv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.LogRef.createcsv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Opens a .csv file to log exceptions given by the routine</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">L</span><span class="o">=</span><span class="n">LogRef</span><span class="p">(</span><span class="s">&quot;fox_log_1.csv&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 </dd></dl>
 
 </dd></dl>
@@ -333,6 +327,7 @@
 <dd><p>Generates biomass equations based on inputs of b1, b2, b3 and wood density for dbh, in cm.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
 <p>The BioPak method computes Biomass explicitly, rather than from volume. In most cases, the original output was in grams, but in this case, it is converted into Megagrams.</p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -363,6 +358,7 @@
 <dd><p>Generates biomass equations based on inputs of b1, b2, b3, h1, h2, h3  and wood density for dbh, in cm.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
 <p>Unlike many other BioPak methods, the chinquapin functions usually need height.</p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -397,6 +393,7 @@
 <dd><p>Generates biomass equations based on inputs of dbh and the parameter &#8220;rows&#8221; for ACCI.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
 <p>Unlike many other BioPak methods, the chinquapin functions usually need height.</p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -430,6 +427,7 @@
 <code class="descclassname">biomass_basis.</code><code class="descname">as_d2ht</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_d2ht" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates biomass equations based on inputs of b1, b2, b3, h1, h2, and h3 and wood density for dbh, in cm.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -463,6 +461,7 @@
 <code class="descclassname">biomass_basis.</code><code class="descname">as_d2htcasc</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_d2htcasc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates biomass equations based on inputs of b1, b2, b3 and wood density for dbh, in cm.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -492,6 +491,7 @@
 <code class="descclassname">biomass_basis.</code><code class="descname">as_lnln</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_lnln" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates biomass equations based on inputs of b1, b2, b3, and wood density for dbh, in cm.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -522,6 +522,7 @@
 <dd><p>Generates biomass equations based on inputs of b1, b2, b3, h1, h2, h3  and wood density for dbh, in cm.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
 <p>Species in the Quercus family almost uniquely use this form in BioPak for doing the dbh.</p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -554,7 +555,7 @@
 <dt id="biomass_basis.maxref">
 <code class="descclassname">biomass_basis.</code><code class="descname">maxref</code><span class="sig-paren">(</span><em>dbh</em>, <em>species</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.maxref" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if given dbh and given species is bigger than the maximum for that combination. The max was found from determining the top 1 percent of dbh&#8217;s for each species.</p>
-<p>** INPUTS **</p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -576,6 +577,13 @@
 <code class="descclassname">biomass_basis.</code><code class="descname">which_fx</code><span class="sig-paren">(</span><em>function_string</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.which_fx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the correct function for doing the biomass, volume, Jenkins, and wood density in the lookup table.
 The keys for the lookup table are the same as the FORM field in FSDB</p>
+<p><strong>INTERNAL VARIABLES</strong>
+:as_lnln: function call for the lnln form 
+:as_compbio: function call for the component-biomass form
+:as_oak_biopak: function call for the oak biomass form
+:as_biopak: function call for the biopak form
+:as_d2htcasc: function call for the d2ht, Cascades-variety, form
+:as_d2ht: function call for the d2ht form</p>
 </dd></dl>
 
 <span class="target" id="module-tps_Tree"></span><dl class="class">
@@ -624,7 +632,7 @@ The keys for the lookup table are the same as the FORM field in FSDB</p>
 </tr>
 </tbody>
 </table>
-<p><strong>RETURNED VARIABLES</strong>
+<p><strong>RETURNS</strong>
 :tc: a dictionary of &#8216;tree checks&#8217;, referenced by the string containing the interval between two measurements</p>
 <ul class="simple">
 <li>Houdini trees: &#8220;9&#8221; then something not &#8220;9&#8221;</li>
@@ -660,7 +668,11 @@ The keys for the lookup table are the same as the FORM field in FSDB</p>
 <dd><p>Retrieves a single tree and assign its species, standid, and plot; create a list of lists describing that tree for each remeasurement in its life. Gathers the equations the tree needs to have its biomass computed.</p>
 <p><strong>INTERNAL VARIABLES</strong>
 :Tree.state: a list of lists containing the year, dbh, dbh_code, and status_code
-:Tree.eqns: a dictionary of eqns keyed by &#8216;normal&#8217;, &#8216;big&#8217;, or &#8216;component&#8217; containing lambda functions to receive dbh inputs and compute Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), and wood density.</p>
+:Tree.eqns: a dictionary of eqns keyed by &#8216;normal&#8217;, &#8216;big&#8217;, or &#8216;component&#8217; containing lambda functions to receive dbh inputs and compute Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), and wood density.
+:sql: sql query defined in &#8216;qf_2.yaml&#8217;
+:sql_2: another sql query defined in &#8216;qf_2.yaml&#8217;
+:form: equation &#8216;form&#8217; such as as_lnln, as_compbio, etc.
+:proxy: if a tree does not have its own equation, a proxy equation is used from a similar species. This proxy species is needed in the output.</p>
 </dd></dl>
 
 <dl class="method">
@@ -685,6 +697,8 @@ The keys for the lookup table are the same as the FORM field in FSDB</p>
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong>
+:expansion_dict: a dictionary by year containing the expansion factor that should be applied. If the year is not present, there is a 1.0 applied.</p>
 </dd></dl>
 
 <dl class="method">
@@ -692,6 +706,7 @@ The keys for the lookup table are the same as the FORM field in FSDB</p>
 <code class="descname">is_unusual_area</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.is_unusual_area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the Capture.uplot_areas object as a dictionary specific for this tree.</p>
 <p>If the plot is listed in the unique areas reference, that reference will be returned for the year, otherwise, the default 625 is returned</p>
+<p><strong>INTERNAL VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -708,6 +723,8 @@ The keys for the lookup table are the same as the FORM field in FSDB</p>
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong>
+:area_dict: the area of the plot that the tree is on, defaults to 625. if not specified.</p>
 </dd></dl>
 
 <dl class="method">
@@ -726,7 +743,12 @@ The keys for the lookup table are the same as the FORM field in FSDB</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Areas:</th><td class="field-body">reference dictionary from :is_unusual_area():</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Args:</th><td class="field-body">the names of csv files for output. The first arguement will be for the data, the second will be for the checks, the third will be for the per hectare version. If no files are specified, default file names of <cite>basic_tree_output.csv</cite>, <cite>check_tree_output.csv</cite>, and <cite>perhectare_tree_output.csv</cite> will be used</td>
+<tr class="field-odd field"><th class="field-name">TAreas:</th><td class="field-body">reference dictionary from :get_my_total_area():</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">File0, file1, file2:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the names of csv files for output. The first arguement will be for the data, the second will be for the checks, the third will be for the per hectare version. If no files are specified, default file names of <cite>basic_tree_output.csv</cite>, <cite>check_tree_output.csv</cite>, and <cite>perhectare_tree_output.csv</cite> will be used</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Mode:</th><td class="field-body"><cite>wt</cite> for write one time, <cite>a</cite> for append.</td>
 </tr>
 </tbody>
 </table>
@@ -767,6 +789,12 @@ The keys for the lookup table are the same as the FORM field in FSDB</p>
 <code class="descname">check_mort</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.check_mort" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if the year is a mortality year.</p>
 <p>Populates self.mortality_years if there are any mortality years. Also sets self.shifted to the output dictionary if there are no mortality years.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Stand.check_stand_members">
+<code class="descname">check_stand_members</code><span class="sig-paren">(</span><em>BadTreeRef</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.check_stand_members" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates an output file containing ingrowth Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), and wood density, by species</p>
 </dd></dl>
 
 <dl class="method">
@@ -867,8 +895,8 @@ The keys for the lookup table are the same as the FORM field in FSDB</p>
 <dl class="method">
 <dt id="tps_Stand.Stand.get_total_area">
 <code class="descname">get_total_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.get_total_area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the total area for each year on that stand and store in reference table.</p>
-<p><a href="#id1"><span class="problematic" id="id2">**</span></a>INTERNAL PARAMETERS*
+<dd><p>Get the total area for each year on that stand and create a reference table to be used when figuring out the per hectare output</p>
+<p><strong>INTERNAL PARAMETERS</strong>
 :self.total_area_query: &#8220;SELECT year, sum(area_m2_corr) from plotAreas where standid like &#8216;{standid}&#8217; group by year&#8221;</p>
 </dd></dl>
 
@@ -906,17 +934,20 @@ The keys for the lookup table are the same as the FORM field in FSDB</p>
 <dl class="method">
 <dt id="tps_Stand.Stand.write_stand_dead">
 <code class="descname">write_stand_dead</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_dead" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Generates an output file containing dead Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), and wood density, by species</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.write_stand_ingrowth">
 <code class="descname">write_stand_ingrowth</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_ingrowth" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Generates an output file containing ingrowth Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), and wood density, by species</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.write_stand_live">
 <code class="descname">write_stand_live</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_live" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Generates an output file containing ingrowth Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), and wood density, by species</p>
+</dd></dl>
 
 </dd></dl>
 

@@ -6,7 +6,8 @@ import math
 def maxref(dbh, species):
     """ Check if given dbh and given species is bigger than the maximum for that combination. The max was found from determining the top 1 percent of dbh's for each species.
 
-    ** INPUTS **
+    **INPUTS**
+    
     :dbh: the tree's dbh, in cm
     :species: the tree's species, a four character code. If the database provides a longer code, it will be converted to a lowercase four letter code.
 
