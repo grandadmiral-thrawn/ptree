@@ -51,7 +51,7 @@
   <div class="section" id="welcome-to-the-tps-documentation">
 <h1>Welcome to the TPS documentation!<a class="headerlink" href="#welcome-to-the-tps-documentation" title="Permalink to this headline">¶</a></h1>
 <p>TPS (Tree, Plot, Stand) is a simple set of Python3 scripts for processing the TP001 dataset into the required Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg/Ha ), NPP ( Mg/Ha/yr ), Volume ( m<sup>3</sup> ) , and Basal Area ( m<sup>2</sup> ) outputs for live trees, dead trees, and ingrowth by individual tree, stand, species, and year.</p>
-<p>TPS can be run in &#8220;tree&#8221;, &#8220;stand&#8221;, or &#8220;qc&#8221; modes from the command line interface in :tps_cli:.</p>
+<p>TPS can be run in &#8220;tree&#8221;, &#8220;stand&#8221;, or &#8220;qc&#8221; modes from the command line interface in <em>tps_cli</em>. The functions below detail what processing is contained in the TPS module. To skip ahead to the documentation on <cite>tps_cli</cite>, use the Indices and Tables link on the left.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul class="simple">
@@ -113,28 +113,28 @@
 <tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Boolean True or False if a detail plot on that stand and plot and year</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;area&#8217;]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the area of that plot</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the area (m<sup>2</sup>) of that plot</td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;min&#8217;]:</th></tr>
 <tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the minimum dbh on that detail plot</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">A.umins_reference.[standid]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">stands whose minimum dbhs in at least 1 year are not 15.</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">stands whose minimum dbhs in at least 1 year are not 15.0 cm.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">A.umins_reference.[standid][year]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the plots on that stand and year when at least 1 plot has a minimum dbh that is not 15</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the plots on that stand and year when at least 1 plot has a minimum dbh that is not 15.0 cm</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">A.umins_reference[standid][year][plotno]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the minimum dbh for that stand, plot, and year, which is not 15.0</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the minimum dbh for that stand, plot, and year, which is not 15.0 cm.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">A.uplots_areas[standid]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">stands whose areas in at least 1 year are not 625 m2</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">stands whose areas in at least 1 year are not 625 (m<sup>2</sup>)</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">A.uplots_areas[standid][year]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the plots on that stand and year when at least 1 plot has an area not 625 m2</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the plots on that stand and year when at least 1 plot has an area not 625 (m<sup>2</sup>)</td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">A.uplots_areas[standid][year][plotno]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the area for the stand, year, and plot that is not 625</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the area for the stand, year, and plot that is not 625 (m<sup>2</sup>)</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">A.expansion[standid][year][plotid]:</th></tr>
 <tr class="field-even field"><td>&nbsp;</td><td class="field-body">the expansion factor for the stand, year, and plot which will not be 1.0</td>
@@ -147,7 +147,7 @@
 <dd><p>Condenses the detail reference into a readable dictionary of expansion factors by plot</p>
 <p>The expansion factor only applies to trees whose dbhs are greater than the minimum dbh (usually 5.0 cm) and less than the smallest dbh for the not-detail plots (usually 15.0 cm). The terms <cite>large</cite> and <cite>small</cite> are used casually throughout the program to refer to these size groups.</p>
 <p><cite>Given stand attribute * (area of all plots / area of all detail plots) = Representative stand attribute</cite></p>
-<p>10 Mg Biomass in small trees on detail plots * (10000 m2 all plots / 2000 m2 detail plots) = 50 Mg Biomass on detail plots</p>
+<p>10 Mg Biomass in small trees on detail plots * (10000 (m<sup>2</sup>) all plots / 2000 (m<sup>2</sup>) detail plots) = 50 Mg Biomass on detail plots</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">expansion</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;RS32&#39;</span><span class="p">,</span> <span class="s">&#39;AG05&#39;</span><span class="p">,</span> <span class="s">&#39;RS02&#39;</span><span class="p">,</span> <span class="s">&#39;RS01&#39;</span><span class="p">,</span> <span class="s">&#39;TO04&#39;</span><span class="p">,</span> <span class="s">&#39;AV14&#39;</span><span class="p">,</span> <span class="s">&#39;AR07&#39;</span><span class="p">,</span> <span class="s">&#39;TB13&#39;</span><span class="p">,</span> <span class="s">&#39;AE10&#39;</span><span class="p">,</span> <span class="s">&#39;TO11&#39;</span><span class="p">,</span> <span class="s">&#39;PP17&#39;</span><span class="p">,</span> <span class="s">&#39;AM16&#39;</span><span class="p">,</span> <span class="s">&#39;RS31&#39;</span><span class="p">,</span> <span class="s">&#39;RS28&#39;</span><span class="p">,</span> <span class="s">&#39;AB08&#39;</span><span class="p">,</span> <span class="s">&#39;AX15&#39;</span><span class="p">,</span> <span class="s">&#39;RS29&#39;</span><span class="p">,</span> <span class="s">&#39;AV06&#39;</span><span class="p">,</span> <span class="s">&#39;RS30&#39;</span><span class="p">])</span>
@@ -233,7 +233,7 @@
 <dt id="poptree_basis.Capture.create_unusual_mins_reference">
 <code class="descname">create_unusual_mins_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.create_unusual_mins_reference" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a lookup for plots that do not have minimums of 15, but are not detail plots.</p>
-<p><cite>create_unusual_mins_reference</cite> queries the database to create a reference for plots where detailPlot is not &#8216;T&#8217; and minimum DBH is not 15.</p>
+<p><cite>create_unusual_mins_reference</cite> queries the database to create a reference for plots where detailPlot is not &#8216;T&#8217; and minimum DBH is not 15.0 cm</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">umins_reference</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;YBNF&#39;</span><span class="p">,</span> <span class="s">&#39;SRNF&#39;</span><span class="p">,</span> <span class="s">&#39;MRNA&#39;</span><span class="p">,</span> <span class="s">&#39;CH10&#39;</span><span class="p">,</span><span class="o">...</span>

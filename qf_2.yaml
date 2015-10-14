@@ -19,7 +19,7 @@ stand:
     query_total_stand: "select year, standid, sum(area_m2_corr) from plotAreas group by standid, year"
     query_unusual_plot_minimums: "select standid, plot, year, minDBH_cm_dbh from plotAreas where detailPlot not like 'T' and minDBH_cm_dbh < 15.0 group by standid, plot, year" 
 plot:
-    query_dist_plots: "select standid, year, plot from plotAreas where standid like '{standid}' and year like '{year}'"
+    query_dist_plots: "select standid, year, plot from plotAreas"
     query_spec: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101. species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00103.dbh_last, fsdbdata.dbo.tp00103.year FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00103 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00103.treeid WHERE fsdbdata.dbo.tp00101.plotid like '{plotid}' AND fsdbdata.dbo.tp00101.species like '{species}'"
 tree:
     sql_1tree: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, fsdbdata.dbo.tp00102.year, fsdbdata.dbo.tp00102.dbh_code, fsdbdata.dbo.tp00101.PSP_STUDYID, fsdbdata.dbo.tp00101.STANDID FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00102 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid WHERE fsdbdata.dbo.tp00101.treeid like '{tid}' ORDER BY fsdbdata.dbo.tp00102.year ASC" 
