@@ -104,16 +104,16 @@ class Capture(object):
     :A.detail_reference.[standid]: the years that `standid` contains at least 1 detail plot
     :A.detail_reference.[standid][year]: the `plotnos` on that stand and year when at least 1 plot is a detail plot
     :A.detail_reference.[standid][year][plotno]['detail']: Boolean True or False if a detail plot on that stand and plot and year
-    :A.detail_reference.[standid][year][plotno]['area']: the area (m\ :sup:`2`) of that plot
+    :A.detail_reference.[standid][year][plotno]['area']: the area m\ :sup:`2` of that plot
     :A.detail_reference.[standid][year][plotno]['min']: the minimum dbh on that detail plot
 
     :A.umins_reference.[standid]: stands whose minimum dbhs in at least 1 year are not 15.0 cm.
     :A.umins_reference.[standid][year]: the plots on that stand and year when at least 1 plot has a minimum dbh that is not 15.0 cm
     :A.umins_reference[standid][year][plotno]: the minimum dbh for that stand, plot, and year, which is not 15.0 cm.
 
-    :A.uplots_areas[standid]: stands whose areas in at least 1 year are not 625 (m\ :sup:`2`)
-    :A.uplots_areas[standid][year]: the plots on that stand and year when at least 1 plot has an area not 625 (m\ :sup:`2`)
-    :A.uplots_areas[standid][year][plotno]: the area for the stand, year, and plot that is not 625 (m\ :sup:`2`)
+    :A.uplots_areas[standid]: stands whose areas in at least 1 year are not 625 m\ :sup:`2`
+    :A.uplots_areas[standid][year]: the plots on that stand and year when at least 1 plot has an area not 625 m\ :sup:`2`
+    :A.uplots_areas[standid][year][plotno]: the area for the stand, year, and plot that is not 625 m\ :sup:`2`
 
     :A.expansion[standid][year][plotid]: the expansion factor for the stand, year, and plot which will not be 1.0
 
@@ -426,6 +426,12 @@ class Capture(object):
 
     def create_num_plots(self):
         """ Creates a number of plots count for each stand and year.
+
+        **RETURNS**
+
+        :Capture.num_plots: the number of plots for that stand and year.
+
+        .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
         """
 
         np = {}

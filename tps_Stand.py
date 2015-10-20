@@ -8,10 +8,7 @@ import bisect
 import csv
 
 class Stand(object):
-    """Stands contain several plots, grouped by year and species. Stand produce outputs of biomass, volume, jenkins, trees/ha, and basal areas per hectare.
-
-    1. "Tree in remeasurement not in master" - a tree id appears in one measurement not in the former
-    2. "Tree in master not remeasured" - a tree id disappears from one measurement to the next
+    """Stands contain several plots, grouped by year and species. Stand produce outputs of biomass ( Mg/ha ), volume (m\ :sup:`3`), Jenkins biomass ( Mg/ha ), TPH (number of trees/ ha), and basal area (m\ :sup:`2` / ha).
 
     .. Example:
 
@@ -75,10 +72,11 @@ class Stand(object):
         """ Gets only the equations you need based on the species on that plot by querying the database for individual species that will be on this stand and makes an equation table.
 
         **INTERNAL VARIABLES**
+
         :list_species: a list of the species on that stand in any year, used to query the database for distinct species
         :self.woodden_dict: a dictionary of wood densities by species
         :self.proxy_dict: a dictionary of equation proxies, by species
-        :self.eqns: a dictionary of eqns keyed by 'normal', 'big', or 'component' containing lambda functions to receive dbh inputs and compute Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins'' Biomass ( Mg ), and wood density.
+        :self.eqns: a dictionary of eqns keyed by 'normal', 'big', or 'component' containing lambda functions to receive dbh (in cm) inputs and compute Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), and wood density.
         """
         list_species = []
         
@@ -150,6 +148,7 @@ class Stand(object):
                     j2 = None
 
 
+                # these methods handle ACCI different than others because it's components
                 if form != 'as_compbio':
                     this_eqn = lambda x : biomass_basis.which_fx(form)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
                     
@@ -171,6 +170,10 @@ class Stand(object):
     
     def check_additions(self, XFACTOR):
         """ Check if the stand may contain "additions". If so, populate the additions attribute of yourself and do not include trees from those years
+
+        **INTERNAL VARIABLES**
+        :additions: stand additions are years that have live trees measured that were not measured in previous year's inventory. we allocate additions to the subsequent year's inventory. There's only about 15 plots this happens on. 
+        :replacement: replaces the years of "additions" with the subsequent year
         """
 
         if self.standid.lower() in XFACTOR.additions.keys():
@@ -184,13 +187,15 @@ class Stand(object):
         else:
             self.additions = []
 
+            print(self.replacement + "<- self.replacement")
+
 
     def get_total_area(self):
-        """ Get the total area for each year on that stand and create a reference table to be used when figuring out the per hectare output
+        """ Get the total area for each year on that stand and create a reference table to be used when figuring out the per hectare output. The percent of area on the plot over the percent of the area of the stand is the proportion represented by that plot.
 
-        **INTERNAL PARAMETERS**
+        **INTERNAL VARIABLES**
+
         :self.total_area_query: "SELECT year, sum(area_m2_corr) from plotAreas where standid like '{standid}' group by year"
-
         """
 
         self.pcur.execute(self.total_area_query.format(standid=self.standid))
@@ -221,6 +226,8 @@ class Stand(object):
         .. Note: ingrowth is included in "live" (live statuses are all but "6" and "9"), but ingrowth is exclusive when status is "2"
 
         **INTERNAL VARIABLES**
+
+
         :self.query: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, fsdbdata.dbo.tp00102.year, fsdbdata.dbo.tp00102.dbh_code, fsdbdata.dbo.tp00101.PSP_STUDYID FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00102 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid WHERE fsdbdata.dbo.tp00101.standid like '{standid}' ORDER BY fsdbdata.dbo.tp00102.treeid ASC"
 
         """
@@ -274,6 +281,7 @@ class Stand(object):
 
             if year in self.additions:
                 year = self.replacement
+                
             else:
 
                 if year not in self.od and status in ["6", "9"]:
@@ -369,6 +377,7 @@ class Stand(object):
 
             if year in self.additions:
                 year = self.replacement
+                print("conducted a replacement on dead")
             else:
 
 
@@ -390,7 +399,11 @@ class Stand(object):
     def check_mort(self):
         """ Checks if the year is a mortality year. 
 
-        Populates self.mortality_years if there are any mortality years. Also sets self.shifted to the output dictionary if there are no mortality years.
+        Populates self.mortality_years if there are any mortality years. Also sets self.shifted to the output dictionary if there are no mortality years. The mortality years are those with only dead trees but no live ones. Effectively, if this happened in the wild, it would be a "mortality year" even if it weren't intended to be, so the math will resolve.
+
+        **INTERNAL VARIABLES**
+
+        :list_all_years_possible_mortality: holds the years that might be mortality years, which are discovered based on if they have counts of mortality, but no live or ingrowth trees.
         """
         # a year is a mortality year if there is no live biomass in that year for all species on a plot. include species because maybe useful for species
         list_all_years_possible_mortality = []
@@ -417,6 +430,8 @@ class Stand(object):
         """ Returns a new dbh dictionary for the stand based on whether or not a year is a mortality year. If it is not a mortality year, the dictionary is the same as the original. If it is a mortality year, the dead trees are shifted to the subsequent year.
 
         The bisect right function determines the windowing years from a given list around a given input year. 
+
+        **INTERNAL VARIABLES**
 
         :list_of_live_years: a list of years when checks were performed that were not mortality only
         :dead_year: the year of the mortality check to be aggregated to a selection from list_of_live_years
@@ -705,7 +720,9 @@ class Stand(object):
         :XFACTOR.stands_with_unusual_mins: plots which have minimums that are not 15 and are not detail plots
         :XFACTOR.unusual_plot_areas: plots whose areas are not 625m
 
-        ** Internal Variables **
+        **INTERNAL VARIABLES**
+
+        Basically, this is the same as compute_normal_biomasses except the unique area of each plot and stand is referenced from a table rather than assumed to be 625 m\ :sup: 2.
 
         """
 
@@ -887,6 +904,7 @@ class Stand(object):
         """ for each year in biomasses, add up all the trees from all the species, and output the stand summary over all the species as a nearly identical data structure. 
 
         For every one of the attributes in Biomasses for Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins'' Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. In the write out, we'll multiply it out to the HA level
+
         """
         Biomasses_Agg = {}
 
@@ -1031,6 +1049,71 @@ class Stand(object):
                 writer.writerow(new_row2)
                 writer.writerow(new_row3)
 
+
+    def write_stand_composite(self, Biomasses, Biomasses_Agg, XFACTOR):
+        """ Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins'' Biomass ( Mg ), Basal Area (m \ :sup:`2`) and wood density by species with a row of "all" containing only the TPH, Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), and Basal Area (m \ :sup:`2`)
+        """
+
+        filename_out = self.standid + "_stand_composite_output.csv"
+        with open(filename_out,'w') as writefile:
+            writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
+
+            writer.writerow(['DBCODE','ENTITY','STUDYID', 'STANDID', 'SPECIES', 'YEAR', 'STATUS','TPH','BA_M2HA','VOLM3_HA','BIO_MGHA','JBIO_MGHA','WOODDEN','NPLOTS_SPECIES'])
+
+            for each_year in sorted(Biomasses.keys()):
+
+                for each_species in Biomasses[each_year]:
+                    # remember to multiply by 10000 to go from m2 to hectare
+                    new_row_1 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_species, each_year,'INGROWTH', int(Biomasses[each_year][each_species]['total_ingrowth_trees']), round(Biomasses[each_year][each_species]['total_ingrowth_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_ingrowth_volume']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_bio']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_jenkins']*10000,3), Biomasses[each_year][each_species]['wooddensity'], Biomasses[each_year][each_species]['num_plots']]
+                    
+                    #writer.writerow(new_row)
+
+                    # remember to multiply by 10000 to go from m2 to hectare
+                    new_row_2 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_species, each_year,'LIVE', int(Biomasses[each_year][each_species]['total_live_trees']), round(Biomasses[each_year][each_species]['total_live_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_live_volume']*10000,3), round(Biomasses[each_year][each_species]['total_live_bio']*10000,3), round(Biomasses[each_year][each_species]['total_live_jenkins']*10000,3), Biomasses[each_year][each_species]['wooddensity'], Biomasses[each_year][each_species]['num_plots']]
+                 
+                    #writer.writerow(new_row)
+
+                    # remember to multiply by 10000 to go from m2 to hectare
+                    new_row_3 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_species, each_year,'MORT', int(Biomasses[each_year][each_species]['total_dead_trees']), round(Biomasses[each_year][each_species]['total_dead_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_dead_volume']*10000,3), round(Biomasses[each_year][each_species]['total_dead_bio']*10000,3), round(Biomasses[each_year][each_species]['total_dead_jenkins']*10000,3), Biomasses[each_year][each_species]['wooddensity'], Biomasses[each_year][each_species]['num_plots']]
+
+                    writer.writerow(new_row_1)
+                    writer.writerow(new_row_2)
+                    writer.writerow(new_row_3)
+
+           # for each_year in sorted(Biomasses_Agg.keys()):
+
+                    try:
+                        # remember to multiply by 10000 to go from m2 to hectare
+                        new_row1 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), 'ALL', each_year,'INGROWTH', int(Biomasses_Agg[each_year]['total_ingrowth_trees']), round(Biomasses_Agg[each_year]['total_ingrowth_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_ingrowth_volume']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_bio']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_jenkins']*10000,3), None, XFACTOR.num_plots[self.standid.lower()][each_year]]
+                    except Exception:
+                        try:
+                            new_row1 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), 'ALL', each_year,'INGROWTH', int(Biomasses_Agg[each_year]['total_ingrowth_trees']), round(Biomasses_Agg[each_year]['total_ingrowth_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_ingrowth_volume']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_bio']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_jenkins']*10000,3), None, None]
+                            print("temp plot table does not include " + self.standid + "in " + str(each_year))
+                        except Exception:
+                            import pdb; pdb.set_trace()
+
+                    # remember to multiply by 10000 to go from m2 to hectare
+                    try:
+                        new_row2 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), 'ALL', each_year,'LIVE', int(Biomasses_Agg[each_year]['total_live_trees']), round(Biomasses_Agg[each_year]['total_live_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_live_volume']*10000,3), round(Biomasses_Agg[each_year]['total_live_bio']*10000,3), round(Biomasses_Agg[each_year]['total_live_jenkins']*10000,3), None, XFACTOR.num_plots[self.standid.lower()][each_year]]
+                    except Exception:
+                        try:
+                            new_row2 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), 'ALL', each_year,'LIVE', int(Biomasses_Agg[each_year]['total_live_trees']), round(Biomasses_Agg[each_year]['total_live_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_live_volume']*10000,3), round(Biomasses_Agg[each_year]['total_live_bio']*10000,3), round(Biomasses_Agg[each_year]['total_live_jenkins']*10000,3), None, None]
+                        except Exception:
+                            import pdb; pdb.set_trace()
+
+                # remember to multiply by 10000 to go from m2 to hectare
+                try:
+                    new_row3 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), 'ALL', each_year,'MORT', int(Biomasses_Agg[each_year]['total_dead_trees']), round(Biomasses_Agg[each_year]['total_dead_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_dead_volume']*10000,3), round(Biomasses_Agg[each_year]['total_dead_bio']*10000,3), round(Biomasses_Agg[each_year]['total_dead_jenkins']*10000,3), None, XFACTOR.num_plots[self.standid.lower()][each_year]]
+                except Exception:
+                    try:
+                        new_row3 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), 'ALL', each_year,'MORT', int(Biomasses_Agg[each_year]['total_dead_trees']), round(Biomasses_Agg[each_year]['total_dead_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_dead_volume']*10000,3), round(Biomasses_Agg[each_year]['total_dead_bio']*10000,3), round(Biomasses_Agg[each_year]['total_dead_jenkins']*10000,3), None, None]
+                    except Exception:
+                        import pdb; pdb.set_trace()
+
+                
+                writer.writerow(new_row1)
+                writer.writerow(new_row2)
+                writer.writerow(new_row3)
 
 
     def check_stand_members(self, BadTreeRef):
@@ -1244,7 +1327,7 @@ if __name__ == "__main__":
     #import pdb; pdb.set_trace()
     #test_stands = ['CFMF','AV06','WI01','NCNA', 'AG05', 'AB08', 'AX15', 'PP17', 'TO11', 'AV14', 'RS31', 'RS28', 'RS01', 'RS02', 'RS30', 'TB13', 'AR07', 'AM16', 'RS29', 'RS32', 'AE10', 'AV06', 'TO04']
     
-    test_stands = ["NCNA"]
+    test_stands = ["NCNA", "AX15", "WI01"]
     for each_stand in test_stands:
         
         A = Stand(cur, pcur, XFACTOR, queries, each_stand)
@@ -1253,10 +1336,12 @@ if __name__ == "__main__":
         
         if BM == {}:
             Biomasses, BadTreeSpec = A.compute_special_biomasses(XFACTOR)
-            A.write_stand_normalized(Biomasses)
+            #A.write_stand_normalized(Biomasses)
 
             Biomasses_aggregate = A.aggregate_biomasses(Biomasses)
-            A.write_stand_normalized_aggregate(Biomasses_aggregate, XFACTOR)
+            #A.write_stand_normalized_aggregate(Biomasses_aggregate, XFACTOR)
+
+            A.write_stand_composite(Biomasses, Biomasses_Agg, XFACTOR)
             #A.write_stand_live(Biomasses)
             #A.write_stand_dead(Biomasses)
             #A.write_stand_ingrowth(Biomasses)
@@ -1269,9 +1354,11 @@ if __name__ == "__main__":
 
     
         else:
-            A.write_stand_normalized(BM) 
+            #A.write_stand_normalized(BM) 
             BMA = A.aggregate_biomasses(BM)
-            A.write_stand_normalized_aggregate(BMA, XFACTOR)
+
+            A.write_stand_composite(BM, BMA, XFACTOR)
+            #A.write_stand_normalized_aggregate(BMA, XFACTOR)
             #A.write_stand_live(BM)
             #A.write_stand_dead(BM)
             #A.write_stand_ingrowth(BM)

@@ -281,12 +281,17 @@ def which_fx(function_string):
     The keys for the lookup table are the same as the FORM field in FSDB
 
     **INTERNAL VARIABLES**
+
     :as_lnln: function call for the lnln form 
     :as_compbio: function call for the component-biomass form
     :as_oak_biopak: function call for the oak biomass form
     :as_biopak: function call for the biopak form
     :as_d2htcasc: function call for the d2ht, Cascades-variety, form
     :as_d2ht: function call for the d2ht form
+
+    **RETURNS**
+
+    This function will return a lambda to another function that is then assembled in tps_Tree or tps_Stand for the species at hand, and called with the dbhs there.
 
     .. warning: requires pymssql
     """
