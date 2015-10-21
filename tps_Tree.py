@@ -8,9 +8,10 @@ import biomass_basis
 
 
 class Tree(object):
-    """ A Tree object contains the required metrics and functions to compute Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Volume ( m\ :sup:`3` ) , and Basal Area ( m\ :sup:`2` ) for any one tree. Tree objects also create a check file for data quality. 
+    """ A Tree object contains the required metrics and functions to compute Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Volume ( m\ :sup:`3` and m\ :sup:`3`/Ha ) , and Basal Area ( m\ :sup:`2` and m\ :sup:`2`/Ha ) for any one tree. 
+    Tree objects will also create a check file for individual tree history problems.
 
-    Tree objects are independent of the years; that is, each Tree object contains all the years of that tree's existance.
+    Tree objects represent a tree as it is in TP00101; that is, each Tree object contains all the years of that tree's re-measurements, no matter its status.
 
     .. Example:
 
@@ -47,15 +48,11 @@ class Tree(object):
         self.eqns = {}
         self.proxy = ""
         self.woodden = 0.0
-        self.filename_data = ""
-        self.filename_checks = ""
-        self.filename_data_2 = ""
-        self.filename_data_3 = ""
 
         self.get_a_tree()
 
     def get_a_tree(self):
-        """ Retrieves a single tree and assign its species, standid, and plot; create a list of lists describing that tree for each remeasurement in its life. Gathers the equations the tree needs to have its biomass computed. 
+        """ Retrieves a single tree and assign its species, standid, and plot; create a list of lists describing that tree for each remeasurement in its life. Gathers the equations the tree needs to have its attributes computed. 
 
         **INTERNAL VARIABLES**
 
@@ -80,7 +77,8 @@ class Tree(object):
             else:
                 pass
 
-            # append to state to ( year, dbh, status, dbh_code )
+            # append to state to Tree.state, to create a list of tuples with : ( year, dbh, status, dbh_code )
+            # on connection, when a tree has a missing DBH (dead?) a None will be passed. Later it will be populated with the mortality DBH, if it truely is dead.
             try:
                 self.state.append( [int(str(row[6])), round(float(str(row[4])),3), str(row[5]), str(row[7])] )
             except Exception:
@@ -156,9 +154,9 @@ class Tree(object):
                 self.eqns.update({str(row[12].rstrip().lower()):this_eqn})
 
     def compute_biomasses(self):
-        """ Compute biomass, volume, Jenkins' biomass and wood density from equations
+        """ Compute biomass (Mg) , volume (m\ :sup:`3`), Jenkins' biomass (Mg) and wood density (g/cm\ :sup:`3`) from equations
 
-        If a tree is in it's death year, the dbh from the previous measurement is used.
+        If a tree is in it's death year (i.e. has a status of '6'), the dbh from the previous live measurement is used.
 
         .. Example:
 
@@ -168,7 +166,7 @@ class Tree(object):
         >>> A.compute_biomasses()
         >>> [(1.2639, 2.8725, 1.14323, 0.44), (1.2639, 2.8725, 1.14323, 0.44), [0.002, 0.002]]
 
-        .. note: Biomass and Jenkins' biomass are in Mg.
+        .. note: Biomass and Jenkins' biomass are in Mg. Hectare division happens when the tree is written to file.
         
         **INTERNAL VARIABLES**
 
@@ -253,7 +251,7 @@ class Tree(object):
                             print("still some kind of error in tree computation")
 
     def is_detail(self, XFACTOR):
-        """ Returns the Capture.expansion object as a dictionary specific for this tree.  
+        """ Returns the expansion attribute from the Capture object as a dictionary specific for this tree.  
 
         If the plot is a detail plot and the tree has a dbh which is less than 15.0 cm but greater than the minimum dbh listed, then a factor other than 1.0 will be returned.
 
@@ -303,13 +301,13 @@ class Tree(object):
                 return expansion_dict
 
     def is_unusual_area(self, XFACTOR):
-        """ Returns the Capture.uplot_areas object as a dictionary specific for this tree.  
+        """ Returns the uplot_areas attribute from the Capture object as a dictionary specific for this tree.  
 
         If the plot is listed in the unique areas reference, that reference will be returned for the year, otherwise, the default 625 m\ :sup:`2` is returned
 
         **INTERNAL VARIABLES**
 
-        :XFACTOR: is an instance of the Capture object, used for reference here.
+        :XFACTOR: is an instance of the Capture object.
         :standid: the stand of a tree object
         :plot: the plotid attribute of a tree object
         :dbh: the dbh attribute of a tree object
@@ -342,16 +340,17 @@ class Tree(object):
             return area_dict
 
     def check_trees(self):
-        """ Performance checks on tree 'state'
+        """ Performs checks on tree ``state`` (i.e. ``Tree.state``). These checks test whether or not logical sequences of tree status are being followed. For example, a tree cannot die twice. See rules:
 
-        **Rules**
+        **RULES:**
 
-        * A tree should not have more than one death 
-        * A tree should not die and then re-appear
-        * A tree should not go missing and then re-appear
-        * A tree should not grow more than 10 percent per year between re-measurements unless it is smaller than 8.0 cm on the first of those measurements (because scaling)
-        * A tree should not decrease in size by more than 10 percent per year between re-measurements
-        * this method shouldn't be called in the case where there is only one state
+        * A tree should not have more than one death (``double-death``)
+        * A tree should not die and then re-appear (``lazarus``)
+        * A tree should not go missing and then re-appear (``houdini``)
+        * A tree should not grow more than 10 percent per year between re-measurements unless it is smaller than 8.0 cm on the first of those measurements (``growthx``)
+        * A tree should not decrease in size by more than 10 percent per year between re-measurements (``shrinkx``)
+        * We should be told if a tree's dbh code changes from G or V to any inferior dbh code (1,2,3,4,8,9,M or U) - see `DBH CODES <http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&dbcode=Tp001&attid=7287&topnav=8>`_(``degradex``)
+        * This method shouldn't be called in the case where there is only one state
 
         **INTERNAL VARIABLES**
 
@@ -366,7 +365,7 @@ class Tree(object):
         * Houdini trees: "9" then something not "9"
         * Lazarus trees: "6" then something not "9"
         * Double-death: more than 1 "6"
-        * Degrade: changes from dbh code of "G" (good) or "V" (verified) to "M" (missing) or "U" (unmeasured)
+        * DegradeX: changes from dbh code of "G" (good) or "V" (verified) to "M" (missing) or "U" (unmeasured)
         * ShrinkX : mean percentage shrink per year if mean percentage shrink > 10 %
         * GrowthX : mean percentage growth per year if mean percentage growth > 10 %
 
@@ -401,6 +400,7 @@ class Tree(object):
                     # if there are more instances of early death then just continue and tc "should" fill in nones... this is what happens if more than 1 missing dbh
                     pass
 
+            # default dictionary
             tc = {x:{'deathx':"None", 'lazarus': "None", 'houdini':"None", 'growthx':"None", 'shrinkx':"None", 'degradex':"None"} for x in intervals}
 
             indices_double_dead = [intervals[index] for index,value in enumerate(statuses) if value =="6,6"]
@@ -427,126 +427,10 @@ class Tree(object):
             
             return tc
 
-    def output_tree(self, Bios, Details, Checks, Areas, file0 = 'basic_tree_output.csv', file1 = 'check_tree_output.csv', file2 = 'perhectare_tree_output.csv', mode = 'wt'):
-        """ Writes 3 csv files, one containing the tree measurements for the individual trees, the second containing the checks about status, and the last containing a "per hectare" version. If filenames are given as arguements, these can be used, otherwise, default filenames will be assigned.
-
-        **INPUT VARIABLES**
-
-        :Bios: computed biomasses, Jenkins' biomasses, basal areas, volumes etc. from :compute_biomass():
-        :Details: expansion factors for the specific tree in question - includes whether or not a detail plot as well as the DBH of the tree
-        :Checks: reference dictionary from :check_trees():
-        :Areas: reference dictionary from :is_unusual_area():
-        :TAreas: reference dictionary from :get_my_total_area():
-        :file0, file1, file2: the names of csv files for output. The first arguement will be for the data, the second will be for the checks, the third will be for the per hectare version. If no files are specified, default file names of `basic_tree_output.csv`, `check_tree_output.csv`, and `perhectare_tree_output.csv` will be used
-        :mode: `wt` for write one time, `a` for append.
-
-        **INTERNAL VARIABLES**
-
-        :expansion_factor_revised: 10000 divided by the number of meters squared on the plot
-
-        """
-        
-        # Writes the single tree output, not on a per hectare basis
-        self.filename_data = file0
-        
-        with open(self.filename_data, mode) as writefile:
-            writer = csv.writer(writefile, delimiter = ",", quoting = csv.QUOTE_NONNUMERIC)
-
-            # if the file is in append mode, do not write headers
-            if mode != 'a':
-
-                headers = ['DBCODE', 'ENTITY', 'STUDYID', 'STANDID', 'TREEID', 'SPECIES', 'PROXY_USED', 'WOOD_DENSITY_G_CM3', 'YEAR', 'DBH_CM', 'TREE_STATUS', 'DBH_CODE', 'BASAL_AREA_M2', 'VOLUME_M3', 'BIOMASS_MG', 'JENKINS_MG', 'EXPANSION_FACTOR_HA']
-                writer.writerow(headers)
-            else:
-                pass
-
-            for index, each_state in enumerate(self.state):
-
-                # expansion factor revised is the Xw of the tree * 10000 m / total area of the stand that year, from XFACTOR.total_areas
-                # Removed : expansion_factor_revised = 10000./Areas[each_state[0]], and added in: 
-                expansion_factor_revised = 10000./Areas[each_state[0]]
-                #expansion_factor_revised = Details[each_state[0]] * 10000./XFACTOR.total_areas[self.standid.lower()][each_state[0]]s
-
-                try:
-
-                    new_row = ['TP001', '12', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], each_state[3], round(Bios[1][index],6), round(Bios[0][index][1],4), round(Bios[0][index][0],4), round(Bios[0][index][2],4), round(expansion_factor_revised,4)]
-
-                except Exception:
-                    import pdb; pdb.set_trace()
-
-                writer.writerow(new_row)
-
-
-        # Writes the single tree output, on a per hectare basis
-
-        self.filename_data_2 = file2
-
-        with open(self.filename_data_2, mode) as writefile3:
-            writer3 = csv.writer(writefile3, delimiter = ",", quoting = csv.QUOTE_NONNUMERIC)
-            
-            # if the file is in append mode, do not write headers
-            if mode != 'a':
-                    headers = ['DBCODE', 'ENTITY', 'STUDYID', 'STANDID', 'TREEID', 'SPECIES', 'PROXY_USED', 'WOOD_DENSITY_G_CM3', 'YEAR', 'DBH_CM', 'TREE_STATUS', 'DBH_CODE', 'BASAL_AREA_M2_HA', 'VOLUME_M3_HA', 'BIOMASS_MG_HA', 'JENKINS_MG_HA']
-                    writer3.writerow(headers)
-                    
-            else:
-                pass
-
-            
-            
-            for index, each_state in enumerate(self.state):
-
-
-                # the proportion of a hectare that the plot is:
-                expansion_factor_revised = 10000./Areas[each_state[0]]
-
-
-                try:
-                    new_row = ['TP001', '13', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], each_state[3], round((Bios[1][index]/Areas[each_state[0]])*10000,6), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4)]
-                    
-                    writer3.writerow(new_row)
-
-                except KeyError:
-                    if self.state[-1][1] == None and each_state == self.state[-1]:
-                        self.state[-1][1] = self.state[-2][1]
-                        new_row = ['TP001', '13', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], each_state[3], round((Bios[1][index]/Areas[each_state[0]])*10000,6), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4)]
-                        writer3.writerow(new_row)
-
-                    else:
-                        import pdb; pdb.set_trace()
-                
-                # writes the checks output, if it can be written, otherwise, returns a file containing only "NA" because the checks are Not Applicable. This would happen if there was only one remeasurement
-        if Checks != False:
-            self.filename_checks = file1
-
-            with open(self.filename_checks, mode) as writefile2:
-                writer2 = csv.writer(writefile2, delimiter = ",", quoting = csv.QUOTE_NONNUMERIC)
-                
-                # if the file is in append mode, do not write headers
-                if mode != 'a':    
-                    headers = ['TREEID', 'SPECIES', 'INTERVAL','SHRINK_X_FLAGGED','GROWTH_X_FLAGGED','DOUBLE_DEATH_FLAG','LAZARUS_FLAG','HOUDINI_FLAG','DEGRADE_FLAG']
-                    writer2.writerow(headers)
-                else:
-                    pass
-
-                for each_interval in sorted(Checks.keys()):
-                    new_row = [self.tid.upper(), self.species.upper(), each_interval, Checks[each_interval]['shrinkx'], Checks[each_interval]['growthx'], Checks[each_interval]['deathx'], Checks[each_interval]['lazarus'], Checks[each_interval]['houdini'], Checks[each_interval]['degradex']]
-
-                    writer2.writerow(new_row)
-        
-        else:
-
-            self.filename_checks = file1
-
-            with open(self.filename_checks, mode) as writefile2:
-                writer2 = csv.writer(writefile2, delimiter = ",", quoting = csv.QUOTE_NONNUMERIC)
-                # when only one measurement has been taken
-                new_row = [self.tid.upper(), "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
-                writer2.writerow(new_row)
-
-    def output_tree_agg(self, Bios, Details, Checks, Areas, file3 = 'all_indv_tree_output.csv', file1 = 'all_check_tree_output.csv', mode = 'wt'):
+    def output_tree_agg(self, Bios, Details, Checks, Areas, datafile = 'all_indv_tree_output.csv', checkfile = 'all_check_tree_output.csv', mode = 'wt'):
         """ Writes a csv files, containing both the tree measurements for the individual trees and a "per hectare" version. If filenames are given as arguements, these can be used, otherwise, default filenames will be assigned. Writes a "checks" file if it needs to.
 
+        .. note: THIS IS THE CURRENT PREFERRED METHOD. 
 
         **INPUT VARIABLES**
 
@@ -554,27 +438,33 @@ class Tree(object):
         :Details: expansion factors for the specific tree in question - includes whether or not a detail plot as well as the DBH of the tree
         :Checks: reference dictionary from :check_trees():
         :Areas: reference dictionary from :is_unusual_area():
-        :TAreas: reference dictionary from :get_my_total_area():
-        :file1, file3: the names of csv files for output. The first arguement will be for the data, the second will be for the checks.
+        :datafile, checkfile: the names of csv files for output. The first arguement will be for the data, the second will be for the checks.
         :mode: `wt` for write one time, `a` for append.
 
         **INTERNAL VARIABLES**
 
-        :expansion_factor_revised: 10000/ area of the plot.
+        The expansion factor is an internal variable. At the moment we compute it as 
+
+            .. code-block:: python
+            expansion_factor_revised = 10000./Areas[each_state[0]]/Details
+
+        In this instance, Details is the total area of the plots which are detail plots. 
+
+        ..example::
+
+            exfr = 10000./625
+
         """
 
         # Writes a new "aggregate" output with both tree on per hectare basis and tree NOT per hectare.
 
-        self.filename_data_3 = file3
-        self.filename_data_1 = file1
-
-        with open(self.filename_data_3, mode) as writefile3:
-            writer3 = csv.writer(writefile3, delimiter = ",", quoting = csv.QUOTE_NONNUMERIC)
+        with open(datafile, mode) as writefile:
+            writer = csv.writer(writefile, delimiter = ",", quoting = csv.QUOTE_NONNUMERIC)
             
             # if the file is in append mode, do not write headers
             if mode != 'a':
-                headers = ['DBCODE', 'ENTITY', 'STUDYID', 'STANDID', 'TREEID', 'SPECIES', 'PROXY_USED', 'WOOD_DENSITY_G_CM3', 'YEAR', 'DBH_CM', 'TREE_STATUS', 'DBH_CODE', 'BASAL_AREA_M2', 'BASAL_AREA_M2_HA', 'VOLUME_M3', 'VOLUME_M3_HA', 'BIOMASS_MG', 'BIOMASS_MG_HA', 'JENKINS_MG', 'JENKINS_MG_HA', 'PROP_HECTARE_IS_PLOT', 'TREE_IS_WORTH_IN_STAND', 'EXPANSION_FACTOR_ROB_HA']
-                writer3.writerow(headers)
+                headers = ['DBCODE', 'ENTITY', 'STUDYID', 'STANDID', 'TREEID', 'SPECIES', 'PROXY_USED', 'WOOD_DENSITY_G_CM3', 'YEAR', 'DBH_CM', 'TREE_STATUS', 'BASAL_AREA_M2', 'BASAL_AREA_M2_HA', 'VOLUME_M3', 'VOLUME_M3_HA', 'BIOMASS_MG', 'BIOMASS_MG_HA', 'JENKINS_MG', 'JENKINS_MG_HA','TPHX']
+                writer.writerow(headers)
             
             else:
                 pass
@@ -588,49 +478,144 @@ class Tree(object):
                 # this information is in Details[each_state[0]]. The last column additionally normalizes the plot area by the expansion # factor, as Rob likes for his program
 
                 try:
-                    new_row = ['TP001', '13', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], each_state[3], round(Bios[1][index],6), round((Bios[1][index]/Areas[each_state[0]])*10000,6), round(Bios[0][index][1],4), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round(Bios[0][index][0],4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round(Bios[0][index][2],4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4), round(expansion_factor_revised,4), Details[each_state[0]], round(expansion_factor_revised / Details[each_state[0]],4)]
+                    new_row = ['TP001', 'TBD', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], round(Bios[1][index],6), round((Bios[1][index]/Areas[each_state[0]])*10000,6), round(Bios[0][index][1],4), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round(Bios[0][index][0],4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round(Bios[0][index][2],4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4), round(expansion_factor_revised / Details[each_state[0]],4)]
                     
-                    writer3.writerow(new_row)
+                    writer.writerow(new_row)
 
                 except KeyError:
+                    # occurs sometimes if the final state and the second to final state are 9 and then 6 ... 
                     if self.state[-1][1] == None and each_state == self.state[-1]:
                         self.state[-1][1] = self.state[-2][1]
 
-                        new_row = ['TP001', '13', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], each_state[3], round(Bios[1][index],6), round((Bios[1][index]/Areas[each_state[0]])*10000,6), round(Bios[0][index][1],4), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round(Bios[0][index][0],4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round(Bios[0][index][2],4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4), round(expansion_factor_revised,4), Details[each_state[0]], round(expansion_factor_revised / Details[each_state[0]],4)]
-                        writer3.writerow(new_row)
+                        new_row = ['TP001', 'TBD', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], round(Bios[1][index],6), round((Bios[1][index]/Areas[each_state[0]])*10000,6), round(Bios[0][index][1],4), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round(Bios[0][index][0],4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round(Bios[0][index][2],4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4), round(expansion_factor_revised / Details[each_state[0]],4)]
+                        
+                        writer.writerow(new_row)
 
                     else:
+                        print("an unexpected error has occured while trying to print individual tree output, please debug.")
                         import pdb; pdb.set_trace()
 
 
         # writes the checks output, if it can be written, otherwise, returns a file containing only "NA" because the checks are Not Applicable. This would happen if there was only one remeasurement
         if Checks != False:
-            self.filename_checks = file1
 
-            with open(self.filename_checks, mode) as writefile2:
-                writer2 = csv.writer(writefile2, delimiter = ",", quoting = csv.QUOTE_NONNUMERIC)
+            with open(checkfile, mode) as writefile:
+                writer = csv.writer(writefile, delimiter = ",", quoting = csv.QUOTE_NONNUMERIC)
                 
                 # if the file is in append mode, do not write headers
                 if mode != 'a':    
                     headers = ['TREEID', 'SPECIES', 'INTERVAL','SHRINK_X_FLAGGED','GROWTH_X_FLAGGED','DOUBLE_DEATH_FLAG','LAZARUS_FLAG','HOUDINI_FLAG','DEGRADE_FLAG']
-                    writer2.writerow(headers)
+                    writer.writerow(headers)
                 else:
                     pass
 
                 for each_interval in sorted(Checks.keys()):
                     new_row = [self.tid.upper(), self.species.upper(), each_interval, Checks[each_interval]['shrinkx'], Checks[each_interval]['growthx'], Checks[each_interval]['deathx'], Checks[each_interval]['lazarus'], Checks[each_interval]['houdini'], Checks[each_interval]['degradex']]
 
-                    writer2.writerow(new_row)
+                    writer.writerow(new_row)
         
         else:
 
-            self.filename_checks = file1
+            print("Could not write checks for " + self.tid + " - only one state exists :)")
 
-            with open(self.filename_checks, mode) as writefile2:
-                writer2 = csv.writer(writefile2, delimiter = ",", quoting = csv.QUOTE_NONNUMERIC)
-                # when only one measurement has been taken
-                new_row = [self.tid.upper(), "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
-                writer2.writerow(new_row)
+
+    def only_output_attributes(self, Bios, Details, Areas, datafile = 'all_indv_tree_output.csv', mode='wt'):
+        """ Writes a csv file, containing both the tree measurements for the individual trees and a "per hectare" version. Can accept a filename as arguement. Does not do checks.
+
+        .. note: THIS IS THE CURRENT PREFERRED, EASY METHOD. It only writes the attributes, rather than trying to write all the checks as well, which take longer.
+
+        When the program is executed on the stand level, and this output is given (see example in `tps_Sample.py`) trees are sorted by tree id (ascending alphabetical order.)
+
+        **INPUT VARIABLES**
+
+        :Bios: computed biomasses, Jenkins' biomasses, basal areas, volumes etc. from :compute_biomass():
+        :Details: expansion factors for the specific tree in question - includes whether or not a detail plot as well as the DBH of the tree.
+        :Areas: reference dictionary from :is_unusual_area():
+        :datafile: the name of the csv file to output to.
+        :mode: `wt` for write one time, `a` for append.
+
+        **INTERNAL VARIABLES**
+
+        :expansion_factor_revised: 10000/ (area of the plot * tree's expansion)
+        """
+
+        # Writes a new "aggregate" output with both tree on per hectare basis and tree NOT per hectare.
+
+        with open(datafile, mode) as writefile:
+            writer = csv.writer(writefile, delimiter = ",", quoting = csv.QUOTE_NONNUMERIC)
+            
+            # if the file is in append mode, do not write headers
+            if mode != 'a':
+                headers = ['DBCODE', 'ENTITY', 'STUDYID', 'STANDID', 'TREEID', 'SPECIES', 'PROXY_USED', 'WOOD_DENSITY_G_CM3', 'YEAR', 'DBH_CM', 'TREE_STATUS', 'BASAL_AREA_M2', 'BASAL_AREA_M2_HA', 'VOLUME_M3', 'VOLUME_M3_HA', 'BIOMASS_MG', 'BIOMASS_MG_HA', 'JENKINS_MG', 'JENKINS_MG_HA','TPHX']
+                
+                writer.writerow(headers)
+            
+            else:
+                pass
+
+            for index, each_state in enumerate(self.state):
+
+                # the proportion of a hectare that the plot is:
+                expansion_factor_revised = 10000./Areas[each_state[0]]
+
+                # for the final two columns : the tree's "worth" in the stand -  most trees are 1.0 but a small tree on a detail might be "4.0"
+                # this information is in Details[each_state[0]]. The last column additionally normalizes the plot area by the expansion # factor, as Rob likes for his program
+
+                try:
+                    new_row = ['TP001', 'TBD', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], round(Bios[1][index],6), round((Bios[1][index]/Areas[each_state[0]])*10000,6), round(Bios[0][index][1],4), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round(Bios[0][index][0],4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round(Bios[0][index][2],4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4), round(expansion_factor_revised / Details[each_state[0]],4)]
+                    
+                    writer.writerow(new_row)
+
+                    if each_state[0] not in Details.keys():
+                        new_row = ['TP001', 'TBD', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], round(Bios[1][index],6), round((Bios[1][index]/Areas[each_state[0]])*10000,6), round(Bios[0][index][1],4), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round(Bios[0][index][0],4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round(Bios[0][index][2],4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4), round(expansion_factor_revised,4)]
+                        print("year of " + str(each_state[0] + " was not in the detail reference given. Default scaling is 1.0. Please recheck after suzanne updates the db."))
+                        writer.writerow(new_row)
+                    else:
+                        pass
+
+                except KeyError:
+                    # same as before, if the final state is 9 and then 6 you could have subsequent missing dbh
+                    if self.state[-1][1] == None and each_state == self.state[-1]:
+                        self.state[-1][1] = self.state[-2][1]
+
+                        new_row = ['TP001', 'TBD', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], round(Bios[1][index],6), round((Bios[1][index]/Areas[each_state[0]])*10000,6), round(Bios[0][index][1],4), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round(Bios[0][index][0],4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round(Bios[0][index][2],4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4), round(expansion_factor_revised / Details[each_state[0]],4)]
+                        
+                        writer.writerow(new_row)
+
+                    else:
+                        print("error in writing the individual tree biomass etc. to file, please debug.")
+                        import pdb; pdb.set_trace()
+
+
+    def only_output_checks(self, Checks, checkfile = 'all_indv_tree_checks.csv', mode='wt'):
+        """ A method to only write out the Checks when computed. Run separately from biomasses for faster results.
+
+        **INPUTS**
+        :Checks: the results from running the checks routine
+        :checkfile: the name of the file you wish to output to.
+        :mode: `wt` for write one time, `a` for append.
+        """
+        # writes the checks output, if it can be written, otherwise, returns a file containing only "NA" because the checks are Not Applicable. This would happen if there was only one remeasurement
+        if Checks != False:
+
+            with open(checkfile, mode) as writefile:
+                writer = csv.writer(writefile, delimiter = ",", quoting = csv.QUOTE_NONNUMERIC)
+                
+                # if the file is in append mode, do not write headers
+                if mode != 'a':    
+                    headers = ['TREEID', 'SPECIES', 'INTERVAL','SHRINK_X_FLAGGED','GROWTH_X_FLAGGED','DOUBLE_DEATH_FLAG','LAZARUS_FLAG','HOUDINI_FLAG','DEGRADE_FLAG']
+                    writer.writerow(headers)
+                else:
+                    pass
+
+                for each_interval in sorted(Checks.keys()):
+                    new_row = [self.tid.upper(), self.species.upper(), each_interval, Checks[each_interval]['shrinkx'], Checks[each_interval]['growthx'], Checks[each_interval]['deathx'], Checks[each_interval]['lazarus'], Checks[each_interval]['houdini'], Checks[each_interval]['degradex']]
+
+                    writer.writerow(new_row)
+        
+        else:
+
+            print("could not perform checks for " + self.tid + " only one remeasurement has been taken :)")
 
 
 if __name__ == "__main__":
@@ -639,8 +624,6 @@ if __name__ == "__main__":
     conn, cur = DATABASE_CONNECTION.sql_connect()
     pconn, pcur = DATABASE_CONNECTION.lite3_connect()
     queries = DATABASE_CONNECTION.queries
-
-    #import pdb; pdb.set_trace()
 
     # creates lookups for expansion factors
     XFACTOR = poptree_basis.Capture()
@@ -666,15 +649,6 @@ if __name__ == "__main__":
     # a query of trees by stand to work with:
     sample_trees = ["HGBK061000002", "HGBK061000003", 'SP06000400035', 'SP06000400036', 'SP06000400037']
 
-    # sqls = ["select treeid from fsdbdata.dbo.tp00101 where treeid like \'rs13%\'", "select treeid from fsdbdata.dbo.tp00101 where treeid like \'tctr%\'", "select treeid from fsdbdata.dbo.tp00101 where treeid like \'tb13%\'", "select treeid from fsdbdata.dbo.tp00101 where treeid like \'wmnf%\'", "select treeid from fsdbdata.dbo.tp00101 where treeid like \'wr02%\'"]
-
-    # for each_sql in sqls:
-
-    #     cur.execute(each_sql)
-    #     for row in cur:
-
-    #         sample_trees.append(str(row[0]))
-
     # create output with the first tree, to initiate the csv file.
     First_Tree = Tree(cur, pcur, queries, sample_trees[0])
     Bios = First_Tree.compute_biomasses()
@@ -682,8 +656,7 @@ if __name__ == "__main__":
     Checks = First_Tree.check_trees()
     Areas = First_Tree.is_unusual_area(XFACTOR)
 
-    First_Tree.output_tree_agg(Bios, Details, Checks, Areas, file3 = "10152015_agg.csv", file1="10152015_checks.csv", mode = 'wt')
-    #First_Tree.output_tree(Bios, Details, Checks, Areas, file0 = "10142015_part2_basic.csv", file1 = "10142015__part2_checks.csv", file2 = "10142015_part2_hectare.csv", mode='wt')
+    First_Tree.output_tree_agg(Bios, Details, Checks, Areas, datafile = "10212015_bio.csv", checkfile="10212015_checks.csv", mode = 'wt')
 
     # clear out the global variables by setting to empty arrays
     Bios = {}
@@ -697,27 +670,12 @@ if __name__ == "__main__":
         Details = A.is_detail(XFACTOR)
         Checks = A.check_trees()
         Areas = A.is_unusual_area(XFACTOR)
-        
 
-        A.output_tree_agg(Bios, Details, Checks, Areas, file3 = "10152015_agg.csv", file1="10152015_checks.csv", mode = 'a')
-        #A.output_tree(Bios, Details, Checks, Areas, file0 = "10142015_part2_basic.csv", file1 = "10142015_part2_checks.csv", file2 = "10142015_part2_hectare.csv", mode='a')
+        A.output_tree_agg(Bios, Details, Checks, Areas, datafile= "10212015_bio.csv", checkfile="10212015_checks.csv", mode = 'a')
 
         # special cases:
-        integer_plot = int(A.plotid[4:])
 
-        if A.standid.lower() == 'ch11' and integer_plot == 11:
-            A.plotid = 1
-
-            A.output_tree(Bios, Details, Checks, Areas, file0 = "10142015_basic.csv", file1 = "10142015_checks.csv", file2 = "10142015_hectare.csv", mode='a')
-
-        if A.standid.lower()== 'frd2':
-            print("there is no FRD2")
-            continue
-
-        if A.standid.lower() == 'frd1' and integer_plot == 2:
-            print("we dont know the areas of plot 2 on frd1")
-            continue 
-
+        # WE NEED TO ACCOUNT FOR IF plot id is 11 and stand is CH11 it should be 01. We need to account for trees on FRD2/FRD1
         Bios = {}
         Details = {}
         Checks = {}

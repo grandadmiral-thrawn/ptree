@@ -377,7 +377,7 @@ class Stand(object):
 
             if year in self.additions:
                 year = self.replacement
-                print("conducted a replacement on dead")
+                #print("conducted a replacement on dead")
             else:
 
 

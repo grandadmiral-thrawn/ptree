@@ -3,133 +3,177 @@
 
 import poptree_basis
 import biomass_basis
-import tps_Tree
-import tps_Stand
+import tps_Tree as _t
+import tps_Stand as _s
+import tps_NPP as _n
 import math
 import csv
 import sys
 
 
-class ArgCapture():
-    """ Captures the command line arguements to run the tool.
+#######
+# Basic inputs are here, used to run all the things
+#######
+analysis_type = sys.argv[1] 
+target_type = sys.argv[2]
+target = sys.argv[3]
+DATABASE_CONNECTION = poptree_basis.YamlConn()
+conn, cur = DATABASE_CONNECTION.sql_connect()
+pconn, pcur = DATABASE_CONNECTION.lite3_connect()
+queries = DATABASE_CONNECTION.queries
+XFACTOR = poptree_basis.Capture()
 
-    :analysis_type: can be "t" for tree, "s" for stand, "q" for quality control.
-    :target_type: under tree mode, can be "t" for tree or "s" for stand. under stand mode, can be "s" for stand or "p" for study or "a" for all. under quality mode, can be "s" for stand or "p" for study or "a" for all.
-    :target: under tree mode, can be a tree id or stand id. under stand mode, can be a stand id or a study id or another "a" for all. under quality mode, can be a stand id, a study id, or "a" again for all.
 
-    If all three inputs are not specified, the program will not run the cli.
+def choose_operation():
+    """ Selects which analyses to run based on inputs...
+
+
+    By species and aggregate inputs are together in a file, but the aggregate is called "ALL" for its species, and it has no density.
+    
+    :analysis_type: "t", "s", or "q" for tree, stand, or quality control.
+    :target_type: "t", "w", "s", "p", "a" for one tree, whole stand by tree, one stand, one study, or "a" for all
+    """
+    # one tree, output
+    if analysis_type == 't' and target_type == 't':
+        single_tree_on_tree()
+
+    # one tree, qc
+    elif analysis_type == 'q' and target_type == 't':
+        single_tree_qc()
+
+    # whole stand by tree, output
+    elif analysis_type == 't' and target_type == 's':
+        stand_on_tree()
+
+    # whole stand by tree, checks
+    elif analysis_type == 'q' and target_type == 'w':
+        stand_on_tree_qc()
+
+    # whole stand, just one stand
+    elif analysis_type == 's' and target_type == 's':
+        single_stand_on_stand()
+
+    # whole stand, all stands in a study
+    elif analysis_type == 's' and target_type == 'p':
+        study_on_stand()
+
+    elif analysis_type == 's' and target_type == 'a':
+        all_stand_on_stand()
+
+
+    elif analysis_type == 'q' and target_type == 's':
+        stand_qc()
+
+    elif analysis_type == 'q' and target_type == 'a':
+        all_stand_qc()
+
+    else:
+        print("You have input invalid parameters. Your first input was {x} -- is that in \'t\', \'s\', or \'q\'? \n Your next input was {y} -- is that in \'s\', \'p\', or \'a\'? Your final input must be a treeid, standid, studyid, or the letter \'a\' for all. Note you cannot run individual trees as \'a\' yet.".format(x=analysis_type, y=target_type))
+
+def single_tree_on_tree():
+    """ Computes a single tree's values. Needs "t","t", "tree id". 
 
     """
-    def __init__(self):
 
-        self.analysis_type = sys.argv[1] 
-        self.target_type = sys.argv[2]
-        self.target = sys.argv[3]
-        self.DATABASE_CONNECTION = poptree_basis.YamlConn()
-        self.conn, self.cur = DATABASE_CONNECTION.sql_connect()
-        self.pconn, self.pcur = DATABASE_CONNECTION.lite3_connect()
-        self.queries = DATABASE_CONNECTION.queries
-        self.XFACTOR = poptree_basis.Capture()
+    A = _t.Tree(cur, pcur, queries, target)
+    Bios = A.compute_biomasses()
+    Details = A.is_detail(XFACTOR)
+    Areas = A.is_unusual_area(XFACTOR)
+
+    basic_name = target + "_basic.csv"
+
+    A.only_output_attributes(Bios, Details, Areas, datafile = basic_name, mode = 'wt')
+
+def single_tree_qc():
+    """ Computes a single tree's checks for qc. Needs "q","t", "tree id". 
+    """
+
+    A = _t.Tree(cur, pcur, queries, target)
+    Checks = A.check_trees()
+
+    checks_name = target + "_checks.csv"
+
+    A.only_output_checks(Checks, checkfile = checks_name, mode = 'wt')
 
 
-    def choose_operation(self):
-        """ Selects which analyses to run based on inputs...
-        """
-        if self.analysis_type == 't' and self.target_type == 't':
-            self.single_tree_on_tree()
+def stand_on_tree():
+    """ Computes all the trees on one stand as individuals. Needs "t","s","standid".
+    Standid should be four upper case characters.
+    """
 
-        elif self.analysis_type == 't' and target_type == 's':
-            self.stand_on_tree()
+    mod_target = target.upper()
 
-        elif self.analysis_type == 's' and target_type == 's':
-            self.single_stand_on_stand()
+    sql = queries['tree']['cli_stand_tree'].format(standid=target)
 
-        elif self.analysis_type == 's' and target_type == 'p':
-            self.study_on_stand()
+    trees_on_stand = []
+    cur.execute(sql)
 
-        elif self.analysis_type == 's' and target_type == 'a':
-            self.all_stand_on_stand()
-
-        elif self.analysis_type == 'q' and target_type == 's':
-            self.stand_qc()
-
-        elif self.analysis_type == 'q' and target_type == 'a':
-            self.all_stand_qc()
-
+    for row in cur:
+        if  trees_on_stand ==[] or str(row[0]) >= sample_trees[0]:
+            trees_on_stand.append(str(row[0]))
         else:
-            print("You have input invalid parameters. Your first input was {x} -- is that in \'t\', \'s\', or \'q\'? \n Your next input was {y} -- is that in \'s\', \'p\', or \'a\'? Your final input must be a treeid, standid, studyid, or the letter \'a\' for all. Note you cannot run individual trees as \'a\' yet.".format(x=self.analysis_type, y=self.target_type))
+            trees_on_stand.insert(0, str(row[0]))
 
-    def single_tree_on_tree(self):
-        """ Computes a single tree's values (see the docs on tps_Tree for more info.)
-        """
+    # create output with the first tree:
+    First_Tree = _t.Tree(cur, pcur, queries, trees_on_stand[0])
+    Bios = First_Tree.compute_biomasses()
+    Details = First_Tree.is_detail(XFACTOR)
+    Areas = First_Tree.is_unusual_area(XFACTOR)
 
-        A = Tree(self.cur, self.pcur, self.queries, self.target)
+    basic_name = target + "_basic.csv"
+
+    First_Tree.only_output_attributes(Bios, Details, Areas, file3 = basic_name, mode = 'wt')
+
+    # clear out the global variables by setting to empty arrays
+    Bios = {}
+    Details = {}
+    Areas = {}
+
+    for each_tree in trees_on_stand[1:]:
+        A = _t.Tree(cur, pcur, queries, each_tree)
         Bios = A.compute_biomasses()
         Details = A.is_detail(XFACTOR)
-        Checks = A.check_trees()
         Areas = A.is_unusual_area(XFACTOR)
+        A.only_output_attributes(Bios, Details, Areas, datafile = basic_name, mode = 'a')
 
-        basic_name = target + "_basic.csv"
-        checks_name = target + "_checks.csv"
-        hectare_name = target + "_hectare.csv"
-
-        A.output_tree(Bios, Details, Checks, Areas, file0 = basic_name , file1 = checks_name, file2 = hectare_name, mode='wt')
-
-    elif analysis_type == 't' and target_type == 's':
-
-        sql = queries['stand']['cli_stand_tree'].format(standid=target)
-
-        trees_on_stand = []
-        cur.execute(sql)
-        for row in cur:
-            trees_on_stand.append(str(row[0]))
-
-        # create output with the first tree:
-        First_Tree = Tree(cur, pcur, queries, trees_on_stand[0])
-        Bios = First_Tree.compute_biomasses()
-        Details = First_Tree.is_detail(XFACTOR)
-        Checks = First_Tree.check_trees()
-        Areas = First_Tree.is_unusual_area(XFACTOR)
-
-        basic_name = target + "_basic.csv"
-        checks_name = target + "_checks.csv"
-        hectare_name = target + "_hectare.csv"
-
-        First_Tree.output_tree(Bios, Details, Checks, Areas, file0 = basic_name, file1 = checks_name, file2 = hectare_name, mode='wt')
-
-        # clear out the global variables by setting to empty arrays
         Bios = {}
         Details = {}
         Checks = {}
         Areas = {}
 
-        for each_tree in trees_on_stand[1:]:
-            A = Tree(cur, pcur, queries, each_tree)
-            Bios = A.compute_biomasses()
-            Details = A.is_detail(XFACTOR)
-            Checks = A.check_trees()
-            Areas = A.is_unusual_area(XFACTOR)
-            A.output_tree(Bios, Details, Checks, Areas, file0 = basic_name, file1 = checks_name, file2 = hectare_name, mode='a')
+def stand_on_tree_qc():
+    """ Computes all the trees on one stand as individuals. Needs "q","w","standid".
+    Standid should be four upper case characters.
+    """
+    mod_target = target.upper()
 
-            # special cases:
-            integer_plot = int(A.plotid[4:])
+    sql = queries['tree']['cli_stand_tree'].format(standid=target)
 
-            if A.standid == 'ch11' and integer_plot == 11:
-                A.plotid = 1
+    trees_on_stand = []
+    cur.execute(sql)
 
-            if A.standid == 'frd2':
-                print("there is no FRD2")
-                continue
+    for row in cur:
+        if  trees_on_stand ==[] or str(row[0]) >= sample_trees[0]:
+            trees_on_stand.append(str(row[0]))
+        else:
+            trees_on_stand.insert(0, str(row[0]))
 
-            if A.standid == 'frd1' and integer_plot == 2:
-                print("we dont know the areas of plot 2 on frd1")
-                continue 
+    checks_name = target + "_checks.csv"
 
-            Bios = {}
-            Details = {}
-            Checks = {}
-            Areas = {}
+    # create output with the first tree:
+    First_Tree = _t.Tree(cur, pcur, queries, trees_on_stand[0])
+    Checks = First_Tree.check_trees()
+    First_Tree.only_output_checks(Checks, checkfile=check_name, mode = 'wt')
+        
+    Checks = {}
 
-    elif analysis_type == "s" and target_type == "s":
+    for index,each_tree in enumerate(sample_trees[1:]):
+        A = _t.Tree(cur, pcur, queries, each_tree)
+        Checks = A.check_trees()
+
+        A.only_output_checks(Checks, checkfile=daystring_out, mode = 'a')
+        print("now checking tree number " + str(index) + " --still doing things!")
+        Checks = {}
+
 
         
