@@ -181,7 +181,7 @@
 <dl class="method">
 <dt id="poptree_basis.Capture.condense_detail_reference">
 <code class="descname">condense_detail_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.condense_detail_reference" title="Permalink to this definition">¶</a></dt>
-<dd><p>Condenses the detail reference into a readable dictionary of expansion factors by plot</p>
+<dd><p>Condenses the detail reference into a readable dictionary of expansion factors by plot. The expansion factor relates the area of the detail plots (in total) to the area of the stand, in total. For example, if there are 4 detail plots of 625 m<sup>2</sup> each which is a total of 2500 m<sup>2</sup> of detail plots representing a whole stand which has 16 plots of 625 m:sup: <cite>2</cite> each on it with a total of 10000 m:sup: <cite>2</cite> (one Ha), then the expansion in this case is 4. Each Mg of biomass or single tree measured in the <cite>detail</cite> study is worth 4 x itself in the full sized study. In the final synopsis these are back weighted by the proportionate area of the plots to the whole</p>
 <p>The expansion factor only applies to trees whose dbhs are greater than the minimum dbh (usually 5.0 cm) and less than the smallest dbh for the not-detail plots (usually 15.0 cm). The terms <cite>large</cite> and <cite>small</cite> are used casually throughout the program to refer to these size groups.</p>
 <p><cite>Given stand attribute * (area of all plots / area of all detail plots) = Representative stand attribute</cite></p>
 <p>10 Mg Biomass in small trees on detail plots * (10000 (m<sup>2</sup>) all plots / 2000 (m<sup>2</sup>) detail plots) = 50 Mg Biomass on detail plots</p>
@@ -207,7 +207,7 @@
 <dl class="method">
 <dt id="poptree_basis.Capture.contains_unusual_plots">
 <code class="descname">contains_unusual_plots</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.contains_unusual_plots" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a lookup table for stands, plots, and years which have areas other than 625 m<sup>2</sup></p>
+<dd><p>Creates a lookup table for stands, plots, and years which have areas other than 625 m<sup>2</sup>. This is the most common area.</p>
 <p>While many of the plots have the same area, those that do not can be called from the database explicitly. It is then easier to add all the plots together to get the total area of the stand, or to apply this area to the individual trees per hectare method.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">uplot_areas</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -222,7 +222,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Capture.uplot_areas:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the name of the lookup table created, which can be referenced as an attribute of the Capture object.</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">A referenced table for the areas of plots which are not 625 m<sup>2</sup>.</td>
 </tr>
 </tbody>
 </table>
@@ -231,7 +231,7 @@
 <dl class="method">
 <dt id="poptree_basis.Capture.create_detail_reference">
 <code class="descname">create_detail_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.create_detail_reference" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a reference for detail plots that any instance of Tree (called by tps_Tree) or Stand (calld by tps_Stand) can use.</p>
+<dd><p>Creates a reference for detail plots that any instance of Tree (called by tps_Tree) or Stand (calld by tps_Stand) can use. The reference contains the area of the plot in question (<cite>area</cite>), the status as detail or not detail plot in that given year (<cite>detail</cite>), and the minimum dbh for the plot (whether detail or not, <cite>min</cite>).</p>
 <p>Here is a case where the stand, year, and plot in question is NOT a detail plot.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">Capture</span><span class="o">.</span><span class="n">detail_reference</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;AB08&#39;</span><span class="p">,</span> <span class="s">&#39;AV14&#39;</span><span class="p">,</span> <span class="s">&#39;AR07&#39;</span><span class="p">,</span> <span class="s">&#39;RS01&#39;</span><span class="p">,</span> <span class="s">&#39;TO11&#39;</span><span class="p">,</span> <span class="s">&#39;AM16&#39;</span><span class="p">,</span> <span class="s">&#39;AX15&#39;</span><span class="p">,</span> <span class="s">&#39;RS29&#39;</span><span class="p">,</span> <span class="s">&#39;RS02&#39;</span><span class="p">,</span> <span class="s">&#39;RS30&#39;</span><span class="p">,</span> <span class="s">&#39;RS28&#39;</span><span class="p">,</span> <span class="s">&#39;TB13&#39;</span><span class="p">,</span> <span class="s">&#39;RS32&#39;</span><span class="p">,</span> <span class="s">&#39;AG05&#39;</span><span class="p">,</span> <span class="s">&#39;TO04&#39;</span><span class="p">,</span> <span class="s">&#39;AE10&#39;</span><span class="p">,</span> <span class="s">&#39;RS31&#39;</span><span class="p">,</span> <span class="s">&#39;PP17&#39;</span><span class="p">,</span> <span class="s">&#39;AV06&#39;</span><span class="p">])</span>
@@ -245,7 +245,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">15.0</span>
 </pre></div>
 </div>
-<p>Here is a case where the stand, year, and plot in question is a detail plot.</p>
+<p>Here is a case where the stand, year, and plot in question is a detail plot. See how the <cite>min</cite> is smaller.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="s">&#39;area&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mi">625</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="s">&#39;detail&#39;</span><span class="p">]</span>
@@ -260,7 +260,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Capture.detail_reference:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the name of the lookup table created, which can be referenced as an attribute of the Capture object.</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">The name of the lookup table for detail plots and their areas and minimum dbh&#8217;s. If not otherwise specified, the minimum dbh for a tree on a non-detail plot or the cutoff for a big tree on a detail plot is 15 cm.</td>
 </tr>
 </tbody>
 </table>
@@ -276,7 +276,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Capture.num_plots:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the number of plots for that stand and year.</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the number of plots for that stand and year. Serves no purpose in computation and is only used to generated the required outputs.</td>
 </tr>
 </tbody>
 </table>
@@ -285,8 +285,16 @@
 <dl class="method">
 <dt id="poptree_basis.Capture.create_unusual_mins_reference">
 <code class="descname">create_unusual_mins_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.create_unusual_mins_reference" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a lookup for plots that do not have minimums of 15, but are not detail plots.</p>
-<p><cite>create_unusual_mins_reference</cite> queries the database to create a reference for plots where detailPlot is not &#8216;T&#8217; and minimum DBH is not 15.0 cm</p>
+<dd><p>Creates a lookup for plots that do not have minimum dbh of 15 cm, but are also not detail plots. That is, they are still sampled proportionally to the rest of the stand in their given year, but for whatever reason in that year, the minimum dbh is not 15 cm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Create_unusual_mins_reference:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">queries the database to create a reference for plots where detailPlot is not &#8216;T&#8217; and minimum DBH is not 15.0 cm</td>
+</tr>
+</tbody>
+</table>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">umins_reference</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;YBNF&#39;</span><span class="p">,</span> <span class="s">&#39;SRNF&#39;</span><span class="p">,</span> <span class="s">&#39;MRNA&#39;</span><span class="p">,</span> <span class="s">&#39;CH10&#39;</span><span class="p">,</span><span class="o">...</span>
@@ -300,7 +308,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Capture.umins_reference:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the name of the lookup table created, which can be referenced as an attribute of the Capture object.</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">The unusual minimums table contains the stand, year, and plot that have a minimum that is not 15.0 cm and is also not a detail plot.</td>
 </tr>
 </tbody>
 </table>
@@ -309,7 +317,7 @@
 <dl class="method">
 <dt id="poptree_basis.Capture.get_total_stand_area">
 <code class="descname">get_total_stand_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.get_total_stand_area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a lookup table for stands total areas in m<sup>2</sup></p>
+<dd><p>Creates a lookup table for stands total areas in m<sup>2</sup>.</p>
 <p>The sum of the areas of each plots is calculated in the sql, i.e. &#8220;select year, standid, sum(area_m2_corr) from plotAreas group by standid, year&#8221;</p>
 <p>It&#8217;s faster to just have this here then do it for each one of the stands individually if you are running this in bulk.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
@@ -325,7 +333,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Capture.total_areas:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the total area of all the plots for that stand and year.</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the total area of all the plots for that stand and year. All stands and years are included here.</td>
 </tr>
 </tbody>
 </table>
@@ -704,7 +712,7 @@ Tree objects will also create a check file for individual tree history problems.
 <li>A tree should not go missing and then re-appear (<code class="docutils literal"><span class="pre">houdini</span></code>)</li>
 <li>A tree should not grow more than 10 percent per year between re-measurements unless it is smaller than 8.0 cm on the first of those measurements (<code class="docutils literal"><span class="pre">growthx</span></code>)</li>
 <li>A tree should not decrease in size by more than 10 percent per year between re-measurements (<code class="docutils literal"><span class="pre">shrinkx</span></code>)</li>
-<li>We should be told if a tree&#8217;s dbh code changes from G or V to any inferior dbh code (1,2,3,4,8,9,M or U) - see <cite>DBH CODES &lt;http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&amp;dbcode=Tp001&amp;attid=7287&amp;topnav=8&gt;`_(``degradex`</cite>)</li>
+<li>We should be told if a tree&#8217;s dbh code changes from G or V to any inferior dbh code (1,2,3,4,8,9,M or U) - see <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&amp;dbcode=Tp001&amp;attid=7287&amp;topnav=8">DBH CODES</a> (<code class="docutils literal"><span class="pre">degradex</span></code>)</li>
 <li>This method shouldn&#8217;t be called in the case where there is only one state</li>
 </ul>
 <p><strong>INTERNAL VARIABLES</strong></p>
@@ -896,10 +904,19 @@ Tree objects will also create a check file for individual tree history problems.
 <dt id="tps_Tree.Tree.only_output_checks">
 <code class="descname">only_output_checks</code><span class="sig-paren">(</span><em>Checks</em>, <em>checkfile='all_indv_tree_checks.csv'</em>, <em>mode='wt'</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.only_output_checks" title="Permalink to this definition">¶</a></dt>
 <dd><p>A method to only write out the Checks when computed. Run separately from biomasses for faster results.</p>
-<p><strong>INPUTS</strong>
-:Checks: the results from running the checks routine
-:checkfile: the name of the file you wish to output to.
-:mode: <cite>wt</cite> for write one time, <cite>a</cite> for append.</p>
+<p><strong>INPUT VARIABLES</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Checks:</th><td class="field-body">the results from running the checks routine</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Checkfile:</th><td class="field-body">the name of the file you wish to output to.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Mode:</th><td class="field-body"><cite>wt</cite> for write one time, <cite>a</cite> for append.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -911,13 +928,13 @@ Tree objects will also create a check file for individual tree history problems.
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Bios:</th><td class="field-body">computed biomasses, Jenkins&#8217; biomasses, basal areas, volumes etc. from :compute_biomass():</td>
+<tr class="field-odd field"><th class="field-name">Bios:</th><td class="field-body">computed biomasses, Jenkins&#8217; biomasses, basal areas, volumes etc. from <cite>compute_biomass()</cite></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Details:</th><td class="field-body">expansion factors for the specific tree in question - includes whether or not a detail plot as well as the DBH of the tree</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Checks:</th><td class="field-body">reference dictionary from :check_trees():</td>
+<tr class="field-odd field"><th class="field-name">Checks:</th><td class="field-body">reference dictionary from <cite>check_trees()</cite></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Areas:</th><td class="field-body">reference dictionary from :is_unusual_area():</td>
+<tr class="field-even field"><th class="field-name">Areas:</th><td class="field-body">reference dictionary from <cite>is_unusual_area()</cite></td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">Datafile, checkfile:</th></tr>
 <tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the names of csv files for output. The first arguement will be for the data, the second will be for the checks.</td>
@@ -928,26 +945,28 @@ Tree objects will also create a check file for individual tree history problems.
 </table>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <p>The expansion factor is an internal variable. At the moment we compute it as</p>
-<blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">expansion_factor_revised</span> <span class="o">=</span> <span class="mf">10000.</span><span class="o">/</span><span class="n">Areas</span><span class="p">[</span><span class="n">each_state</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">/</span><span class="n">Details</span>
 </pre></div>
 </div>
-<p>expansion_factor_revised = 10000./Areas[each_state[0]]/Details</p>
-</div></blockquote>
 <p>In this instance, Details is the total area of the plots which are detail plots.</p>
 <p>..example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">exfr</span> <span class="o">=</span> <span class="mf">10000.</span><span class="o">/</span><span class="mi">625</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">expansion_factor_revised</span> <span class="o">=</span> <span class="mf">10000.</span><span class="o">/</span><span class="mi">625</span>
 </pre></div>
 </div>
 </dd></dl>
 
 </dd></dl>
 
+</div>
+<div class="section" id="stands">
+<h2>Stands:<a class="headerlink" href="#stands" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">tps_Stand.py</span></code> contains classes and functions for computing the attributes on the stand scale. Each stand is defined as all the plots during a given re-measurement year. Stand attributes are computed on a per-hectare basis. Some stands contain <code class="docutils literal"><span class="pre">detail</span> <span class="pre">plots</span></code> with small trees representative of the stand as a whole.</p>
 <span class="target" id="module-tps_Stand"></span><dl class="class">
 <dt id="tps_Stand.QC">
 <em class="property">class </em><code class="descclassname">tps_Stand.</code><code class="descname">QC</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.QC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Conducts Stand level quality control if needed</p>
+<p>Conducts Stand level quality control if needed. Do not excute this with every run.</p>
+<p>Takes the list of trees who are on any one year of the stand and compare them to the prior year. Checks for the appearance and disappearance of individuals that cannot be attributed to death or a known status change.</p>
 <dl class="method">
 <dt id="tps_Stand.QC.check_many_stands">
 <code class="descname">check_many_stands</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.QC.check_many_stands" title="Permalink to this definition">¶</a></dt>
@@ -957,13 +976,15 @@ Tree objects will also create a check file for individual tree history problems.
 <dl class="method">
 <dt id="tps_Stand.QC.check_one_stand">
 <code class="descname">check_one_stand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.QC.check_one_stand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets up the needed inputs</p>
+<dd><p>Sets up the needed inputs, such as database connectors. Creates instance of Stand from <cite>self.target</cite>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.QC.parse_target">
 <code class="descname">parse_target</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.QC.parse_target" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decides to do one or many stands. Fails if no stands are given.</p>
+<dd><p>Enable QC on either one or many stands. Fails if no stands are given.</p>
+<p><strong>RETURNS</strong></p>
+<p>False if not inputs. Function for many stands if more than one is given. Function for one stand if one is given.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1247,7 +1268,7 @@ Tree objects will also create a check file for individual tree history problems.
 
 <span class="target" id="module-tps_cli"></span><dl class="function">
 <dt id="tps_cli.choose_operation">
-<code class="descclassname">tps_cli.</code><code class="descname">choose_operation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.choose_operation" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tps_cli.</code><code class="descname">choose_operation</code><span class="sig-paren">(</span><em>analysis_type</em>, <em>target_type</em>, <em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.choose_operation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Selects which analyses to run based on inputs...</p>
 <p>By species and aggregate inputs are together in a file, but the aggregate is called &#8220;ALL&#8221; for its species, and it has no density.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1264,28 +1285,46 @@ Tree objects will also create a check file for individual tree history problems.
 
 <dl class="function">
 <dt id="tps_cli.single_tree_on_tree">
-<code class="descclassname">tps_cli.</code><code class="descname">single_tree_on_tree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.single_tree_on_tree" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tps_cli.</code><code class="descname">single_tree_on_tree</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.single_tree_on_tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes a single tree&#8217;s values. Needs &#8220;t&#8221;,&#8221;t&#8221;, &#8220;tree id&#8221;.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tps_cli.single_tree_qc">
-<code class="descclassname">tps_cli.</code><code class="descname">single_tree_qc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.single_tree_qc" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tps_cli.</code><code class="descname">single_tree_qc</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.single_tree_qc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes a single tree&#8217;s checks for qc. Needs &#8220;q&#8221;,&#8221;t&#8221;, &#8220;tree id&#8221;.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="tps_cli.stand_on_stand">
+<code class="descclassname">tps_cli.</code><code class="descname">stand_on_stand</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.stand_on_stand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the biomass for a single stand.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tps_cli.stand_on_stand_qc">
+<code class="descclassname">tps_cli.</code><code class="descname">stand_on_stand_qc</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.stand_on_stand_qc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks tree populations at the stand scale (no output function written yet!)</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="tps_cli.stand_on_tree">
-<code class="descclassname">tps_cli.</code><code class="descname">stand_on_tree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.stand_on_tree" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tps_cli.</code><code class="descname">stand_on_tree</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.stand_on_tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes all the trees on one stand as individuals. Needs &#8220;t&#8221;,&#8221;s&#8221;,&#8221;standid&#8221;.
 Standid should be four upper case characters.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tps_cli.stand_on_tree_qc">
-<code class="descclassname">tps_cli.</code><code class="descname">stand_on_tree_qc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.stand_on_tree_qc" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tps_cli.</code><code class="descname">stand_on_tree_qc</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.stand_on_tree_qc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes all the trees on one stand as individuals. Needs &#8220;q&#8221;,&#8221;w&#8221;,&#8221;standid&#8221;.
 Standid should be four upper case characters.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tps_cli.study_on_stands">
+<code class="descclassname">tps_cli.</code><code class="descname">study_on_stands</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.study_on_stands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes all the stands in a certain study code (biomass)</p>
 </dd></dl>
 
 </div>
@@ -1312,6 +1351,7 @@ Standid should be four upper case characters.</p>
 <li><a class="reference internal" href="#database-connectors-and-cached-settings">Database Connectors and Cached Settings:</a></li>
 <li><a class="reference internal" href="#biomass-equations">Biomass Equations:</a></li>
 <li><a class="reference internal" href="#individual-trees">Individual Trees:</a></li>
+<li><a class="reference internal" href="#stands">Stands:</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>

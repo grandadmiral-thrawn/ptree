@@ -349,7 +349,7 @@ class Tree(object):
         * A tree should not go missing and then re-appear (``houdini``)
         * A tree should not grow more than 10 percent per year between re-measurements unless it is smaller than 8.0 cm on the first of those measurements (``growthx``)
         * A tree should not decrease in size by more than 10 percent per year between re-measurements (``shrinkx``)
-        * We should be told if a tree's dbh code changes from G or V to any inferior dbh code (1,2,3,4,8,9,M or U) - see `DBH CODES <http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&dbcode=Tp001&attid=7287&topnav=8>`_(``degradex``)
+        * We should be told if a tree's dbh code changes from G or V to any inferior dbh code (1,2,3,4,8,9,M or U) - see `DBH CODES <http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&dbcode=Tp001&attid=7287&topnav=8>`_ (``degradex``)
         * This method shouldn't be called in the case where there is only one state
 
         **INTERNAL VARIABLES**
@@ -434,10 +434,10 @@ class Tree(object):
 
         **INPUT VARIABLES**
 
-        :Bios: computed biomasses, Jenkins' biomasses, basal areas, volumes etc. from :compute_biomass():
+        :Bios: computed biomasses, Jenkins' biomasses, basal areas, volumes etc. from `compute_biomass()`
         :Details: expansion factors for the specific tree in question - includes whether or not a detail plot as well as the DBH of the tree
-        :Checks: reference dictionary from :check_trees():
-        :Areas: reference dictionary from :is_unusual_area():
+        :Checks: reference dictionary from `check_trees()`
+        :Areas: reference dictionary from `is_unusual_area()`
         :datafile, checkfile: the names of csv files for output. The first arguement will be for the data, the second will be for the checks.
         :mode: `wt` for write one time, `a` for append.
 
@@ -445,15 +445,15 @@ class Tree(object):
 
         The expansion factor is an internal variable. At the moment we compute it as 
 
-            .. code-block:: python
+        .. code-block:: python
+
             expansion_factor_revised = 10000./Areas[each_state[0]]/Details
 
         In this instance, Details is the total area of the plots which are detail plots. 
 
         ..example::
 
-            exfr = 10000./625
-
+            expansion_factor_revised = 10000./625
         """
 
         # Writes a new "aggregate" output with both tree on per hectare basis and tree NOT per hectare.
@@ -590,7 +590,8 @@ class Tree(object):
     def only_output_checks(self, Checks, checkfile = 'all_indv_tree_checks.csv', mode='wt'):
         """ A method to only write out the Checks when computed. Run separately from biomasses for faster results.
 
-        **INPUTS**
+        **INPUT VARIABLES**
+
         :Checks: the results from running the checks routine
         :checkfile: the name of the file you wish to output to.
         :mode: `wt` for write one time, `a` for append.

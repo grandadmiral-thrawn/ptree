@@ -731,8 +731,18 @@ class Stand(object):
         
         all_years = sorted(self.shifted.keys())
         
-        for each_year in all_years:
-            total_area = self.total_area_ref[each_year]
+        for index, each_year in enumerate(all_years):
+
+            try:
+                total_area = self.total_area_ref[each_year]
+            except Exception:
+                try:
+                    # get most recent similar year
+                    total_area = self.total_area_ref[all_years[index-1]]
+                except Exception:
+                    # get most recent year
+                    total_area = self.total_area_ref[all_years[-1]]
+
 
             for each_species in self.shifted[each_year].keys():
                 
@@ -841,7 +851,7 @@ class Stand(object):
                     total_ingrowth_volume = sum([large_ingrowth_trees[tree]['bio'][1]/area for tree in large_ingrowth_trees.keys()]) * percent_area_of_total + sum([(small_ingrowth_trees[tree]['bio'][1]/area)*Xw for tree in small_ingrowth_trees.keys()]) * percent_area_of_total
                     total_dead_volume = sum([large_dead_trees[tree]['bio'][1]/area for tree in large_dead_trees.keys()]) * percent_area_of_total+ sum([(small_dead_trees[tree]['bio'][1]/area)*Xw for tree in small_dead_trees.keys()]) * percent_area_of_total
 
-                    total_live_basal = sum([large_live_trees[tree]['ba']/area for tree in large_live_trees.keys()]) * percent_area_of_total + sum([(live_trees_small[tree]['ba']/area)*Xw for tree in live_trees_small.keys()]) * percent_area_of_total
+                    total_live_basal = sum([large_live_trees[tree]['ba']/area for tree in large_live_trees.keys()]) * percent_area_of_total + sum([(small_live_trees[tree]['ba']/area)*Xw for tree in small_live_trees.keys()]) * percent_area_of_total
                     total_ingrowth_basal = sum([large_ingrowth_trees[tree]['ba']/area for tree in large_ingrowth_trees.keys()])* percent_area_of_total +  sum([(small_ingrowth_trees[tree]['ba']/area)*Xw for tree in small_ingrowth_trees.keys()]) * percent_area_of_total
                     total_dead_basal = sum([large_dead_trees[tree]['ba'] for tree in large_dead_trees.keys()])/area + sum([(small_dead_trees[tree]['ba']/area)*Xw for tree in small_dead_trees.keys()]) * percent_area_of_total
 
@@ -861,9 +871,9 @@ class Stand(object):
                         
 
                     # get a list of tree names for checking
-                    living_trees = list(live_trees_large) + list(live_trees_small)
-                    ingrowth_trees = list(ingrowth_trees_large) + list(ingrowth_trees_small)
-                    dead_trees = list(dead_trees_large) + list(dead_trees_small)
+                    living_trees = list(large_live_trees) + list(small_live_trees)
+                    ingrowth_trees = list(large_ingrowth_trees) + list(small_ingrowth_trees)
+                    dead_trees = list(large_dead_trees) + list(small_dead_trees)
 
                     if each_year not in Biomasses:
                         Biomasses[each_year] = {each_species : {'total_live_bio': total_live_bio, 'total_dead_bio' : total_dead_bio, 'total_ingrowth_bio': total_ingrowth_bio, 'total_live_jenkins': total_live_jenkins, 'total_ingrowth_jenkins': total_ingrowth_jenkins, 'total_dead_jenkins' : total_dead_jenkins, 'total_live_volume' : total_live_volume, 'total_dead_volume' : total_dead_volume, 'total_ingrowth_volume': total_ingrowth_volume, 'total_live_trees': total_live_trees, 'total_dead_trees': total_dead_trees, 'total_ingrowth_trees': total_ingrowth_trees, 'total_live_basal': total_live_basal, 'wooddensity': wooddensity, 'name_live': living_trees, 'name_mort': dead_trees, 'total_ingrowth_basal': total_ingrowth_basal, 'total_dead_basal': total_dead_basal,  'name_ingrowth': ingrowth_trees, 'num_plots': num_plots}}
@@ -1148,12 +1158,23 @@ class Stand(object):
                                 writer.writerow([each_year, each_species, each_plot, each_tree, 'ingrowth', 'dbh is None'])
 
 class QC(object):
-    """ Conducts Stand level quality control if needed
+    """ Conducts Stand level quality control if needed. Do not excute this with every run.
+
+    Takes the list of trees who are on any one year of the stand and compare them to the prior year. Checks for the appearance and disappearance of individuals that cannot be attributed to death or a known status change. 
 
     """
 
     def __init__(self, target):
-        """ Initializes the QC
+        """ Initializes the QC.
+
+        **INPUT VARIABLES**
+        
+        :target: a stand or stands to QC. 
+
+        **INTERNAL VARIABLES**
+
+        :BM: biomasses on the target stand being processed
+        :BTR: list of "bad trees" on the target stand being processsed.
         """
 
         self.target = target
@@ -1161,10 +1182,15 @@ class QC(object):
         self.BTR = {}
 
         self.parse_target()
-
+        self.check_one_stand()
+        self.population_check()
 
     def parse_target(self):
-        """ Decides to do one or many stands. Fails if no stands are given.
+        """ Enable QC on either one or many stands. Fails if no stands are given.
+
+        **RETURNS**
+
+        False if not inputs. Function for many stands if more than one is given. Function for one stand if one is given.     
         """
         if self.target == []:
             return False
@@ -1177,7 +1203,7 @@ class QC(object):
             self.population_check()
 
     def check_one_stand(self):
-        """ Sets up the needed inputs
+        """ Sets up the needed inputs, such as database connectors. Creates instance of Stand from `self.target`.
         """
         DATABASE_CONNECTION = poptree_basis.YamlConn()
         conn, cur = DATABASE_CONNECTION.sql_connect()
@@ -1189,9 +1215,24 @@ class QC(object):
 
         BM, BTR = A.compute_normal_biomasses(XFACTOR)
         
-        # if the stands are not normal, compute them in the special way
         if BM == {}:
-            BM, BTR = A.compute_special_biomasses(XFACTOR)
+            Biomasses, BadTreeSpec = A.compute_special_biomasses(XFACTOR)
+
+            if BadTreeSpec == {}:
+                pass
+            else:
+                A.check_stand_members(BadTreeSpec)
+                
+
+            self.BM = Biomasses
+            self.BTR = BadTreeSpec
+
+
+        else:
+            A.check_stand_members(BTR)
+            self.BM = BM
+            self.BTR = BTR
+
 
     def population_check(self):
         """ Gets the tree check data from each year and species.
@@ -1202,6 +1243,8 @@ class QC(object):
         """
         # find trees whose ID's are "lost" between remeasurements
         lost_trees = {}
+
+        import pdb; pdb.set_trace()
 
         # create a "diff" function to filter items in one list which are not in the other (order matters: items in 1 not in 2)
         diff = lambda l1,l2: filter(lambda x: x not in l2, l1)
@@ -1217,7 +1260,8 @@ class QC(object):
 
             # name the interval
             interval_name = str(first_year) + " - " + str(each_year)
-            second_species_list = self.BM[each_year].keys()
+            second_species_list = list(self.BM[each_year].keys())
+
 
             # if a species is present in the first year but not in the next, log it to the lost_trees list appropriately
             for each_species in first_species_list:
@@ -1249,8 +1293,6 @@ class QC(object):
                                         lost_trees[each_species][interval_name]['ingrowth_tree_lost'].append(each_tree)
                                     else:
                                         pass
-
-
 
                     # if there are no dead trees in the first year but that species is going to disappear, record this
                     if name_dead == []:
@@ -1302,6 +1344,11 @@ class QC(object):
                                             lost_trees[interval_name][each_species]['ingrowth_tree_abandoned'].append(each_tree)
                                         else:
                                             pass
+
+
+        print("lost some trees!")                                
+        return lost_trees
+
 
     def check_many_stands(self):
         """ Sets up the needed inputs

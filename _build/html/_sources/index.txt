@@ -89,6 +89,10 @@ Individual Trees:
    :inherited-members:
    :show-inheritance:
 
+Stands:
+-------
+``tps_Stand.py`` contains classes and functions for computing the attributes on the stand scale. Each stand is defined as all the plots during a given re-measurement year. Stand attributes are computed on a per-hectare basis. Some stands contain ``detail plots`` with small trees representative of the stand as a whole.   
+
 .. automodule:: tps_Stand
    :members:
    :undoc-members:

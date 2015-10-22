@@ -125,12 +125,27 @@ def do_NCNA_whole_stand():
     
         else:
             BMA = A.aggregate_biomasses(BM)
-
             A.write_stand_composite(BM, BMA, XFACTOR)
+
+def do_NCNA_QC():
+    """ Compute various information about trees getting lost, or maybe not!
+    """
+    DATABASE_CONNECTION = poptree_basis.YamlConn()
+    _, cur = DATABASE_CONNECTION.sql_connect()
+    _, pcur = DATABASE_CONNECTION.lite3_connect()
+    queries = DATABASE_CONNECTION.queries
+    XFACTOR = poptree_basis.Capture()
+
+    test_stands = ["NCNA"]
+    for each_stand in test_stands:
+        
+        Q = _s.QC(each_stand.lower())
+
 
 if __name__ == "__main__":
     # Comment in any or all of the below to test on NCNA.
 
     #do_NCNA_by_tree()
     #do_NCNA_by_tree_qc()
-    do_NCNA_whole_stand()
+    #do_NCNA_whole_stand()
+    #lt = do_NCNA_QC()
