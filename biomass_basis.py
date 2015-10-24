@@ -292,15 +292,14 @@ def jenkins2014(dbh, j3, j4):
 
 def which_fx(function_string):
     """ Find the correct function for doing the biomass, volume, Jenkins, and wood density in the lookup table.
-    The keys for the lookup table are the same as the FORM field in TP00111.
+    The keys for the lookup table are the same as the FORM field in TP00110. The component biomass method we used for ACCI is being removed.
 
     **INTERNAL VARIABLES**
 
     :as_lnln: function call for the lnln form 
-    :as_compbio: function call for the component-biomass form
     :as_oak_biopak: function call for the oak biomass form
+    :as_chinq_biopak: function call for the chinquapin biomass form
     :as_biopak: function call for the biopak form
-    :as_d2htcasc: function call for the d2ht, Cascades-variety, form
     :as_d2ht: function call for the d2ht form
 
     **RETURNS**
@@ -310,12 +309,10 @@ def which_fx(function_string):
     .. warning: requires pymssql
     """
 
-    lookup = {'as_lnln': as_lnln,
-    'as_compbio': as_compbio,
-    'as_oak_biopak': as_oak_biopak,
-    'as_chinq_biopak': as_chinq_biopak,
-    'as_biopak': as_biopak,
-    'as_d2htcasc': as_d2htcasc,
-    'as_d2ht': as_d2ht}
+    lookup = {'lnln': as_lnln,
+    'oak_biopak': as_oak_biopak,
+    'chinq_biopak': as_chinq_biopak,
+    'biopak': as_biopak,
+    'd2ht': as_d2ht}
 
     return lookup[function_string]

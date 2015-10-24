@@ -6,17 +6,17 @@
 Welcome to the TPS documentation!
 =================================
 
-TPS (Tree, Plot, Stand) is a simple set of Python3 scripts for processing the "PSP Study" forest inventory data (contained in entity TP001) into the required Trees per Hectare (TPH), Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Volume ( m\ :sup:`3` ), and Basal Area ( m\ :sup:`2` ) tree and stand level summaries. It is also set up to compute the delta Trees Per Hectare (TPH), delta Biomass (Mg/Ha), delta Jenkins Biomass ( Mg and Mg/Ha ), delta Basal Area ( m\ :sup:`2` ), delta Volume ( m\ :sup:`3` ) between re-measurement intervals and to solve for Bole Net Primary Productivity (NPP, Mg/Ha/yr ) using the "change in biomass plus mortality and plus ingrowth" technique. It has the capacity to produce both species specific and aggregate metrics for each remeasurement or the interval between them.
+TPS (Tree, Plot, Stand) is a simple set of Python3 scripts for processing the "PSP Study" forest inventory data (contained in entity TP001) into the required Trees per Hectare (TPH), Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Volume ( m\ :sup:`3` ), and Basal Area ( m\ :sup:`2` ) tree, plot, and stand level summaries. It is also set up to compute the delta Trees Per Hectare (TPH), delta Biomass (Mg/Ha), delta Jenkins Biomass ( Mg/Ha ), delta Basal Area ( m\ :sup:`2` ), delta Volume ( m\ :sup:`3` ) between re-measurement intervals and to solve for Bole Net Primary Productivity (NPP, Mg/Ha/yr ) using the "change in biomass plus mortality and plus ingrowth" technique. It has the capacity to produce both species specific and aggregate metrics for each remeasurement or the interval between them.
 
 Outputs from TPS go to:
 
-* TP00107 - By species Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Basal Area ( m\ :sup:`2` ), Volume ( m\ :sup:`3` ), and wood density for stands by species
-* TP00108 - By species Bole NPP (NPP, Mg/Ha/yr ) and the change in Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Basal Area ( m\ :sup:`2` ), Volume ( m\ :sup:`3` ) between intervals.
-* TP00109 - Whole stand summary of Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Basal Area ( m\ :sup:`2` ), Volume ( m\ :sup:`3` ), and wood density for stands by species
-* TP00110 - Whole stand summary of Bole NPP (NPP, Mg/Ha/yr ) and the change in Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Basal Area ( m\ :sup:`2` ), Volume ( m\ :sup:`3` ) between intervals.
+* TP00107 - By species and whole stand biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m\ :sup:`2`/Ha ), Volume ( m\ :sup:`3`/Ha ), and trees per hectare for stands by species
+* TP00108 - By species and whole stand Bole NPP (NPP, Mg/Ha/yr ) and the change in Biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m\ :sup:`2`/Ha ), Volume ( m\ :sup:`3`/Ha ) between intervals.
+* TP00109 - By species and whole plot biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m\ :sup:`2`/Ha ), Volume ( m\ :sup:`3`/Ha ), and trees per hectare for stands by species
+* TP001XX - By species and whole plot Bole NPP (NPP, Mg/Ha/yr ) and the change in Biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m\ :sup:`2`/Ha ), Volume ( m\ :sup:`3`/Ha ) between intervals.
+* TP00113 - Individual tree Biomass ( Mg ), Jenkins Biomass ( Mg ), Basal Area ( m\ :sup:`2` ), Volume ( m\ :sup:`3` ).
 
-
-TPS contains 3 core modules: ``tps_Tree`` (for individual trees), ``tps_Stand`` (for stands), and ``tps_NPP`` (for differences between stands over time). ``tps_CLI`` is a command line interface for using the appropriate module. Within each tps program, reliance on a core data structure is consistent. This structure is basically:
+TPS contains 3 core modules: ``tps_Tree`` (for individual trees), ``tps_Stand`` (for stands and plots), and ``tps_NPP`` (for differences between stands over time). ``tps_CLI`` is a command line interface for using the appropriate module. Within each tps program, reliance on a core data structure is consistent. This structure is basically:
 
 .. code-block:: python
 
@@ -70,7 +70,7 @@ In the ``tps_CLI`` commands can be issued to gather a specific tree, stand, set 
 Biomass Equations:
 ------------------
 
-``biomass_basis.py`` uses the information in TP00111 to compute the Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Basal Area ( m\ :sup:`2` ), Volume ( m\ :sup:`3` ). Wood density is assigned by ``biomass_basis`` but no computation is involved apart from using it to switch between volume and biomass when needed.
+``biomass_basis.py`` uses the information in TP00111 to compute the Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Basal Area ( m\ :sup:`2` ), Volume ( m\ :sup:`3` ). Wood density is assigned by ``biomass_basis`` but no computation is involved apart from using it to switch between volume and biomass when needed. Proxy forms and components computed are also pulled from the database at this time. 
 
 .. automodule:: biomass_basis
     :members:
@@ -81,7 +81,7 @@ Biomass Equations:
 Individual Trees:
 -----------------
 
-``tps_Tree.py`` contains classes and functions for computing the attributes of individual trees. Each individual tree as defined in TP00101 is an instance of a class of ``Tree``. For example, ``NCNA000300005`` is one Tree. All the remeasurements taken on one individual tree are encapsulated into a single instance of Tree for that individual, and can be accessed using the property of ``Tree.state``. 
+``tps_Tree.py`` contains classes and functions for computing the attributes of individual trees. Each individual tree as defined in TP00101 is an instance of a class of ``Tree``. For example, ``NCNA000300005`` is one Tree, even if it alive for 5 remeasurements. All the remeasurements taken on one individual tree are encapsulated into a single instance of Tree for that individual, and can be accessed using the property of ``Tree.state``. If desired, checks on the state of a tree are generated.
 
 .. automodule:: tps_Tree
    :members:
@@ -91,7 +91,7 @@ Individual Trees:
 
 Stands:
 -------
-``tps_Stand.py`` contains classes and functions for computing the attributes on the stand scale. Each stand is defined as all the plots during a given re-measurement year. Stand attributes are computed on a per-hectare basis. Some stands contain ``detail plots`` with small trees representative of the stand as a whole.   
+``tps_Stand.py`` contains classes and functions for computing the attributes on the stand scale. Each stand is defined as all the plots during a given re-measurement year. Stand attributes are computed on a per-hectare basis. Some stands contain ``detail plots`` with small trees representative of the stand as a whole. Plots sometimes have additional ``meaning`` we want to know beyond that of the stand. In all cases, we compute plot ``on the way`` to getting stand, so it's easy for us to include it in the output as well.
 
 .. automodule:: tps_Stand
    :members:

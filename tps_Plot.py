@@ -4,45 +4,50 @@
 import poptree_basis
 import math
 import biomass_basis
-import sys
-
+import bisect
+import csv
 
 class Plot(object):
-    """The Plot object aggregates the biomasses for each plot.
-    Plots are made for each year
+    """Plots contain individual trees, grouped by year and species. Plots produce outputs of biomass ( Mg/ha ), volume (m\ :sup:`3`), Jenkins biomass ( Mg/ha ), TPH (number of trees/ ha), and basal area (m\ :sup:`2` / ha).
+
+    .. Example:
+
+    >>> A = Plot(cur, pcur, XFACTOR, queries, 'NCNA')
+    >>> A.cur = <pymssql.Cursor object at 0x1007a4648>
+    >>> A.pcur = <sqlite3.Cursor object at 0x10078cce0>
+    >>> A.tree_list = "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species..."
+    >>> A.species_list = ""SELECT DISTINCT(fsdbdata.dbo.tp00101.species) from ..."
+    >>> A.eqn_query = "SELECT SPECIES, EQNSET, FORM, H1, H2, H3, B1 ..."
+    >>> A.eqns = {'abam': {'normal': <function Stand.select_eqns.<locals>.<lambda> at 0x1007d9730>}..."
+    >>> A.od[1985]['abam'][4]['dead']
+    >>> [('av06000400017', None, '6', '1985')]
+
+    .. Note: shifted keys are the years with live trees; mortality only years are merged into these.
+
+    >>> A.od.keys()
+    >>> dict_keys([1985, 1987, 1988, 2007, 1993, 1978, 1981, 1998, 1983])
+    >>> A.shifted.keys()
+    >>> dict_keys([1993, 1978, 1988, 1998, 2007])
+    >>> A.mortality_years
+    >>> [1981, 1983, 1985, 1987]
+ 
     """
-    def __init__(self, standid, plotid):
-
-
+    def __init__(self, cur, pcur, XFACTOR, queries, standid):
         self.standid = standid
-        self.plotid = plotid
-        self.is_detail = False
-        self.big_trees ={'bio':None,'jbio':None,'vol':None,'TPA':None}
-        self.small_trees={'bio':None,'jbio':None,'vol':None,'TPA':None}
-
-    def is_small_plot(self):
-        """ Determines if a plot is a detail plot and if so gets the appropriate expansion factor
-        """
-         if self.standid not in Xfactor.detail_reference.keys():
-            return False
-
-if __name__ == "__main__":
-    """ Basic setup for computing trees, plots, stands, etc. Database connections and look up references"""
-    standid = sys.argv[1]
-    plotid = sys.argv[2]
-
-    # Plotid should be an integer
-    if not isinstance(plotid, int):
-        try:
-            plotid = int(plotid)
-        except Exception as e4:
-            print('plot id should be an integer -- error in tps_Plot.py')
-            import pdb; pdb.set_trace()
-
-    DATABASE_CONNECTION = poptree_basis.YamlConn()
-    conn, cur = DATABASE_CONNECTION.sql_connect()
-    pconn, pcur = DATABASE_CONNECTION.lite3_connect()
-    queries = DATABASE_CONNECTION.queries
-
-    # creates lookups for expansion factors
-    Xfactor = poptree_basis.DetailCapture()
+        self.cur = cur
+        self.pcur = pcur
+        self.tree_list = queries['plot']['query']
+        self.tree_list_m = queries['plot']['query_trees_m']
+        self.species_list = queries['plot']['query_species']
+        self.eqn_query = queries['tree']['sql_1tree_eqn']
+        self.total_area_query = queries['plot']['query_total_plot']
+        self.study_id = ""
+        self.woodden_dict = {}
+        self.proxy_dict = {}
+        self.eqns = {}
+        self.od = {}
+        self.shifted = {}
+        self.mortality_years = []
+        self.total_area_ref = {}
+        self.additions = []
+        self.replacement = ""

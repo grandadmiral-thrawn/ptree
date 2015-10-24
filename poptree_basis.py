@@ -5,7 +5,7 @@ import sys
 import os
 import yaml
 import pymssql
-import sqlite3
+#import sqlite3
 
 HERE = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, os.path.join(HERE))
@@ -45,25 +45,25 @@ class YamlConn(object):
         cur = conn.cursor()
         return conn, cur
 
-    def lite3_connect(self):
-        """ Connects to the SQLite3 database
+    # def lite3_connect(self):
+    #     """ Connects to the SQLite3 database
 
-        Configuration parameters are in config_2.yaml file. 
-        """
-        lite3conn = None
+    #     Configuration parameters are in config_2.yaml file. 
+    #     """
+    #     lite3conn = None
 
-        lite3db = self.config['litedb']
-        try:
-            lite3conn = sqlite3.connect(lite3db)
-            lite3cur = lite3conn.cursor()
+    #     lite3db = self.config['litedb']
+    #     try:
+    #         lite3conn = sqlite3.connect(lite3db)
+    #         lite3cur = lite3conn.cursor()
 
-        except sqlite3.Error as e:
-            if lite3conn:
-                lite3con.rollback()
+    #     except sqlite3.Error as e:
+    #         if lite3conn:
+    #             lite3con.rollback()
 
-            print("Error : ",e.args[0])
-            sys.exit(1)
-        return lite3conn, lite3cur
+    #         print("Error : ",e.args[0])
+    #         sys.exit(1)
+    #     return lite3conn, lite3cur
 
 class Capture(object):
     """ This class contains dictionaries to be used in Stand computations for indexing the unique cases of minimum dbh's, stand areas, and detail plot expansions. Stands use the parameters in Capture to do specific calculations when the default case of area 625 m\ :sup:`2`,  minimum dbh 15.0 cm, detailPlot is False does not apply.
@@ -119,7 +119,7 @@ class Capture(object):
 
     """
     def __init__(self):
-        self.pconn, self.pcur = YamlConn().lite3_connect()
+        #self.pconn, self.pcur = YamlConn().lite3_connect()
         self.detail_reference = {}
         self.expansion = {}
         self.uplot_areas = {}
@@ -141,7 +141,7 @@ class Capture(object):
         self.create_num_plots()
 
     def create_detail_reference(self):
-        """ Creates a reference for detail plots that any instance of Tree (called by tps_Tree) or Stand (calld by tps_Stand) can use.
+        """ Creates a reference for detail plots that any instance of Tree (called by tps_Tree) or Stand (calld by tps_Stand) can use. The reference contains the area of the plot in question (`area`), the status as detail or not detail plot in that given year (`detail`), and the minimum dbh for the plot (whether detail or not, `min`).
 
         Here is a case where the stand, year, and plot in question is NOT a detail plot.
 
@@ -158,7 +158,7 @@ class Capture(object):
         >>> H.detail_reference['RS01'][2004][1]['min']
         >>> 15.0
 
-        Here is a case where the stand, year, and plot in question is a detail plot.
+        Here is a case where the stand, year, and plot in question is a detail plot. See how the `min` is smaller.
 
         .. Example :
         
@@ -171,17 +171,26 @@ class Capture(object):
 
         **RETURNS**
 
-        :Capture.detail_reference: the name of the lookup table created, which can be referenced as an attribute of the Capture object.
+        :Capture.detail_reference: The name of the lookup table for detail plots and their areas and minimum dbh's. If not otherwise specified, the minimum dbh for a tree on a non-detail plot or the cutoff for a big tree on a detail plot is 15 cm. 
 
         .. warning : Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
         """
         stands_with_details = []
-        sql = YamlConn().queries['stand']['lite_context_dtl']
-        self.pcur.execute(sql)
+        #sql = YamlConn().queries['stand']['lite_context_dtl']
+        sql = YamlConn().queries['stand']['query_context_dtl']
+        #self.pcur.execute(sql)
+        self.cur.execute(sql)
         
-        for row in self.pcur:
-            stands_with_details.append(str(row[0]))
+        for row in self.cur:
+        #for row in self.pcur:
+            standid = str(row[0])[0:4]
+            if standid not in stands_with_details:
+                stands_with_details.append(standid)
+            else:
+                pass
 
+        print("fox remove this testing: ")
+        print(stands_with_details)
 
         for each_stand in stands_with_details:
 
@@ -191,11 +200,11 @@ class Capture(object):
             elif each_stand.rstrip().lower() in self.detail_reference:
                 pass
 
-            sql = YamlConn().queries['stand']['lite_context_dtl_2'].format(standid=each_stand)
-            self.pcur.execute(sql)
+            sql = YamlConn().queries['stand']['query_context_dtl1'].format(standid=each_stand)
+            self.cur.execute(sql)
             
-            for row in self.pcur:
-                plotno = int(row[0])
+            for row in self.cur:
+                plotno = str(row[0])
                 year = int(row[1])
                 detail = str(row[2])
                 
@@ -203,7 +212,7 @@ class Capture(object):
                 try:
                     area = int(row[3])
                 except Exception:
-                    area = 625
+                    area = 625.
 
                 # default min dbh is 5
                 try:
@@ -211,22 +220,22 @@ class Capture(object):
                 except Exception:
                     mindbh = 5.0
 
-                if year not in self.detail_reference[each_stand.rstrip().lower()] and detail == 'T':
+                if year not in self.detail_reference[each_stand.rstrip().lower()] and detail == 'Y':
                     self.detail_reference[each_stand.rstrip().lower()][year]={plotno:{'area': area, 'detail': True, 'min': mindbh}}
-                elif year in self.detail_reference[each_stand.rstrip().lower()] and detail == 'T':
+                elif year in self.detail_reference[each_stand.rstrip().lower()] and detail == 'Y':
                     self.detail_reference[each_stand.rstrip().lower()][year][plotno] = {'area': area, 'detail': True, 'min': mindbh}
-                elif year not in self.detail_reference[each_stand.rstrip().lower()] and detail != 'T':
+                elif year not in self.detail_reference[each_stand.rstrip().lower()] and detail != 'Y':
                     self.detail_reference[each_stand.rstrip().lower()][year]={plotno:{'area':area, 'detail': False, 'min': mindbh}}
-                elif year in self.detail_reference[each_stand.rstrip().lower()] and detail !='T':
+                elif year in self.detail_reference[each_stand.rstrip().lower()] and detail !='Y':
                     self.detail_reference[each_stand.rstrip().lower()][year][plotno] = {'area':area, 'detail':False, 'min':mindbh}
 
                 else:
                     pass
 
     def create_unusual_mins_reference(self):
-        """ Creates a lookup for plots that do not have minimums of 15, but are not detail plots.
+        """ Creates a lookup for plots that do not have minimum dbh of 15 cm, but are also not detail plots. That is, they are still sampled proportionally to the rest of the stand in their given year, but for whatever reason in that year, the minimum dbh is not 15 cm. 
 
-        `create_unusual_mins_reference` queries the database to create a reference for plots where detailPlot is not 'T' and minimum DBH is not 15.0 cm 
+        :create_unusual_mins_reference: queries the database to create a reference for plots where detailPlot is not 'T' and minimum DBH is not 15.0 cm 
 
         .. Example:
         
@@ -238,8 +247,8 @@ class Capture(object):
 
         **RETURNS**
 
-        :Capture.umins_reference: the name of the lookup table created, which can be referenced as an attribute of the Capture object.
-
+        :Capture.umins_reference: The unusual minimums table contains the stand, year, and plot that have a minimum that is not 15.0 cm and is also not a detail plot.
+        
         .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
 
         """
@@ -273,7 +282,7 @@ class Capture(object):
                 pass
 
     def condense_detail_reference(self):
-        """ Condenses the detail reference into a readable dictionary of expansion factors by plot
+        """ Condenses the detail reference into a readable dictionary of expansion factors by plot. The expansion factor relates the area of the detail plots (in total) to the area of the stand, in total. For example, if there are 4 detail plots of 625 m\ :sup:`2` each which is a total of 2500 m\ :sup:`2` of detail plots representing a whole stand which has 16 plots of 625 m\ :sup: `2` each on it with a total of 10000 m\ :sup: `2` (one Ha), then the expansion in this case is 4. Each Mg of biomass or single tree measured in the `detail` study is worth 4 x itself in the full sized study. In the final synopsis these are back weighted by the proportionate area of the plots to the whole
 
         The expansion factor only applies to trees whose dbhs are greater than the minimum dbh (usually 5.0 cm) and less than the smallest dbh for the not-detail plots (usually 15.0 cm). The terms `large` and `small` are used casually throughout the program to refer to these size groups.
         
@@ -295,7 +304,7 @@ class Capture(object):
 
         :Capture.expansion: the name of the lookup table created, which can be referenced as an attribute of the Capture object.
 
-        .. note: Unlike the other Capture methods, expansion does not require the "plot" attribute to be called.
+        .. note: Unlike the other Capture methods, expansion does not require the "plot" attribute to be called. Expasion has already found the aggregate of the plots and that aggregate is the same regardless of which detail plot one is on.
 
         .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
         """
@@ -328,7 +337,7 @@ class Capture(object):
                         pass
 
     def contains_unusual_plots(self):
-        """ Creates a lookup table for stands, plots, and years which have areas other than 625 m\ :sup:`2`
+        """ Creates a lookup table for stands, plots, and years which have areas other than 625 m\ :sup:`2`. This is the most common area.
 
         While many of the plots have the same area, those that do not can be called from the database explicitly. It is then easier to add all the plots together to get the total area of the stand, or to apply this area to the individual trees per hectare method.
         
@@ -342,9 +351,10 @@ class Capture(object):
 
         **RETURNS**
 
-        :Capture.uplot_areas: the name of the lookup table created, which can be referenced as an attribute of the Capture object.
+        :Capture.uplot_areas: A referenced table for the areas of plots which are not 625 m\ :sup:`2`.
 
         .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
+        .. warning: Discussions on watersheds lead us to thinking there may be another dimension for this which isn't in the current program.
         """
 
         sql = YamlConn().queries['stand']['query_unusual_plot']
@@ -373,7 +383,7 @@ class Capture(object):
                 pass
 
     def get_total_stand_area(self):
-        """ Creates a lookup table for stands total areas in m\ :sup:`2`
+        """ Creates a lookup table for stands total areas in m\ :sup:`2`.
 
         The sum of the areas of each plots is calculated in the sql, i.e. "select year, standid, sum(area_m2_corr) from plotAreas group by standid, year"
 
@@ -389,7 +399,7 @@ class Capture(object):
 
         **RETURNS**
 
-        :Capture.total_areas: the total area of all the plots for that stand and year.
+        :Capture.total_areas: the total area of all the plots for that stand and year. All stands and years are included here.
 
         .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
         """
@@ -429,7 +439,7 @@ class Capture(object):
 
         **RETURNS**
 
-        :Capture.num_plots: the number of plots for that stand and year.
+        :Capture.num_plots: the number of plots for that stand and year. Serves no purpose in computation and is only used to generated the required outputs. 
 
         .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
         """

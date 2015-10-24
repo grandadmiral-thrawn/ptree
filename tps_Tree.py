@@ -8,10 +8,13 @@ import biomass_basis
 
 
 class Tree(object):
-    """ A Tree object contains the required metrics and functions to compute Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Volume ( m\ :sup:`3` and m\ :sup:`3`/Ha ) , and Basal Area ( m\ :sup:`2` and m\ :sup:`2`/Ha ) for any one tree. 
-    Tree objects will also create a check file for individual tree history problems.
+    """ A Tree object contains the required metrics and functions to compute Biomass ( Mg ), Jenkins Biomass ( Mg ), Volume ( m\ :sup:`3` ) , and Basal Area ( m\ :sup:`2` ) for any one tree. 
 
-    Tree objects represent a tree as it is in TP00101; that is, each Tree object contains all the years of that tree's re-measurements, no matter its status.
+    Tree objects can also create a check file for individual tree history problems.
+
+    Tree objects represent a tree as it is in TP00101; that is, each Tree object contains all the years of that tree's re-measurements, no matter its status. 
+
+    A Tree will also detail which of it's components it calculates: most softwoods get initially the volume of stemwood and convert to biomass, and most hardwoods get initially the total aboveground biomass, and convert to volume. Jenkins equations always get the total aboveground biomass.
 
     .. Example:
 
@@ -24,13 +27,13 @@ class Tree(object):
     >>> A.tree_query= "SELECT <columns> from ..."
     >>> A.eqn_query = "SELECT <columns> from ..."
     >>> A.species = "TSHE"
-    >>> A.state = [[1942, 16.0, '1', 'G'], [1945, 17.9, '1','G']]
+    >>> A.state = [(1942, 16.0, '1', 'G'), (1945, 17.9, '1','G')]
     >>> A.eqns = {'normal' : lambda x :<function 039459x342>}
     >>> A.woodden = 0.44
 
     .. note: Tree.state contains [year, dbh, status, dbh_code]. Although status is an integer, it is recorded as a string here because it is descriptive. '1' is OK, '2' is Ingrowth, '3' is merged or fused, '6' is dead, and '9' is missing. See : `Tree Status Codes <http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&dbcode=Tp001&attid=7291&topnav=8/>`_ . DBH Codes are also all displayed as strings, although some are integers. Description here : `Tree DBH Codes <http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&dbcode=Tp001&attid=7287&topnav=8/>`_
 
-    .. warning: A.cur must be created in an external variable
+    .. warning: A.cur must be created in an external variable, or this will be very slow, because it will want to go to the database many times if you run more than one tree.
 
     """
 
@@ -47,6 +50,7 @@ class Tree(object):
         self.state =[]
         self.eqns = {}
         self.proxy = ""
+        self.component = ""
         self.woodden = 0.0
 
         self.get_a_tree()
@@ -67,7 +71,7 @@ class Tree(object):
 
         self.cur.execute(sql)
 
-        for index,row in enumerate(self.cur):
+        for index, row in enumerate(self.cur):
             if index == 0:
                 self.species = str(row[1]).strip().lower()
                 self.standid = str(row[2]).strip().lower()
@@ -110,6 +114,13 @@ class Tree(object):
             self.proxy = proxy
 
             try:
+                component = str(row[13]).strip().lower()
+            except Exception:
+                component = "None"
+
+            self.component = component
+
+            try:
                 h1 = round(float(str(row[3])),6)
             except:
                 h1 = None
@@ -142,16 +153,14 @@ class Tree(object):
             except:
                 j2 = None
 
-            # for the computation of ACCI, exclusively...
-            if form != 'as_compbio':
+            if self.species == "acci":
+                print("ACCI tree found, number " + self.tid + ", do not compute!")
+                continue
+
+            else:
+            
                 this_eqn = lambda x : biomass_basis.which_fx(form)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
                 self.eqns.update({str(row[1]).rstrip().lower():this_eqn})
-
-                #print(biomass_basis.which_fx(form))
-
-            elif form == 'as_compbio':
-                this_eqn = lambda x: biomass_basis.which_fx('as_biopak')(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
-                self.eqns.update({str(row[12].rstrip().lower()):this_eqn})
 
     def compute_biomasses(self):
         """ Compute biomass (Mg) , volume (m\ :sup:`3`), Jenkins' biomass (Mg) and wood density (g/cm\ :sup:`3`) from equations
@@ -189,9 +198,10 @@ class Tree(object):
         except Exception:
             
             if self.species == "acci":
-                list_of_biomasses = [biomass_basis.as_compbio(x, self.eqns) for (_,x,_,_) in self.state]
-                list_of_basal = [round(0.00007854*float(x)*float(x),6) for (_,x,_,_) in self.state]
-                
+                print("acci found, do not compute! please remove from database tree: " + self.tid)
+                list_of_biomasses = []
+                list_of_basal = []
+
                 return list_of_biomasses, list_of_basal
             
             else:
@@ -248,17 +258,18 @@ class Tree(object):
                                 print("error in tps_Tree.py with dealing with biomasses where DBH is None?")
                                 return list_of_biomasses, list_of_basal
                         except Exception:
-                            print("still some kind of error in tree computation")
+                            print("still some kind of error in tree computation, treeid is " + self.tid + " please check databases for species and status")
 
     def is_detail(self, XFACTOR):
         """ Returns the expansion attribute from the Capture object as a dictionary specific for this tree.  
 
+        First the stand is checked against the list of stands taht at some point in time contained a detail plot. If the stand is not in the list a default lookup of 1.0 is returned. Otherwise, a multiplier for detail plot is returned.
+
         If the plot is a detail plot and the tree has a dbh which is less than 15.0 cm but greater than the minimum dbh listed, then a factor other than 1.0 will be returned.
 
-        
         **INTERNAL VARIABLES**
 
-        :XFACTOR: is an instance of the Capture object, used for reference here.
+        :XFACTOR: is an instance of the Capture object, which tells us if a plot is a detail plot or not. 
         :standid: the stand of a tree object
         :plot: the plotid attribute of a tree object
         :dbh: the dbh attribute of a tree object
@@ -427,33 +438,17 @@ class Tree(object):
             
             return tc
 
-    def output_tree_agg(self, Bios, Details, Checks, Areas, datafile = 'all_indv_tree_output.csv', checkfile = 'all_check_tree_output.csv', mode = 'wt'):
-        """ Writes a csv files, containing both the tree measurements for the individual trees and a "per hectare" version. If filenames are given as arguements, these can be used, otherwise, default filenames will be assigned. Writes a "checks" file if it needs to.
+    def output_tree_agg(self, Bios, Checks, datafile = 'all_indv_tree_output.csv', checkfile = 'all_check_tree_output.csv', mode = 'wt'):
+        """ Writes a csv files, for both the biomasses and the "checks". If filenames are given as arguements, these can be used, otherwise, default filenames will be assigned.
 
         .. note: THIS IS THE CURRENT PREFERRED METHOD. 
 
         **INPUT VARIABLES**
 
         :Bios: computed biomasses, Jenkins' biomasses, basal areas, volumes etc. from `compute_biomass()`
-        :Details: expansion factors for the specific tree in question - includes whether or not a detail plot as well as the DBH of the tree
         :Checks: reference dictionary from `check_trees()`
-        :Areas: reference dictionary from `is_unusual_area()`
         :datafile, checkfile: the names of csv files for output. The first arguement will be for the data, the second will be for the checks.
         :mode: `wt` for write one time, `a` for append.
-
-        **INTERNAL VARIABLES**
-
-        The expansion factor is an internal variable. At the moment we compute it as 
-
-        .. code-block:: python
-
-            expansion_factor_revised = 10000./Areas[each_state[0]]/Details
-
-        In this instance, Details is the total area of the plots which are detail plots. 
-
-        ..example::
-
-            expansion_factor_revised = 10000./625
         """
 
         # Writes a new "aggregate" output with both tree on per hectare basis and tree NOT per hectare.
@@ -463,7 +458,7 @@ class Tree(object):
             
             # if the file is in append mode, do not write headers
             if mode != 'a':
-                headers = ['DBCODE', 'ENTITY', 'STUDYID', 'STANDID', 'TREEID', 'SPECIES', 'PROXY_USED', 'WOOD_DENSITY_G_CM3', 'YEAR', 'DBH_CM', 'TREE_STATUS', 'BASAL_AREA_M2', 'BASAL_AREA_M2_HA', 'VOLUME_M3', 'VOLUME_M3_HA', 'BIOMASS_MG', 'BIOMASS_MG_HA', 'JENKINS_MG', 'JENKINS_MG_HA','TPHX']
+                headers = ['DBCODE', 'ENTITY', 'TREEID', 'COMPONENT', 'YEAR', 'BASAL_AREA_M2', 'VOLUME_M3', 'BIOMASS_MG', 'JENKINS_MG', 'COMP_MG']
                 writer.writerow(headers)
             
             else:
@@ -471,14 +466,9 @@ class Tree(object):
 
             for index, each_state in enumerate(self.state):
 
-                # the proportion of a hectare that the plot is:
-                expansion_factor_revised = 10000./Areas[each_state[0]]
-
-                # for the final two columns : the tree's "worth" in the stand -  most trees are 1.0 but a small tree on a detail might be "4.0"
-                # this information is in Details[each_state[0]]. The last column additionally normalizes the plot area by the expansion # factor, as Rob likes for his program
-
                 try:
-                    new_row = ['TP001', 'TBD', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], round(Bios[1][index],6), round((Bios[1][index]/Areas[each_state[0]])*10000,6), round(Bios[0][index][1],4), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round(Bios[0][index][0],4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round(Bios[0][index][2],4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4), round(expansion_factor_revised / Details[each_state[0]],4)]
+
+                    new_row = ['TP001', '13', self.tid.upper(), self.component, each_state[0], round(Bios[1][index],6), round(Bios[0][index][1],4), round(Bios[0][index][0],4),  round(Bios[0][index][2],4), 'None']
                     
                     writer.writerow(new_row)
 
@@ -487,16 +477,17 @@ class Tree(object):
                     if self.state[-1][1] == None and each_state == self.state[-1]:
                         self.state[-1][1] = self.state[-2][1]
 
-                        new_row = ['TP001', 'TBD', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], round(Bios[1][index],6), round((Bios[1][index]/Areas[each_state[0]])*10000,6), round(Bios[0][index][1],4), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round(Bios[0][index][0],4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round(Bios[0][index][2],4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4), round(expansion_factor_revised / Details[each_state[0]],4)]
+
+                        new_row = ['TP001', '13', self.tid.upper(), self.component, each_state[0],round(Bios[1][index],6), round(Bios[0][index][1],4), round(Bios[0][index][0],4), round(Bios[0][index][2],4), 'None']
                         
                         writer.writerow(new_row)
 
                     else:
-                        print("an unexpected error has occured while trying to print individual tree output, please debug.")
+                        print("an unexpected error has occured while trying to print individual tree output, please debug. check the inputs in tp00101 and the equations in tp00110")
                         import pdb; pdb.set_trace()
 
 
-        # writes the checks output, if it can be written, otherwise, returns a file containing only "NA" because the checks are Not Applicable. This would happen if there was only one remeasurement
+        # writes the checks output, if it can be written, otherwise, just goes on.
         if Checks != False:
 
             with open(checkfile, mode) as writefile:
@@ -519,8 +510,8 @@ class Tree(object):
             print("Could not write checks for " + self.tid + " - only one state exists :)")
 
 
-    def only_output_attributes(self, Bios, Details, Areas, datafile = 'all_indv_tree_output.csv', mode='wt'):
-        """ Writes a csv file, containing both the tree measurements for the individual trees and a "per hectare" version. Can accept a filename as arguement. Does not do checks.
+    def only_output_attributes(self, Bios, datafile = 'all_indv_tree_output.csv', mode='wt'):
+        """ Writes a csv file, containing both the tree measurements for the individual trees. Can accept a filename as arguement. Does not do checks.
 
         .. note: THIS IS THE CURRENT PREFERRED, EASY METHOD. It only writes the attributes, rather than trying to write all the checks as well, which take longer.
 
@@ -529,25 +520,19 @@ class Tree(object):
         **INPUT VARIABLES**
 
         :Bios: computed biomasses, Jenkins' biomasses, basal areas, volumes etc. from :compute_biomass():
-        :Details: expansion factors for the specific tree in question - includes whether or not a detail plot as well as the DBH of the tree.
-        :Areas: reference dictionary from :is_unusual_area():
         :datafile: the name of the csv file to output to.
         :mode: `wt` for write one time, `a` for append.
-
-        **INTERNAL VARIABLES**
-
-        :expansion_factor_revised: 10000/ (area of the plot * tree's expansion)
         """
 
         # Writes a new "aggregate" output with both tree on per hectare basis and tree NOT per hectare.
 
         with open(datafile, mode) as writefile:
             writer = csv.writer(writefile, delimiter = ",", quoting = csv.QUOTE_NONNUMERIC)
-            
+
             # if the file is in append mode, do not write headers
             if mode != 'a':
-                headers = ['DBCODE', 'ENTITY', 'STUDYID', 'STANDID', 'TREEID', 'SPECIES', 'PROXY_USED', 'WOOD_DENSITY_G_CM3', 'YEAR', 'DBH_CM', 'TREE_STATUS', 'BASAL_AREA_M2', 'BASAL_AREA_M2_HA', 'VOLUME_M3', 'VOLUME_M3_HA', 'BIOMASS_MG', 'BIOMASS_MG_HA', 'JENKINS_MG', 'JENKINS_MG_HA','TPHX']
-                
+            
+                headers = ['DBCODE', 'ENTITY', 'TREEID', 'COMPONENT', 'YEAR', 'BASAL_AREA_M2', 'VOLUME_M3', 'BIOMASS_MG', 'JENKINS_MG', 'COMP_MG']
                 writer.writerow(headers)
             
             else:
@@ -555,35 +540,24 @@ class Tree(object):
 
             for index, each_state in enumerate(self.state):
 
-                # the proportion of a hectare that the plot is:
-                expansion_factor_revised = 10000./Areas[each_state[0]]
-
-                # for the final two columns : the tree's "worth" in the stand -  most trees are 1.0 but a small tree on a detail might be "4.0"
-                # this information is in Details[each_state[0]]. The last column additionally normalizes the plot area by the expansion # factor, as Rob likes for his program
-
                 try:
-                    new_row = ['TP001', 'TBD', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], round(Bios[1][index],6), round((Bios[1][index]/Areas[each_state[0]])*10000,6), round(Bios[0][index][1],4), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round(Bios[0][index][0],4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round(Bios[0][index][2],4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4), round(expansion_factor_revised / Details[each_state[0]],4)]
+
+                    new_row = ['TP001', '13', self.tid.upper(), self.component, each_state[0], round(Bios[1][index],6), round(Bios[0][index][1],4), round(Bios[0][index][0],4),  round(Bios[0][index][2],4), 'None']
                     
                     writer.writerow(new_row)
 
-                    if each_state[0] not in Details.keys():
-                        new_row = ['TP001', 'TBD', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], round(Bios[1][index],6), round((Bios[1][index]/Areas[each_state[0]])*10000,6), round(Bios[0][index][1],4), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round(Bios[0][index][0],4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round(Bios[0][index][2],4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4), round(expansion_factor_revised,4)]
-                        print("year of " + str(each_state[0] + " was not in the detail reference given. Default scaling is 1.0. Please recheck after suzanne updates the db."))
-                        writer.writerow(new_row)
-                    else:
-                        pass
-
                 except KeyError:
-                    # same as before, if the final state is 9 and then 6 you could have subsequent missing dbh
+                    # occurs sometimes if the final state and the second to final state are 9 and then 6 ... 
                     if self.state[-1][1] == None and each_state == self.state[-1]:
                         self.state[-1][1] = self.state[-2][1]
 
-                        new_row = ['TP001', 'TBD', self.studyid, self.standid.upper(), self.tid.upper(), self.species.upper(), self.proxy.upper(), self.woodden, each_state[0], each_state[1], each_state[2], round(Bios[1][index],6), round((Bios[1][index]/Areas[each_state[0]])*10000,6), round(Bios[0][index][1],4), round((Bios[0][index][1]/Areas[each_state[0]])*10000,4), round(Bios[0][index][0],4), round((Bios[0][index][0]/Areas[each_state[0]])*10000,4), round(Bios[0][index][2],4), round((Bios[0][index][2]/Areas[each_state[0]])*10000,4), round(expansion_factor_revised / Details[each_state[0]],4)]
+
+                        new_row = ['TP001', '13', self.tid.upper(), self.component, each_state[0],round(Bios[1][index],6), round(Bios[0][index][1],4), round(Bios[0][index][0],4), round(Bios[0][index][2],4), 'None']
                         
                         writer.writerow(new_row)
 
                     else:
-                        print("error in writing the individual tree biomass etc. to file, please debug.")
+                        print("an unexpected error has occured while trying to print individual tree output, please debug. check the inputs in tp00101 and the equations in tp00110")
                         import pdb; pdb.set_trace()
 
 
@@ -634,51 +608,37 @@ if __name__ == "__main__":
     # A = Tree(cur, pcur, queries, 'CH09000100002')
     
     # Bios = A.compute_biomasses()
-    # Details = A.is_detail(XFACTOR)
     # Checks = A.check_trees()
-    # Areas = A.is_unusual_area(XFACTOR)
     
-    # A.output_tree(Bios, Details, Checks, Areas, mode='wt')
-    # print("end!")
 
-    # # a list of test trees to work through:
+    # # a list of test trees to work through -- just a sample set you can use that has a lot of diversity if you are interested!
+
     #sample_trees = ["OL03000100013", "OL03000100014", "CH42000100004", "CH42000100004","CH42000100005", "CH42000100138", "WS02010200001", "WS02010200002", "WS02010200003", "WS02010200004", "WS02010200005", "WS02010200007", "WS02010200006", "WS02010200008", "WS02010200009", "WS02010200010", "CFMF000100027", "FRA3000100001", "FRA3000100002", "FRA3000100003", "FRA3000100004", "FRA3000100005", "FRA3000100006", "FRA3000100007", "FRA3000100008", "FRA3000100009", "FRA3000100010", "FRA3000100011", "FRA3000100012", "FRA3000100013", "FRA3000100014", "FRA3000100015", "FRA3000100016", "FRA3000100017", "FRA3000100018", "FRA3000100019", "AX15000100001", "AX15000100002", "AX15000100003", "AX15000100004", "AX15000100005", "AX15000100006", "AX15000100007", "AX15000100008", "AX15000100009", "AX15000100010", "PIJE000100001", "PIJE000100002", "PIJE000100003", "PIJE000100004", "PIJE000100005", "PIJE000100006", "PIJE000100007", "PIJE000100008", "PIJE000100009", "PIJE000100010", "FRA3000100020", "NCNA000100014", "NCNA003100232", "NCNA002800010", "NCNA001800216", "NCNA002100017", "NCNA001800137", "NCNA001200063", "NCNA000400081", "NCNA000900065", "NCNA000400100", "NCNA004000089", "NCNA004400132", "NCNA004400056", "NCNA003700002", "NCNA003900028", "NCNA004000057", "NCNA003700019", "NCNA003900055", "NCNA003500196", "NCNA003800069", "HS02000700010", "HS02000700011", "HS02000700012", "HS02000700013", "HS02000700014", "HS02000800001", "HS02000800002", "HS02000800003", "HS02000800004", "HS02000800005", "HS02000800006", "HS02000800007", "HS02001300016", "HS02001300017", "HS02001300018", "HS02001300019", "HS02001300020", "HS02001300021", "HS02001300022", "HS02001400001", "CH11000100001", "CH11000100002", "CH11000100003", "CH11000100004", "CH11000100005", "CH11000100006", "CH11000100007", "CH11000100008", "CH11000100009", "CH11000100010", "CFMF000100001", "CFMF000100002", "CFMF000100003", "CFMF000100004", "CFMF000100005", "CFMF000100006", "CFMF000100007", "CFMF000100008", "CFMF000100009", "CFMF000100010", "BPNF000100001", "BPNF000100002"," BPNF000100003", "BPNF000100004", "BPNF000100005", "BPNF000100006", "BPNF000100007", "BPNF000100008", "BPNF000100009", "BPNF000100010", "AB08000100001", "AB08000100002", "AB08000100003", "AB08000100004", "AB08000100005", "AB08000100006", "AB08000100007", "AB08000100008", "AB08000100009", "AB08000100010", "MH02000100016", "MH02000100134", "MH02000100247", "MH02000100367", "MH02000100452", "MH02000100525", "MH02000100135", "MH02000100136", "MH02000100137", "MH02000100138", "RS33000100001", "RS33000100002", "RS33000100003", "RS33000100004", "RS33000100005", "RS33000100006", "RS33000100007", "RS33000100008", "RS33000100009", "RS33000100010", "SUCR000100001", "SUCR000100002", "SUCR000100003", "SUCR000100004", "SUCR000100005", "SUCR000100006", "SUCR000100007", "SUCR000100008", "SUCR000100009", "SUCR000100010", "SN02000100001", "SN02000100002", "SN02000100003", "SN02000100004", "SN02000100005", "SN02000100006", "SN02000100007", "SN02000100008", "SN02000100009", "SN02000100010", "AB08000100007", "AB08000100008", "AB08000100009", "AB08000100010", "AB08000100011", "UCRS000100001", "UCRS000100002", "UCRS000100003", "UCRS000100004", "UCRS000100005", "UCRS000100006", "UCRS000100007", "UCRS000100008", "UCRS000100009", "UCRS000100010", "MH02000100016", "MH02000100134", "MH02000100247", "MH02000100367", "MH02000100452", "MH02000100525", "MH02000100135", "MH02000100136", "MH02000100137", "MH02000100138", "CH12000400121", "CH12000400120", "CH12000400119", "CH12000400118", "CH12000400117", "CH12000400116", "CH12000400115", "CH12000400114", "CH12000400113", "CH12000400112", "WS09001600045", "WS09001600044", "WS09001600043", "WS09001600042", "WS09001600041", "WS09001600040", "WS09001600039", "WS09001600038", "WS09001600037", "WS09001600036", 'RS17000100001', 'RS17000100002', 'RS17000100003', 'RS17000100004', 'RS17000100005', 'RS17000100006', 'RS17000100007', 'RS17000100008', 'RS17000100009', 'RS17000100010', 'RS17000100011', 'RS17000100012', 'RS17000100013', 'RS17000100014', 'RS17000100015', 'RS17000100016', 'RS17000100017', 'RS17000100018', 'RS17000100019', 'RS17000100020', 'RS17000100021', 'RS17000100022', 'RS17000100023', 'RS17000100024', 'RS17000100025', 'RS17000100026', 'RS17000100027', 'RS17000100028', 'RS17000100029', 'RS17000100030', 'RS17000100031', 'RS17000100032', 'RS17000100033', 'RS17000100034', 'RS17000100035', 'RS17000100036', 'RS17000100037', 'RS17000100038', 'RS17000100039', 'RS17000100040', 'RS17000100041', 'RS17000100042', 'RS17000100043', 'RS17000100044', 'RS17000100045', 'RS17000100046', 'RS17000100047', 'RS17000100048', 'RS17000100049', 'RS17000100050', 'RS17000100051', 'RS17000100052', 'RS17000100053', 'RS17000100054', 'RS17000100055', 'RS17000100056', 'RS17000100057', 'RS17000100058', 'RS17000100059', 'RS17000100060', 'RS17000100061', 'RS17000100062', 'RS17000100063', 'RS17000100064', 'RS17000100065', 'RS17000100066', 'RS17000100067', 'RS17000100068', 'RS17000100069', 'RS17000100070', 'RS17000100071', 'RS17000100072', 'RS17000100073', 'RS17000100074', 'RS17000100075', 'RS17000100076', 'RS17000100077', 'RS17000100078', 'RS17000100079', 'RS17000100080', 'RS17000100081', 'RS17000100082', 'RS17000100083', 'RS17000100084', 'RS17000100085', 'RS17000100086', 'RS17000100087', 'RS17000100088', 'RS17000100089', 'RS17000100090', 'RS17000100091', 'RS17000100092', 'RS17000100093', 'RS17000100094', 'RS17000100095', 'RS17000100096', 'RS17000100097', 'RS17000100098', 'RS17000100099', 'RS17000100100', 'RS17000100101', 'RS17000100102', 'RS17000100103', 'RS17000100104', 'RS17000100105', 'RS17000100106', 'RS17000100107', 'RS17000100108', 'RS17000100109', 'RS17000100110', 'RS17000100111', 'RS17000100112', 'RS17000100113', 'RS17000100114', 'RS17000100115', 'RS17000100116', 'RS17000100117', 'RS17000100118', 'RS17000100119', 'RS17000100120', 'RS17000100121', 'RS17000100122', 'RS17000100123', 'RS17000100124', 'RS17000100125', 'RS17000100126', 'RS17000100127', 'RS17000100128', 'RS17000100129', 'RS17000100130', 'RS17000100131', 'RS17000100132', 'RS17000100133', 'RS17000100134', 'RS17000100135', 'RS17000100136', 'RS17000100137', 'RS17000100138', 'RS17000100139', 'RS17000100140', 'RS17000100141', 'RS17000100142', 'RS17000100143', 'RS17000100144', 'RS17000100145', 'RS17000100146', 'RS17000100147', 'RS17000100148', 'RS17000100149', 'RS17000100150', 'RS17000100151', 'RS17000100152', 'RS17000100153', 'RS17000100154', 'RS17000100155', 'RS17000100156', 'RS17000100157', 'RS17000100158', 'RS17000100159', 'RS17000100160', 'SP06000100001', 'SP06000100002', 'SP06000100003', 'SP06000100004', 'SP06000100005', 'SP06000100006', 'SP06000100007', 'SP06000100008', 'SP06000100009', 'SP06000100010', 'SP06000100011', 'SP06000100012', 'SP06000100013', 'SP06000100014', 'SP06000100015', 'SP06000100016', 'SP06000100017', 'SP06000100018', 'SP06000100019', 'SP06000100020', 'SP06000100021', 'SP06000100022', 'SP06000100023', 'SP06000100024', 'SP06000100025', 'SP06000100026', 'SP06000100027', 'SP06000100028', 'SP06000100029', 'SP06000100030', 'SP06000100031', 'SP06000100032', 'SP06000100033', 'SP06000100034', 'SP06000100035', 'SP06000100036', 'SP06000100037', 'SP06000100038', 'SP06000100039', 'SP06000100040', 'SP06000100041', 'SP06000100042', 'SP06000100043', 'SP06000100044', 'SP06000100045', 'SP06000200001', 'SP06000200002', 'SP06000200003', 'SP06000200004', 'SP06000200005', 'SP06000200006', 'SP06000200007', 'SP06000200008', 'SP06000200009', 'SP06000200010', 'SP06000200011', 'SP06000200012', 'SP06000200013', 'SP06000200014', 'SP06000200015', 'SP06000200016', 'SP06000200017', 'SP06000200018', 'SP06000200019', 'SP06000200020', 'SP06000200021', 'SP06000200022', 'SP06000200023', 'SP06000200024', 'SP06000200025', 'SP06000200026', 'SP06000200027', 'SP06000200028', 'SP06000200029', 'SP06000200030', 'SP06000200031', 'SP06000200032', 'SP06000200033', 'SP06000200034', 'SP06000200035', 'SP06000200036', 'SP06000200037', 'SP06000200038', 'SP06000200039', 'SP06000200040', 'SP06000200041', 'SP06000200042', 'SP06000200043', 'SP06000200044', 'SP06000200045', 'SP06000200046', 'SP06000200047', 'SP06000200048', 'SP06000200049', 'SP06000200050', 'SP06000200051', 'SP06000200052', 'SP06000200053', 'SP06000200054', 'SP06000200055', 'SP06000200056', 'SP06000200057', 'SP06000200058', 'SP06000200059', 'SP06000200060', 'SP06000300001', 'SP06000300002', 'SP06000300003', 'SP06000300004', 'SP06000300005', 'SP06000300006', 'SP06000300007', 'SP06000300008', 'SP06000300009', 'SP06000300010', 'SP06000300011', 'SP06000300012', 'SP06000300013', 'SP06000300014', 'SP06000300015', 'SP06000300016', 'SP06000300017', 'SP06000300018', 'SP06000300019', 'SP06000300020', 'SP06000300021', 'SP06000300022', 'SP06000300023', 'SP06000300024', 'SP06000300025', 'SP06000300026', 'SP06000300027', 'SP06000300028', 'SP06000300029', 'SP06000300030', 'SP06000300031', 'SP06000300032', 'SP06000300033', 'SP06000300034', 'SP06000300035', 'SP06000300036', 'SP06000300037', 'SP06000300038', 'SP06000300039', 'SP06000300040', 'SP06000300041', 'SP06000300042', 'SP06000300043', 'SP06000300044', 'SP06000300045', 'SP06000300046', 'SP06000300047', 'SP06000300048', 'SP06000300049', 'SP06000300050', 'SP06000300051', 'SP06000300052', 'SP06000300053', 'SP06000300054', 'SP06000300055', 'SP06000300056', 'SP06000300057', 'SP06000300058', 'SP06000300059', 'SP06000300060', 'SP06000300061', 'SP06000300062', 'SP06000300063', 'SP06000300064', 'SP06000300065', 'SP06000300066', 'SP06000300067', 'SP06000300068', 'SP06000300069', 'SP06000300070', 'SP06000300071', 'SP06000300072', 'SP06000300073', 'SP06000300074', 'SP06000300075', 'SP06000300076', 'SP06000300077', 'SP06000300078', 'SP06000300079', 'SP06000300080', 'SP06000400001', 'SP06000400002', 'SP06000400003', 'SP06000400004', 'SP06000400005', 'SP06000400006', 'SP06000400007', 'SP06000400008', 'SP06000400009', 'SP06000400010', 'SP06000400011', 'SP06000400012', 'SP06000400013', 'SP06000400014', 'SP06000400015', 'SP06000400016', 'SP06000400017', 'SP06000400018', 'SP06000400019', 'SP06000400020', 'SP06000400021', 'SP06000400022', 'SP06000400023', 'SP06000400024', 'SP06000400025', 'SP06000400026', 'SP06000400027', 'SP06000400028', 'SP06000400029', 'SP06000400030', 'SP06000400031', 'SP06000400032', 'SP06000400033', 'SP06000400034', 'SP06000400035', 'SP06000400036', 'SP06000400037', 'SP06000400038', 'SP06000400039', 'SP06000400040', 'SP06000400041', 'SP06000400042']
 
-    # note to self (fox) - for the t-areas in a script, you should set it so that if it's going to be called by the stand, or even a long list of trees, you only have to do TAreas 1 x. 
-
-
-    # a query of trees by stand to work with:
+    # a shorter query of trees by stand to work with:
     sample_trees = ["HGBK061000002", "HGBK061000003", 'SP06000400035', 'SP06000400036', 'SP06000400037']
 
     # create output with the first tree, to initiate the csv file.
     First_Tree = Tree(cur, pcur, queries, sample_trees[0])
     Bios = First_Tree.compute_biomasses()
-    Details = First_Tree.is_detail(XFACTOR)
     Checks = First_Tree.check_trees()
-    Areas = First_Tree.is_unusual_area(XFACTOR)
 
-    First_Tree.output_tree_agg(Bios, Details, Checks, Areas, datafile = "10212015_bio.csv", checkfile="10212015_checks.csv", mode = 'wt')
+    First_Tree.output_tree_agg(Bios, Checks, datafile = "10232015_bio.csv", checkfile="10232015_checks.csv", mode = 'wt')
 
     # clear out the global variables by setting to empty arrays
     Bios = {}
-    Details = {}
     Checks = {}
-    Areas = {}
 
     for each_tree in sample_trees[1:]:
         A = Tree(cur, pcur, queries, each_tree)
         Bios = A.compute_biomasses()
-        Details = A.is_detail(XFACTOR)
         Checks = A.check_trees()
-        Areas = A.is_unusual_area(XFACTOR)
 
-        A.output_tree_agg(Bios, Details, Checks, Areas, datafile= "10212015_bio.csv", checkfile="10212015_checks.csv", mode = 'a')
+        A.output_tree_agg(Bios, Checks, datafile= "10232015_bio.csv", checkfile="10232015_checks.csv", mode = 'a')
 
         # special cases:
 
         # WE NEED TO ACCOUNT FOR IF plot id is 11 and stand is CH11 it should be 01. We need to account for trees on FRD2/FRD1
         Bios = {}
-        Details = {}
         Checks = {}
-        Areas = {}
     
