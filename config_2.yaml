@@ -1,9 +1,6 @@
 server: stewartia.forestry.oregonstate.edu:1433
-user: petersonf
-password: D0ntd1sATLGA!!
+user: ltermeta
+password: $CFdb4LterWeb!
 database: FSDBDATA
 
 query_file: qf_2.yaml
-
-litedb: areas.db
-litetable: plotAreas

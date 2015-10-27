@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>TPS: Tree, Plot, Stand - Biomass Aggregation &mdash; ptree 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ptree 0.1 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ptree 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tps-tree-plot-stand-biomass-aggregation">
+<h1>TPS: Tree, Plot, Stand - Biomass Aggregation<a class="headerlink" href="#tps-tree-plot-stand-biomass-aggregation" title="Permalink to this headline">¶</a></h1>
+<p>TPS is a set of Python 3 modules for the aggregation of trees, plots, and stands from the USFS reference stands data maintained by the Corvallis Forest Science Lab.</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#main-features" id="id3">Main Features</a></li>
+<li><a class="reference internal" href="#installation" id="id4">Installation</a></li>
+<li><a class="reference internal" href="#output-options" id="id5">Output Options</a></li>
+</ul>
+</div>
+<div class="section" id="main-features">
+<h2>Main Features<a class="headerlink" href="#main-features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>tps_Tree &lt;- individual trees</li>
+<li>tps_Plot &lt;- plots on stands</li>
+<li>tps_Stand &lt;- stands</li>
+<li>tps_NPP &lt;- net primary productivity for plots and stands</li>
+<li>tps_CLI &lt;- command line interface</li>
+<li>tps_Sample &lt;- tests</li>
+<li>SQL queries and configs in yaml files for interoperability!</li>
+<li>lots of docs!</li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Set up Python 3 on your computer, and then run the darn thing!
+Best to start with tps_Sample, which will run a series of test trees, plots, and stands on a known dataset (that it will access from the server to test your connection) and output the results. To run it do:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_Sample.py
+</pre></div>
+</div>
+<p>Assuming this goes well, please read the docs! You&#8217;ll be running the remainder of your analyses out of the command line interface for now, but there are a lot of options.</p>
+<div class="section" id="development-version">
+<h3>Development version<a class="headerlink" href="#development-version" title="Permalink to this headline">¶</a></h3>
+<p>The <strong>latest development version</strong> can be installed directly from GitHub. Use this repository. Note that when Fox changes contracts, maintenance will be sporadic at best.</p>
+</div>
+</div>
+<div class="section" id="output-options">
+<h2>Output Options<a class="headerlink" href="#output-options" title="Permalink to this headline">¶</a></h2>
+<p>By default, outputs for a computational analysis will be stored in <code class="docutils literal"><span class="pre">target</span></code> + <code class="docutils literal"><span class="pre">_basic.csv</span></code> and outputs for a check analysis will be stored in <code class="docutils literal"><span class="pre">target</span></code> + <code class="docutils literal"><span class="pre">_checks.csv</span></code>. <code class="docutils literal"><span class="pre">target</span></code> in these cases refers to the object you are analyzing.</p>
+<p>You can control the <code class="docutils literal"><span class="pre">target</span></code> to be a tree, stand, plot, or study.:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="84%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ncna000100005</span></code></td>
+<td>Only addresses the tree NCNA000100005.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ncna</span></code></td>
+<td>Addresses all trees on stand NCNA or NCNA the stand as a whole.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">hsgy</span></code></td>
+<td>Addresses all stands in the HSGY study.</td>
+</tr>
+<tr class="row-even"><td><a href="#id1"><span class="problematic" id="id2">``</span></a>[ncna, ch11]`</td>
+<td>Addresses all trees on stand NCNA and on stand CH11 or the stands NCNA and CH11 as wholes.</td>
+</tr>
+</tbody>
+</table>
+<p>More about CLI.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Character</th>
+<th class="head">Stands for</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">t</span></code></td>
+<td>tree.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">s</span></code></td>
+<td>stand.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">w</span></code></td>
+<td>stand by tree.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">p</span></code></td>
+<td>study.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">q</span></code></td>
+<td>quality control.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">a</span></code></td>
+<td>all.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">n</span></code></td>
+<td>net primary productivity</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">TPS: Tree, Plot, Stand - Biomass Aggregation</a><ul>
+<li><a class="reference internal" href="#main-features">Main Features</a></li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#development-version">Development version</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#output-options">Output Options</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/README.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Fox Peterson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      
+      |
+      <a href="_sources/README.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -267,7 +267,6 @@ def as_compbio(dbh, component_dict):
         volume = 0.
 
         for index, each_component in enumerate(list(component_dict.keys())):
-            # compute biomass and volume - jenkin's is not needed for each component!
             bio_1, vol_1, jbio, woodden = component_dict[each_component](dbh)
             biomass += bio_1
             volume += vol_1
