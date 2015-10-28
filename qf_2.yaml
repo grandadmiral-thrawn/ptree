@@ -12,7 +12,7 @@ stand:
     query_context_dtl1: "SELECT PLOTID, year, detailplot, PLOT_AREA_M2_CORR, DBH_MINIMUM from fsdbdata.dbo.tp00112 where plotid like '{standid}%'"
     query_additions: "select distinct plotid, year from fsdbdata.dbo.tp00112 where activity like 'A'"
     query_mortalities: "select distinct plotid, year from fsdbdata.dbo.tp00112 where activity like 'M'"
-    query_replacements: "select distinct(year) from fsdbdata.dbo.tp00112 where plotid like '{standid}%' and activity like 'R'"
+    query_replacements: "select distinct(year) from fsdbdata.dbo.tp00112 where plotid like '{standid}%' and activity in ('R','E')"
     query_all_year: "select distinct(year) from fsdbdata.dbo.tp00102 where treeid like '{standid}%'"
     lite_context_dtl_2: "SELECT plot, year, detailplot,PLOT_AREA_M2_CORR, DBH_MINIMUM from plotAreas where standid like '{standid}'"
     query: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, fsdbdata.dbo.tp00102.year, fsdbdata.dbo.tp00102.dbh_code, fsdbdata.dbo.tp00101.PSP_STUDYID FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00102 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid WHERE fsdbdata.dbo.tp00101.standid like '{standid}' ORDER BY fsdbdata.dbo.tp00102.treeid ASC"

@@ -61,12 +61,13 @@ class Stand(object):
         # check if it is an addition; if is an addition, move to the subsequent year on that plot by creating self.replacements.
         self.check_additions_and_mort(XFACTOR)
         self.get_all_live_trees()
-        import pdb; pdb.set_trace()
         self.get_all_dead_trees()
+        
 
         # # checks if it is a mortality plot, and, if so, shifts the dbhs to the year they should be on for the death totals
         # is_mort = self.check_mort()
         # self.update_mort(is_mort)
+
         
 
     def select_eqns(self):
@@ -192,21 +193,30 @@ class Stand(object):
             for row in self.cur:
                 decent_years.append(int(row[0]))
 
-            print(decent_years)
+            decent_years_sorted = sorted(decent_years)
+
             # each additions year is replaced by a correct year from the table and the replacements table is updated. 
             if additions_years != []:
                 for each_year in additions_years:
+                    
                     try:
-                        index = bisect.bisect_right(decent_years, each_year)
+                        if each_year not in decent_years:
+                            index = bisect.bisect_left(decent_years, each_year)-1
+                        elif each_year in decent_years:
+                            index = bisect.bisect_left(decent_years, each_year)
+                        
                         replacement_year = decent_years[index]
+                        print("the replacement year is" + str(replacement_year))
                         plots_applied_to = XFACTOR.additions[self.standid][each_year]
                         self.replacements.update({each_year:{'replacement_year': replacement_year, 'plots': plots_applied_to}})
                     
                     except Exception:
+                        print("exception thrown at line 2012")
                         import pdb; pdb.set_trace()
             else:
                 pass
 
+            # each mortality year is replaced by a correct year from the table and the mort_replacements plots are given
             if mortality_years != []:
                 for each_year in mortality_years:
                     try:
@@ -300,6 +310,7 @@ class Stand(object):
 
             if self.additions != {}:
                 
+                # if the tree is in an additions year, roll it back to where it belongs
                 if year in self.additions.keys() and plotid in self.additions[year]:
                     new_year = self.replacements[year]['replacement_year']
                     year = new_year
@@ -317,9 +328,6 @@ class Stand(object):
                     year = new_year
                 else:
                     pass
-
-
-                    ########### YOU ARE HERE!!!!!!!!#######
 
                 self.od[year]={species:{plotid: {'live': {}, 'ingrowth': {}, 'dead': {tid: (dbh, status, dbh_code)}}}}
             
@@ -369,6 +377,7 @@ class Stand(object):
                     elif status in ["6", "9"] and plotid in self.od[year][species][plotid]['dead']:
                         self.od[year][species][plotid]['dead'].update({tid: (dbh, status, dbh_code)})
 
+
     def get_all_dead_trees(self):
         """ Gets all the dead trees from TP00103. Updates self.od, which was made in get_all_live_trees().
 
@@ -387,9 +396,9 @@ class Stand(object):
                     continue
 
             try:
-                plotid = int(str(row[3][4:]))
+                plotid = str(row[3]).rstrip().lower()
             except Exception:
-                plotid = None
+                plotid = "None"
 
             try:
                 species = str(row[1]).strip().lower()
@@ -400,6 +409,7 @@ class Stand(object):
                 dbh = round(float(row[4]), 3)
             except Exception:
                 dbh = None
+                import pdb; pdb.set_trace()
 
             # all status are 6
             status = "6"
@@ -411,110 +421,113 @@ class Stand(object):
 
             dbh_code = "M"
 
-            if year in self.additions:
-                year = self.replacement
-                #print("conducted a replacement on dead")
-            else:
+            if self.mortalities != {}:
 
-
-                if year not in self.od:
-                    self.od[year] = {species: {plotid: {'live': {}, 'ingrowth': {}, 'dead': {tid: (dbh, status, dbh_code)}}}}
-
-                elif year in self.od:
-                    if species not in self.od[year]:
-                        self.od[year][species] ={plotid: {'live': {}, 'ingrowth': {}, 'dead': {tid: ( dbh, status, dbh_code)}}}
-
-                    elif species in self.od[year]:
-                        if plotid not in self.od[year][species]:
-                            self.od[year][species][plotid] = {'dead': {tid: (dbh, status, dbh_code)}, 'live': {}, 'ingrowth': {}}
-                    
-                        elif plotid in self.od[year][species]:   
-                            self.od[year][species][plotid]['dead'].update({tid: (dbh, status, dbh_code)})
-                        
-
-    def check_mort(self):
-        """ Checks if the year is a mortality year. 
-
-        Populates self.mortality_years if there are any mortality years. Also sets self.shifted to the output dictionary if there are no mortality years. The mortality years are those with only dead trees but no live ones. Effectively, if this happened in the wild, it would be a "mortality year" even if it weren't intended to be, so the math will resolve.
-
-        **INTERNAL VARIABLES**
-
-        :list_all_years_possible_mortality: holds the years that might be mortality years, which are discovered based on if they have counts of mortality, but no live or ingrowth trees.
-        """
-        # a year is a mortality year if there is no live biomass in that year for all species on a plot. include species because maybe useful for species
-        list_all_years_possible_mortality = []
-        
-        for each_year in self.od.keys():
-
-            if each_year not in self.total_area_ref.keys() and each_year < 2010:
-                list_all_years_possible_mortality.append(each_year)
-            else:
-                pass
-
-        # if there are no mortality years, return a false, and self.shifted for that year is the exact same as the actual values
-        if list_all_years_possible_mortality == []:
-            self.shifted = self.od
-            return False
-        
-        else:
-            # the mortality years attribute is set for the list of mortality years, and sorted. A true return triggers update mort function
-            self.mortality_years = sorted(list_all_years_possible_mortality)
-            return True
-
-
-    def update_mort(self, is_mort):
-        """ Returns a new dbh dictionary for the stand based on whether or not a year is a mortality year. If it is not a mortality year, the dictionary is the same as the original. If it is a mortality year, the dead trees are shifted to the subsequent year.
-
-        The bisect right function determines the windowing years from a given list around a given input year. 
-
-        **INTERNAL VARIABLES**
-
-        :list_of_live_years: a list of years when checks were performed that were not mortality only
-        :dead_year: the year of the mortality check to be aggregated to a selection from list_of_live_years
-        :is_mort: Boolean value of whether or not we should update mortality. If it was not a mortality year, we shifted the original output into the shifted dictionary using check_mort, without changing a value!
-        """
-        if is_mort != True:
-            pass
-        
-        else:
-            # in this list, all the years which are NOT mortality years, no matter what
-
-            list_live_years = [x for x in sorted(self.od.keys()) if x not in self.mortality_years]
-            self.shifted = {x: self.od[x] for x in list_live_years}
-            
-            for each_year in self.mortality_years:
-                mort_data = self.od[each_year]
-
-                # if the mortality year is not in the live year list, then the mortality belongs to the inventory to its "right"
-                if each_year not in list_live_years:
-                    index = bisect.bisect_right(list_live_years, each_year)
-                    try:
-                        update_year = list_live_years[index]
-                    except Exception:
-                        import pdb; pdb.set_trace()
+                # if the tree is in a mortality year, go ahead and roll it forward to the next real inventory
+                if year in self.mortalities.keys() and plotid in self.mortalities[year]:
+                    new_year = self.mort_replacements[year]['replacement_year']
+                    year = new_year
                 else:
-                    update_year = each_year
-                
-                # if the new mortality year isn't listed in the "shifted" data which was generated from the existing data in "od" add it in; this might happen if the mort was the very last inventory to happen
-                if update_year not in self.shifted.keys():
-                    self.shifted[update_year] = mort_data
-                
-                elif update_year in self.shifted.keys():
-                    for each_species in mort_data.keys():
-                        if each_species not in self.shifted[update_year].keys():
-                            self.shifted[update_year][each_species] = mort_data[each_species]
+                    pass
 
-                        elif each_species in self.shifted[update_year].keys():
-                            for each_plot in mort_data[each_species].keys():
-                                if each_plot not in self.shifted[update_year][each_species].keys():
-                                    self.shifted[update_year][each_species][each_plot] = mort_data[each_species][each_plot]
 
-                                elif each_plot in self.shifted[update_year][each_species].keys():
-                                    try:
-                                        self.shifted[update_year][each_species][each_plot]['dead'].update(mort_data[each_species][each_plot]['dead'])
-                                    except Exception:
+            if year not in self.od:
+                self.od[year] = {species: {plotid: {'live': {}, 'ingrowth': {}, 'dead': {tid: (dbh, status, dbh_code)}}}}
+
+            elif year in self.od:
+                if species not in self.od[year]:
+                    self.od[year][species] ={plotid: {'live': {}, 'ingrowth': {}, 'dead': {tid: ( dbh, status, dbh_code)}}}
+
+                elif species in self.od[year]:
+                    if plotid not in self.od[year][species]:
+                        self.od[year][species][plotid] = {'dead': {tid: (dbh, status, dbh_code)}, 'live': {}, 'ingrowth': {}}
+                
+                    elif plotid in self.od[year][species]:   
+                        self.od[year][species][plotid]['dead'].update({tid: (dbh, status, dbh_code)})
+
+    # def check_mort(self):
+    #     """ Checks if the year is a mortality year. 
+
+    #     Populates self.mortality_years if there are any mortality years. Also sets self.shifted to the output dictionary if there are no mortality years. The mortality years are those with only dead trees but no live ones. Effectively, if this happened in the wild, it would be a "mortality year" even if it weren't intended to be, so the math will resolve.
+
+    #     **INTERNAL VARIABLES**
+
+    #     :list_all_years_possible_mortality: holds the years that might be mortality years, which are discovered based on if they have counts of mortality, but no live or ingrowth trees.
+    #     """
+    #     # a year is a mortality year if there is no live biomass in that year for all species on a plot. include species because maybe useful for species
+    #     list_all_years_possible_mortality = []
+        
+    #     for each_year in self.od.keys():
+
+    #         if each_year not in self.total_area_ref.keys() and each_year < 2010:
+    #             list_all_years_possible_mortality.append(each_year)
+    #         else:
+    #             pass
+
+    #     # if there are no mortality years, return a false, and self.shifted for that year is the exact same as the actual values
+    #     if list_all_years_possible_mortality == []:
+    #         self.shifted = self.od
+    #         return False
+        
+    #     else:
+    #         # the mortality years attribute is set for the list of mortality years, and sorted. A true return triggers update mort function
+    #         self.mortality_years = sorted(list_all_years_possible_mortality)
+    #         return True
+
+
+    # def update_mort(self, is_mort):
+    #     """ Returns a new dbh dictionary for the stand based on whether or not a year is a mortality year. If it is not a mortality year, the dictionary is the same as the original. If it is a mortality year, the dead trees are shifted to the subsequent year.
+
+    #     The bisect right function determines the windowing years from a given list around a given input year. 
+
+    #     **INTERNAL VARIABLES**
+
+    #     :list_of_live_years: a list of years when checks were performed that were not mortality only
+    #     :dead_year: the year of the mortality check to be aggregated to a selection from list_of_live_years
+    #     :is_mort: Boolean value of whether or not we should update mortality. If it was not a mortality year, we shifted the original output into the shifted dictionary using check_mort, without changing a value!
+    #     """
+    #     if is_mort != True:
+    #         pass
+        
+    #     else:
+    #         # in this list, all the years which are NOT mortality years, no matter what
+
+    #         list_live_years = [x for x in sorted(self.od.keys()) if x not in self.mortality_years]
+    #         self.shifted = {x: self.od[x] for x in list_live_years}
+            
+    #         for each_year in self.mortality_years:
+    #             mort_data = self.od[each_year]
+
+    #             # if the mortality year is not in the live year list, then the mortality belongs to the inventory to its "right"
+    #             if each_year not in list_live_years:
+    #                 index = bisect.bisect_right(list_live_years, each_year)
+    #                 try:
+    #                     update_year = list_live_years[index]
+    #                 except Exception:
+    #                     import pdb; pdb.set_trace()
+    #             else:
+    #                 update_year = each_year
+                
+    #             # if the new mortality year isn't listed in the "shifted" data which was generated from the existing data in "od" add it in; this might happen if the mort was the very last inventory to happen
+    #             if update_year not in self.shifted.keys():
+    #                 self.shifted[update_year] = mort_data
+                
+    #             elif update_year in self.shifted.keys():
+    #                 for each_species in mort_data.keys():
+    #                     if each_species not in self.shifted[update_year].keys():
+    #                         self.shifted[update_year][each_species] = mort_data[each_species]
+
+    #                     elif each_species in self.shifted[update_year].keys():
+    #                         for each_plot in mort_data[each_species].keys():
+    #                             if each_plot not in self.shifted[update_year][each_species].keys():
+    #                                 self.shifted[update_year][each_species][each_plot] = mort_data[each_species][each_plot]
+
+    #                             elif each_plot in self.shifted[update_year][each_species].keys():
+    #                                 try:
+    #                                     self.shifted[update_year][each_species][each_plot]['dead'].update(mort_data[each_species][each_plot]['dead'])
+    #                                 except Exception:
                             
-                                        import pdb; pdb.set_trace()
+    #                                     import pdb; pdb.set_trace()
 
 
     def compute_normal_biomasses(self, XFACTOR):
@@ -1414,6 +1427,7 @@ if __name__ == "__main__":
         each_stand=each_stand.lower()
         
         A = Stand(cur, XFACTOR, queries, each_stand)
+        A.shifted = A.od
 
         BM, BTR = A.compute_normal_biomasses(XFACTOR)
         
