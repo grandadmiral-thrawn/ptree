@@ -597,11 +597,10 @@ if __name__ == "__main__":
 
     DATABASE_CONNECTION = poptree_basis.YamlConn()
     conn, cur = DATABASE_CONNECTION.sql_connect()
-    pconn, pcur = DATABASE_CONNECTION.lite3_connect()
     queries = DATABASE_CONNECTION.queries
 
-    # creates lookups for expansion factors
-    XFACTOR = poptree_basis.Capture()
+    # creates lookups for expansion factors, areas, etc. stores locally.
+    XFACTOR = poptree_basis.Capture(cur, queries)
     
     # creates the Biomasses/Basal Areas and the Detail plot expansions
     # A = Tree(cur, pcur, queries, 'TO11000200005')

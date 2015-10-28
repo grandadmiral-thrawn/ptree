@@ -81,6 +81,9 @@ class Capture(object):
     >>> A.expansion['RS32'][2006]
     >>> 4.0
 
+    >>> A.additions['PILA']
+    >>> {1983: ['PILA0010', 'PILA0011', 'PILA0012', 'PILA0013', 'PILA0014', 'PILA0015', 'PILA0016', 'PILA0017', 'PILA0018']}
+
     **METHODS**
 
     :A: in this example, an instance of the Capture class.
@@ -135,8 +138,8 @@ class Capture(object):
         self.cur.execute(sql)
 
         for row in self.cur:
-            standid = str(row[0])[0:4]
-            plotid = str(row[0])
+            plotid = str(row[0]).rstrip().lower()
+            standid = plotid[0:4]
             year = int(row[1])
 
             if standid not in self.additions:
@@ -160,8 +163,8 @@ class Capture(object):
         self.cur.execute(sql)
 
         for row in self.cur:
-            standid = str(row[0])[0:4]
-            plotid = str(row[0])
+            plotid = str(row[0]).rstrip().lower()
+            standid = plotid[0:4]
             year = int(row[1])
 
             if standid not in self.mortalities:
@@ -174,7 +177,7 @@ class Capture(object):
                         self.mortalities[standid][year].append(plotid)
                     else:
                         print("the plotid : " + plotid + " is already listed as an addition for this stand and year")
-
+        
         return self.mortalities
 
     def create_detail_reference(self):

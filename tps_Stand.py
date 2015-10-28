@@ -32,40 +32,41 @@ class Stand(object):
     >>> [1981, 1983, 1985, 1987]
  
     """
-    def __init__(self, cur, pcur, XFACTOR, queries, standid):
+    def __init__(self, cur, XFACTOR, queries, standid):
         self.standid = standid
         self.cur = cur
-        self.pcur = pcur
         self.tree_list = queries['stand']['query']
         self.tree_list_m = queries['stand']['query_trees_m']
         self.species_list = queries['stand']['query_species']
         self.eqn_query = queries['tree']['sql_1tree_eqn']
-        self.total_area_query = queries['stand']['query_total_plot']
+        self.replacement_query = queries['stand']['query_replacements']
         self.study_id = ""
         self.woodden_dict = {}
         self.proxy_dict = {}
         self.eqns = {}
         self.od = {}
         self.shifted = {}
-        self.mortality_years = []
+        self.mortalities ={}
+        self.mort_replacements = {}
         self.total_area_ref = {}
-        self.additions = []
-        self.replacement = ""
+        self.additions = {}
+        self.replacements = {}
 
         # get the total area for the stand - this dictionary is for the years when there is an actual inventory and not a mortality check
-        self.get_total_area()
+        self.get_total_area(XFACTOR)
 
         # get the appropriate equations, live trees, and dead trees for the stand
         self.select_eqns()
 
-        # check that the year is not an "additions" year.
-        self.check_additions(XFACTOR)
+        # check if it is an addition; if is an addition, move to the subsequent year on that plot by creating self.replacements.
+        self.check_additions_and_mort(XFACTOR)
         self.get_all_live_trees()
+        import pdb; pdb.set_trace()
         self.get_all_dead_trees()
 
-        # checks if it is a mortality plot, and, if so, shifts the dbhs to the year they should be on for the death totals
-        is_mort = self.check_mort()
-        self.update_mort(is_mort)
+        # # checks if it is a mortality plot, and, if so, shifts the dbhs to the year they should be on for the death totals
+        # is_mort = self.check_mort()
+        # self.update_mort(is_mort)
         
 
     def select_eqns(self):
@@ -148,75 +149,93 @@ class Stand(object):
                     j2 = None
 
 
-                # these methods handle ACCI different than others because it's components
-                if form != 'as_compbio':
-                    this_eqn = lambda x : biomass_basis.which_fx(form)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
-                    
-                    if each_species not in self.eqns:
-                        self.eqns.update({each_species:{str(row[1]).rstrip().lower():this_eqn}})
-                    
-                    elif each_species in self.eqns:
-                        # when there are 2 or more sizes
-                        self.eqns[each_species].update({str(row[1]).rstrip().lower():this_eqn})
+                this_eqn = lambda x : biomass_basis.which_fx(form)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
+                
+                if each_species not in self.eqns:
+                    self.eqns.update({each_species:{str(row[1]).rstrip().lower():this_eqn}})
+                
+                elif each_species in self.eqns:
+                    # when there are 2 or more sizes
+                    self.eqns[each_species].update({str(row[1]).rstrip().lower():this_eqn})
 
-                # only for "ACCI"
-                elif form == 'as_compbio':
-                    this_eqn = lambda x: biomass_basis.which_fx('as_biopak')(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
-                    
-                    if each_species not in self.eqns:
-                        self.eqns.update({each_species: {str(row[12]).rstrip().lower():this_eqn}})
-                    elif each_species in self.eqns:
-                        self.eqns[each_species].update({str(row[12]).rstrip().lower():this_eqn})
     
-    def check_additions(self, XFACTOR):
-        """ Check if the stand may contain "additions". If so, populate the additions attribute of yourself and do not include trees from those years
+    def check_additions_and_mort(self, XFACTOR):
+        """ Check if the stand may contain "additions". If so, replace the year with the subsequent year as long as it is not also additions or mortality. If additions or mortality is the final years in the data, we will not do those years. 
 
         **INTERNAL VARIABLES**
         :additions: stand additions are years that have live trees measured that were not measured in previous year's inventory. we allocate additions to the subsequent year's inventory. There's only about 15 plots this happens on. 
-        :replacement: replaces the years of "additions" with the subsequent year
+        :replacement: replaces the years of "additions" with the subsequent year that is not an additions.
         """
 
         if self.standid.lower() in XFACTOR.additions.keys():
-            if isinstance(XFACTOR.additions[self.standid.lower()], int):
-                self.additions.append(XFACTOR.additions[self.standid.lower()])
-                self.replacement = XFACTOR.replacements[self.standid.lower()]
-            else:
-              self.additions = XFACTOR.additions[self.standid.lower()]
-              self.replacement = XFACTOR.replacements[self.standid.lower()]
+            # store the additions for when you analyze
+            self.additions = XFACTOR.additions[self.standid]
+            # get the years in which there are additions
+            additions_years = sorted(list(XFACTOR.additions[self.standid].keys()))
 
         else:
-            self.additions = []
+            pass
 
-            print(self.replacement + "<- self.replacement")
+        if self.standid.lower() in XFACTOR.mortalities.keys():
+            self.mortalities = XFACTOR.mortalities[self.standid]
+            mortality_years = sorted(list(XFACTOR.mortalities[self.standid].keys()))
+        else:
+            pass
+
+        if additions_years != [] or mortality_years != []:
+
+            self.cur.execute(self.replacement_query.format(standid=self.standid))
+
+            # the years returned from the sql are not the additions or mort years (just r years)
+            decent_years = []
+            
+            for row in self.cur:
+                decent_years.append(int(row[0]))
+
+            print(decent_years)
+            # each additions year is replaced by a correct year from the table and the replacements table is updated. 
+            if additions_years != []:
+                for each_year in additions_years:
+                    try:
+                        index = bisect.bisect_right(decent_years, each_year)
+                        replacement_year = decent_years[index]
+                        plots_applied_to = XFACTOR.additions[self.standid][each_year]
+                        self.replacements.update({each_year:{'replacement_year': replacement_year, 'plots': plots_applied_to}})
+                    
+                    except Exception:
+                        import pdb; pdb.set_trace()
+            else:
+                pass
+
+            if mortality_years != []:
+                for each_year in mortality_years:
+                    try:
+                        index = bisect.bisect_right(decent_years, each_year)
+                        replacement_year = decent_years[index]
+                        plots_applied_to = XFACTOR.mortalities[self.standid][each_year]
+                        self.mort_replacements.update({each_year:{'replacement_year': replacement_year, 'plots': plots_applied_to}})
+                    
+                    except Exception:
+                        import pdb; pdb.set_trace()
 
 
-    def get_total_area(self):
+    def get_total_area(self, XFACTOR):
         """ Get the total area for each year on that stand and create a reference table to be used when figuring out the per hectare output. The percent of area on the plot over the percent of the area of the stand is the proportion represented by that plot.
 
-        **INTERNAL VARIABLES**
+        **INPUTS**
 
-        :self.total_area_query: "SELECT year, sum(area_m2_corr) from plotAreas where standid like '{standid}' group by year"
+        :XFACTOR: XFACTOR.total_areas has the areas by stand, like this: 
+
+        :Example:
+
+        >>> XFACTOR.total_areas['hr03']
+        >>> {1984: 10000.0, 1985: 10000.0, 1986: 10000.0, 1988: 10000.0, 1989: 10000.0, 2000: 10000.0, 2007: 10000.0, 1978: 10000.0, 1995: 10000.0}
         """
 
-        self.pcur.execute(self.total_area_query.format(standid=self.standid))
-
-        for row in self.pcur:
-
-            try: 
-                year = int(row[0])
-            except Exception:
-                year = None
-
-            try:
-                area_sum = round(float(row[1]),3)
-            except Exception:
-                # if it breaks for some reason, assume the sum of all areas is 10000m2
-                area_sum = 10000.
-
-            if year not in self.total_area_ref:
-                self.total_area_ref[year] = area_sum
-            elif year in self.total_area_ref:
-                pass
+        try:
+            self.total_area_ref = XFACTOR.total_areas[self.standid]
+        except Exception:
+            self.total_area_ref = {None: 10000.0}
 
     def get_all_live_trees(self):
         """ Get the trees on that stand by querying FSDBDATA and sort them by year, plot, live or dead, and species. 
@@ -240,9 +259,9 @@ class Stand(object):
                 year = None
 
             try:
-                plotid = int(str(row[3][4:]))
+                plotid = str(row[3]).rstrip().lower()
             except Exception:
-                plotid = None
+                plotid = "None"
 
             try:
                 species = str(row[1]).strip().lower()
@@ -279,59 +298,76 @@ class Stand(object):
             else:
                 pass
 
-            if year in self.additions:
-                year = self.replacement
+            if self.additions != {}:
                 
+                if year in self.additions.keys() and plotid in self.additions[year]:
+                    new_year = self.replacements[year]['replacement_year']
+                    year = new_year
+                else:
+                    pass
             else:
+                pass
 
-                if year not in self.od and status in ["6", "9"]:
-                    self.od[year]={species:{plotid: {'live': {}, 'ingrowth': {}, 'dead': {tid: (dbh, status, dbh_code)}}}}
-                
-                elif year not in self.od and status not in ["6", "9"]:
-                    self.od[year]={species: {plotid: {'live': {tid: (dbh, status, dbh_code)}, 'ingrowth': {}, 'dead': {}}}}
+            
+            if year not in self.od and status in ["6", "9"]:
+
+                # if the tree is in a mortality year, go ahead and roll it forward.
+                if year in self.mortalities.keys() and plotid in self.mortalities[year]:
+                    new_year = self.mort_replacements[year]['replacement_year']
+                    year = new_year
+                else:
+                    pass
+
+
+                    ########### YOU ARE HERE!!!!!!!!#######
+
+                self.od[year]={species:{plotid: {'live': {}, 'ingrowth': {}, 'dead': {tid: (dbh, status, dbh_code)}}}}
+            
+            elif year not in self.od and status not in ["6", "9"]:
+                self.od[year]={species: {plotid: {'live': {tid: (dbh, status, dbh_code)}, 'ingrowth': {}, 'dead': {}}}}
+
+                if status == "2":
+                    self.od[year][species][plotid]['ingrowth'].update({tid: (dbh, status, dbh_code)})
+                else:
+                    pass
+
+            elif year in self.od:
+
+                if species not in self.od[year] and status in ["6", "9"]:
+                    self.od[year][species] ={plotid: {'live': {}, 'ingrowth': {}, 'dead': {tid: (dbh, status, dbh_code)}}}
+                    
+                elif species not in self.od[year] and status not in ["6","9"]: 
+                    self.od[year][species] ={plotid: {'live': {tid: (dbh, status, dbh_code)}, 'ingrowth': {}, 'dead': {}}}
 
                     if status == "2":
                         self.od[year][species][plotid]['ingrowth'].update({tid: (dbh, status, dbh_code)})
                     else:
                         pass
 
-                elif year in self.od:
-
-                    if species not in self.od[year] and status in ["6", "9"]:
-                        self.od[year][species] ={plotid: {'live': {}, 'ingrowth': {}, 'dead': {tid: (dbh, status, dbh_code)}}}
+                elif species in self.od[year]:
+                    
+                    if status in ["6", "9"] and plotid not in self.od[year][species]:
+                        self.od[year][species][plotid] = {'dead': {tid: (dbh, status, dbh_code)}, 'live': {}, 'ingrowth': {}}
+                    
+                    elif status not in ["6", "9"] and plotid not in self.od[year][species]:
+                        self.od[year][species][plotid] = {'live': {tid: (dbh, status, dbh_code)}, 'dead': {}, 'ingrowth': {}}
                         
-                    elif species not in self.od[year] and status not in ["6","9"]: 
-                        self.od[year][species] ={plotid: {'live': {tid: (dbh, status, dbh_code)}, 'ingrowth': {}, 'dead': {}}}
-
                         if status == "2":
                             self.od[year][species][plotid]['ingrowth'].update({tid: (dbh, status, dbh_code)})
                         else:
                             pass
 
-                    elif species in self.od[year]:
+                    elif status not in ["6", "9"] and plotid in self.od[year][species]:
                         
-                        if status in ["6", "9"] and plotid not in self.od[year][species]:
-                            self.od[year][species][plotid] = {'dead': {tid: (dbh, status, dbh_code)}, 'live': {}, 'ingrowth': {}}
+                        self.od[year][species][plotid]['live'].update({tid: (dbh, status, dbh_code)})
                         
-                        elif status not in ["6", "9"] and plotid not in self.od[year][species]:
-                            self.od[year][species][plotid] = {'live': {tid: (dbh, status, dbh_code)}, 'dead': {}, 'ingrowth': {}}
-                            
-                            if status == "2":
-                                self.od[year][species][plotid]['ingrowth'].update({tid: (dbh, status, dbh_code)})
-                            else:
-                                pass
+                        if status == "2":
+                            self.od[year][species][plotid]['ingrowth'].update({tid: (dbh, status, dbh_code)})
+                        else:
+                            pass
 
-                        elif status not in ["6", "9"] and plotid in self.od[year][species]:
-                            
-                            self.od[year][species][plotid]['live'].update({tid: (dbh, status, dbh_code)})
-                            
-                            if status == "2":
-                                self.od[year][species][plotid]['ingrowth'].update({tid: (dbh, status, dbh_code)})
-                            else:
-                                pass
-
-                        elif status in ["6", "9"] and plotid in self.od[year][species][plotid]['dead']:
-                            self.od[year][species][plotid]['dead'].update({tid: (dbh, status, dbh_code)})
+                    elif status in ["6", "9"] and plotid in self.od[year][species][plotid]['dead']:
+                        self.od[year][species][plotid]['dead'].update({tid: (dbh, status, dbh_code)})
 
     def get_all_dead_trees(self):
         """ Gets all the dead trees from TP00103. Updates self.od, which was made in get_all_live_trees().
@@ -1355,7 +1391,6 @@ class QC(object):
         """
         DATABASE_CONNECTION = poptree_basis.YamlConn()
         conn, cur = DATABASE_CONNECTION.sql_connect()
-        pconn, pcur = DATABASE_CONNECTION.lite3_connect()
         queries = DATABASE_CONNECTION.queries
         XFACTOR = poptree_basis.Capture()
 
@@ -1364,11 +1399,10 @@ if __name__ == "__main__":
 
     DATABASE_CONNECTION = poptree_basis.YamlConn()
     conn, cur = DATABASE_CONNECTION.sql_connect()
-    pconn, pcur = DATABASE_CONNECTION.lite3_connect()
     queries = DATABASE_CONNECTION.queries
 
     # creates lookups for expansion factors
-    XFACTOR = poptree_basis.Capture()
+    XFACTOR = poptree_basis.Capture(cur, queries)
 
     #A = Stand(cur, pcur, XFACTOR, queries, 'CFMF')
     #import pdb; pdb.set_trace()
@@ -1376,8 +1410,10 @@ if __name__ == "__main__":
     
     test_stands = ["NCNA", "AX15", "WI01"]
     for each_stand in test_stands:
+
+        each_stand=each_stand.lower()
         
-        A = Stand(cur, pcur, XFACTOR, queries, each_stand)
+        A = Stand(cur, XFACTOR, queries, each_stand)
 
         BM, BTR = A.compute_normal_biomasses(XFACTOR)
         
