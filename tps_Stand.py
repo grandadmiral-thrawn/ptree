@@ -40,6 +40,7 @@ class Stand(object):
         self.species_list = queries['stand']['query_species']
         self.eqn_query = queries['tree']['sql_1tree_eqn']
         self.replacement_query = queries['stand']['query_replacements']
+        self.numplot_query = queries['plot']['query_plot']
         self.eqns = {}
         self.od = {}
         self.woodden_dict ={}
@@ -51,12 +52,16 @@ class Stand(object):
         self.total_area_ref = {}
         self.additions = {}
         self.replacements = {}
+        self.num_plots = {}
 
         # get the total area for the stand - this dictionary is for the years when there is an actual inventory and not a mortality check
         self.get_total_area(XFACTOR)
 
         # get the appropriate equations, live trees, and dead trees for the stand
         self.select_eqns()
+
+        # count the number of plots
+        self.create_num_plots()
 
         # check if it is an addition; if is an addition, move to the subsequent year on that plot by creating self.replacements.
         self.check_additions_and_mort(XFACTOR)
@@ -66,6 +71,39 @@ class Stand(object):
         # looks to the missing trees and matches their ids to live trees, assigns that dbh to the subsequent year.
         self.update_all_missing_trees()
         
+
+    def create_num_plots(self):
+        """ Creates a number of plots count for each stand and year.
+
+        **RETURNS**
+
+        :Capture.num_plots: the number of plots for that stand and year. Serves no purpose in computation and is only used to generated the required outputs. 
+
+        .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
+        """
+
+        np = {}
+        sql = self.numplot_query.format(standid = self.standid)
+        self.cur.execute(sql)
+
+        for row in self.cur:
+            try: 
+                year = int(row[0])
+            except Exception:
+                year = None
+
+            try:
+                plotid = str(row[1]).rstrip().lower()
+            except Exception:
+                plotid = "None"
+
+            
+            if year not in np:
+                np[year] = [plotid]
+            elif year in np:
+                np[year].append(plotid)
+
+        self.num_plots = {year:len(np[year]) for year in np.keys()}
 
     def select_eqns(self):
         """ Gets only the equations you need based on the species on that plot by querying the database for individual species that will be on this stand and makes an equation table.
@@ -565,11 +603,10 @@ class Stand(object):
                         area = XFACTOR.detail_reference[self.standid][each_year][each_plot]['area']
 
                     # figure out the representative percentage of all the area of the stand that this plot represents in the given year
-                    percent_area_of_total = area/total_area  
-                    print("the area of the plot " + each_plot + " is " + str(area) + " and the total area is " + str(total_area))                  
+                    percent_area_of_total = area/total_area                   
 
                     large_dead_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.od[each_year][each_species][each_plot]['dead'].items() if v[0] != None and v[0] >= 15.0}
-                    
+
                     small_dead_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.od[each_year][each_species][each_plot]['dead'].items() if v[0] != None and v[0] < 15.0 and v[0] > mindbh}
 
                     large_live_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.od[each_year][each_species][each_plot]['live'].items() if v[0] != None and v[0] >= 15.0}
@@ -735,24 +772,26 @@ class Stand(object):
         with open(filename_out,'w') as writefile:
             writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
 
-            writer.writerow(['DBCODE','ENTITY','STANDID','SPECIES','YEAR','PORTION','TPH_NHA','BA_M2HA','VOL_M3HA','BIO_MGHA','JENKBIO_MGHA'])
+            writer.writerow(['DBCODE','ENTITY','STANDID','SPECIES','YEAR','PORTION','TPH_NHA','BA_M2HA','VOL_M3HA','BIO_MGHA','JENKBIO_MGHA', 'NO_PLOTS'])
 
             for each_year in sorted(Biomasses.keys()):
+
+                num_plots = self.num_plots[each_year]
 
                 for each_species in Biomasses[each_year]:
 
                     # remember to multiply by 10000 to go from m2 to hectare
-                    new_row_1 = ['TP001', '07', self.standid.upper(), each_species, each_year,'INGROWTH', int(Biomasses[each_year][each_species]['total_ingrowth_trees']), round(Biomasses[each_year][each_species]['total_ingrowth_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_ingrowth_volume']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_bio']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_jenkins']*10000,3)]
+                    new_row_1 = ['TP001', '06', self.standid.upper(), each_species.upper(), each_year,'INGROWTH', int(Biomasses[each_year][each_species]['total_ingrowth_trees']), round(Biomasses[each_year][each_species]['total_ingrowth_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_ingrowth_volume']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_bio']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_jenkins']*10000,3), num_plots]
                     
                     #writer.writerow(new_row)
 
                     # remember to multiply by 10000 to go from m2 to hectare
-                    new_row_2 = ['TP001', '07', self.standid.upper(), each_species, each_year,'LIVE', int(Biomasses[each_year][each_species]['total_live_trees']), round(Biomasses[each_year][each_species]['total_live_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_live_volume']*10000,3), round(Biomasses[each_year][each_species]['total_live_bio']*10000,3), round(Biomasses[each_year][each_species]['total_live_jenkins']*10000,3)]
+                    new_row_2 = ['TP001', '06', self.standid.upper(), each_species.upper(), each_year,'LIVE', int(Biomasses[each_year][each_species]['total_live_trees']), round(Biomasses[each_year][each_species]['total_live_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_live_volume']*10000,3), round(Biomasses[each_year][each_species]['total_live_bio']*10000,3), round(Biomasses[each_year][each_species]['total_live_jenkins']*10000,3), num_plots]
                  
                     #writer.writerow(new_row)
 
                     # remember to multiply by 10000 to go from m2 to hectare
-                    new_row_3 = ['TP001', '07', self.standid.upper(), each_species, each_year,'MORT', int(Biomasses[each_year][each_species]['total_dead_trees']), round(Biomasses[each_year][each_species]['total_dead_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_dead_volume']*10000,3), round(Biomasses[each_year][each_species]['total_dead_bio']*10000,3), round(Biomasses[each_year][each_species]['total_dead_jenkins']*10000,3)]
+                    new_row_3 = ['TP001', '06', self.standid.upper(), each_species.upper(), each_year,'MORT', int(Biomasses[each_year][each_species]['total_dead_trees']), round(Biomasses[each_year][each_species]['total_dead_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_dead_volume']*10000,3), round(Biomasses[each_year][each_species]['total_dead_bio']*10000,3), round(Biomasses[each_year][each_species]['total_dead_jenkins']*10000,3), num_plots]
 
                     writer.writerow(new_row_1)
                     writer.writerow(new_row_2)
@@ -761,14 +800,14 @@ class Stand(object):
 
             for each_year in sorted(Biomasses_Agg.keys()):
                 # remember to multiply by 10000 to go from m2 to hectare
-                new_row4 = ['TP001', '07', self.standid.upper(), 'ALL', each_year,'INGROWTH', int(Biomasses_Agg[each_year]['total_ingrowth_trees']), round(Biomasses_Agg[each_year]['total_ingrowth_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_ingrowth_volume']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_bio']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_jenkins']*10000,3)]
+                new_row4 = ['TP001', '06', self.standid.upper(), 'ALL', each_year,'INGROWTH', int(Biomasses_Agg[each_year]['total_ingrowth_trees']), round(Biomasses_Agg[each_year]['total_ingrowth_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_ingrowth_volume']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_bio']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_jenkins']*10000,3), num_plots]
                     
 
-                new_row5 = ['TP001', '07', self.standid.upper(), 'ALL', each_year,'LIVE', int(Biomasses_Agg[each_year]['total_live_trees']), round(Biomasses_Agg[each_year]['total_live_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_live_volume']*10000,3), round(Biomasses_Agg[each_year]['total_live_bio']*10000,3), round(Biomasses_Agg[each_year]['total_live_jenkins']*10000,3)]
+                new_row5 = ['TP001', '06', self.standid.upper(), 'ALL', each_year,'LIVE', int(Biomasses_Agg[each_year]['total_live_trees']), round(Biomasses_Agg[each_year]['total_live_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_live_volume']*10000,3), round(Biomasses_Agg[each_year]['total_live_bio']*10000,3), round(Biomasses_Agg[each_year]['total_live_jenkins']*10000,3), num_plots]
 
                 # remember to multiply by 10000 to go from m2 to hectare
 
-                new_row6 = ['TP001', '07', self.standid.upper(), 'ALL', each_year,'MORT', int(Biomasses_Agg[each_year]['total_dead_trees']), round(Biomasses_Agg[each_year]['total_dead_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_dead_volume']*10000,3), round(Biomasses_Agg[each_year]['total_dead_bio']*10000,3), round(Biomasses_Agg[each_year]['total_dead_jenkins']*10000,3)]
+                new_row6 = ['TP001', '06', self.standid.upper(), 'ALL', each_year,'MORT', int(Biomasses_Agg[each_year]['total_dead_trees']), round(Biomasses_Agg[each_year]['total_dead_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_dead_volume']*10000,3), round(Biomasses_Agg[each_year]['total_dead_bio']*10000,3), round(Biomasses_Agg[each_year]['total_dead_jenkins']*10000,3), num_plots]
                 writer.writerow(new_row4)
                 writer.writerow(new_row5)
                 writer.writerow(new_row6)
@@ -805,6 +844,254 @@ class Stand(object):
                         else:
                             for each_tree in BadTreeRef[each_year][each_species][each_plot]['ingrowth']:
                                 writer.writerow([self.standid, each_year, each_species, each_plot, each_tree, 'ingrowth', 'dbh is None'])
+
+class Plot(Stand):
+    """ Most of the functions of plot are actually the same as stand, so why re-write? :)
+    We will add in a "plot list"just in case though.
+    """
+
+    def __init__(self, Stand, XFACTOR, plotlist):
+        self.Stand = Stand
+        self.plotlist = plotlist
+
+    def compute_biomasses_plot(self, XFACTOR):
+        """ Compute the biomass, volume, jenkins, trees per hectare, and basal area. Use at the plot scale, so no expansion factors are needed here. Uses the stand object that the plot maintains. 
+
+
+        :XFACTOR: a Capture object containing the detail plots, minimum dbhs, etc.
+        :XFACTOR.detail_reference: plots which are detail plots and when
+        :XFACTOR.stands_with_unusual_mins: plots which have minimums that are not 15 and are not detail plots
+        :XFACTOR.unusual_plot_areas: plots whose areas are not 625m
+
+        **INTERNAL VARIABLES**
+
+        :self.Stand: basically the same as the stand-level computation, but in this case we actually will output the biomasses at each plot's level
+
+        """
+
+        Biomasses = {}
+        
+        all_years = sorted(self.Stand.od.keys())
+        
+        for index, each_year in enumerate(all_years):
+
+            for each_species in self.Stand.od[each_year].keys():
+                
+                for each_plot in self.Stand.od[each_year][each_species].keys():
+
+                    if self.Stand.standid not in XFACTOR.uplot_areas.keys():
+                        total_area = 625.
+                    else:
+
+                        try:
+                            total_area = XFACTOR.uplot_areas[self.Stand.standid][each_plot][each_year]
+                        except Exception:
+                            try:
+                                total_area = XFACTOR.uplot_areas[self.Stand.standid][each_plot][all_years[index-1]]
+                            except Exception:
+                                print("exception thrown trying to get the plot area for " + each_plot)
+
+                    # try to find the plot in the unusual mins reference
+                    try:
+                        mindbh = XFACTOR.umins_reference[self.Stand.standid][each_year][each_plot]
+                    except KeyError as exc:
+                        mindbh = 15.0
+
+                    # try to find the plot in the unusual areas reference
+                    try:
+                        area = XFACTOR.uplot_areas[self.Stand.standid][each_plot][each_year]
+                    except KeyError as exc:
+                        area = 625.
+
+                  
+
+                    large_dead_trees = {k: {'bio': self.Stand.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.Stand.od[each_year][each_species][each_plot]['dead'].items() if v[0] != None and v[0] >= 15.0}
+                    
+                    small_dead_trees = {k: {'bio': self.Stand.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.Stand.od[each_year][each_species][each_plot]['dead'].items() if v[0] != None and v[0] < 15.0 and v[0] > mindbh}
+
+                    large_live_trees = {k: {'bio': self.Stand.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.Stand.od[each_year][each_species][each_plot]['live'].items() if v[0] != None and v[0] >= 15.0}
+                    
+                    small_live_trees = {k: {'bio': self.Stand.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.Stand.od[each_year][each_species][each_plot]['live'].items() if v[0] != None and v[0] < 15.0 and v[0] > mindbh}
+
+                    large_ingrowth_trees = {k: {'bio': self.Stand.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.Stand.od[each_year][each_species][each_plot]['ingrowth'].items() if v[0] != None and v[0] >= 15.0}
+                    
+                    small_ingrowth_trees = {k: {'bio': self.Stand.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.Stand.od[each_year][each_species][each_plot]['ingrowth'].items() if v[0] != None and v[0] < 15.0 and v[0] > mindbh}
+                    
+                    
+                    # count the number of total dead, live, and ingrowth trees by the plot
+                    try:
+                        total_dead_trees = (len(large_dead_trees) + len(small_dead_trees))
+                    except Exception:
+                        total_dead_trees = 0.
+
+                    try:
+                        total_live_trees = (len(large_live_trees) + len(small_live_trees))
+                    except Exception:
+                        total_live_trees = 0.
+
+                    try:
+                        total_ingrowth_trees = (len(large_ingrowth_trees) + len(small_ingrowth_trees))
+                    except Exception:
+                        total_ingrowth_trees = 0.
+
+                    # compute the totals
+
+                    total_live_bio = sum([large_live_trees[tree]['bio'][0]/total_area for tree in large_live_trees.keys()]) + sum([small_live_trees[tree]['bio'][0]/total_area for tree in small_live_trees.keys()])
+                    total_ingrowth_bio = sum([large_ingrowth_trees[tree]['bio'][0]/total_area for tree in large_ingrowth_trees.keys()])+ sum([small_ingrowth_trees[tree]['bio'][0]/total_area for tree in small_ingrowth_trees.keys()])
+                    total_dead_bio = sum([large_dead_trees[tree]['bio'][0]/total_area for tree in large_dead_trees.keys()]) + sum([small_dead_trees[tree]['bio'][0]/total_area for tree in small_dead_trees.keys()])
+
+                    total_live_jenkins = sum([large_live_trees[tree]['bio'][2]/total_area for tree in large_live_trees.keys()]) + sum([small_live_trees[tree]['bio'][2]/total_area for tree in small_live_trees.keys()])
+                    total_ingrowth_jenkins = sum([large_ingrowth_trees[tree]['bio'][2]/total_area for tree in large_ingrowth_trees.keys()])  + sum([small_ingrowth_trees[tree]['bio'][2]/total_area for tree in small_ingrowth_trees.keys()])
+                    total_dead_jenkins = sum([large_dead_trees[tree]['bio'][2]/total_area for tree in large_dead_trees.keys()]) + sum([small_dead_trees[tree]['bio'][2]/total_area for tree in small_dead_trees.keys()])
+
+                    total_live_volume = sum([large_live_trees[tree]['bio'][1]/total_area for tree in large_live_trees.keys()])  + sum([small_live_trees[tree]['bio'][1]/total_area for tree in small_live_trees.keys()])
+                    total_ingrowth_volume = sum([large_ingrowth_trees[tree]['bio'][1]/total_area for tree in large_ingrowth_trees.keys()]) + sum([small_ingrowth_trees[tree]['bio'][1]/total_area for tree in small_ingrowth_trees.keys()])
+                    total_dead_volume = sum([large_dead_trees[tree]['bio'][1]/total_area for tree in large_dead_trees.keys()]) + sum([small_dead_trees[tree]['bio'][1]/total_area for tree in small_dead_trees.keys()])
+
+                    total_live_basal = sum([large_live_trees[tree]['ba']/total_area for tree in large_live_trees.keys()]) + sum([small_live_trees[tree]['ba']/total_area for tree in small_live_trees.keys()])
+                    total_ingrowth_basal = sum([large_ingrowth_trees[tree]['ba']/total_area for tree in large_ingrowth_trees.keys()])+  sum([small_ingrowth_trees[tree]['ba']/total_area for tree in small_ingrowth_trees.keys()])
+                    total_dead_basal = sum([large_dead_trees[tree]['ba']/total_area for tree in large_dead_trees.keys()]) + sum([small_dead_trees[tree]['ba']/total_area for tree in small_dead_trees.keys()])
+
+
+                    if each_year not in Biomasses:
+                        Biomasses[each_year] = {each_species : {each_plot : {'total_live_bio': total_live_bio, 'total_dead_bio' : total_dead_bio, 'total_ingrowth_bio': total_ingrowth_bio, 'total_live_jenkins': total_live_jenkins, 'total_ingrowth_jenkins': total_ingrowth_jenkins, 'total_dead_jenkins' : total_dead_jenkins, 'total_live_volume' : total_live_volume, 'total_dead_volume' : total_dead_volume, 'total_ingrowth_volume': total_ingrowth_volume, 'total_live_trees': total_live_trees, 'total_dead_trees': total_dead_trees, 'total_ingrowth_trees': total_ingrowth_trees, 'total_live_basal': total_live_basal,'total_ingrowth_basal': total_ingrowth_basal, 'total_dead_basal': total_dead_basal}}}
+                    
+
+                    elif each_year in Biomasses:
+                        
+                        if each_species not in Biomasses[each_year]:
+                            Biomasses[each_year][each_species]= {each_plot : {'total_live_bio': total_live_bio, 'total_dead_bio' : total_dead_bio, 'total_ingrowth_bio': total_ingrowth_bio, 'total_live_jenkins': total_live_jenkins, 'total_ingrowth_jenkins': total_ingrowth_jenkins, 'total_dead_jenkins' : total_dead_jenkins, 'total_live_volume' : total_live_volume, 'total_dead_volume' : total_dead_volume, 'total_ingrowth_volume': total_ingrowth_volume, 'total_live_trees': total_live_trees, 'total_dead_trees': total_dead_trees, 'total_ingrowth_trees': total_ingrowth_trees, 'total_live_basal': total_live_basal, 'total_dead_basal': total_dead_basal, 'total_ingrowth_basal': total_ingrowth_basal}}
+                        
+                        # don't need to augment the wood density - one time is enough! - this is adding in each of the plots, which are already on area basis
+                        elif each_species in Biomasses[each_year]:
+                            if each_plot not in Biomasses[each_year][each_species]:
+                                Biomasses[each_year][each_species][each_plot] = {'total_live_bio': total_live_bio, 'total_dead_bio' : total_dead_bio, 'total_ingrowth_bio': total_ingrowth_bio, 'total_live_jenkins': total_live_jenkins, 'total_ingrowth_jenkins': total_ingrowth_jenkins, 'total_dead_jenkins' : total_dead_jenkins, 'total_live_volume' : total_live_volume, 'total_dead_volume' : total_dead_volume, 'total_ingrowth_volume': total_ingrowth_volume, 'total_live_trees': total_live_trees, 'total_dead_trees': total_dead_trees, 'total_ingrowth_trees': total_ingrowth_trees, 'total_live_basal': total_live_basal, 'total_dead_basal': total_dead_basal, 'total_ingrowth_basal': total_ingrowth_basal}
+                            elif each_plot in Biomasses[each_year][each_species]:
+                                print("error, you have already processed " + each_plot)
+                        else:
+                            pass
+        
+        return Biomasses
+
+    def aggregate_biomasses_plot(self, Biomasses):
+        """ for each year in biomasses, add up all the trees from all the species, and output the plot summary over all the species as a nearly identical data structure. 
+
+        For every one of the attributes in Biomasses for Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins'' Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. In the write out, we'll multiply it out to the HA level
+
+        """
+        Biomasses_Agg = {}
+
+        for each_year in sorted(Biomasses.keys()):
+
+            for each_species in Biomasses[each_year].keys():
+
+                for each_plot in Biomasses[each_year][each_species].keys():
+                    print(each_plot)
+                    
+                    if each_plot not in Biomasses_Agg:
+
+                        Biomasses_Agg[each_plot] = { each_year: {
+                        'total_live_trees': Biomasses[each_year][each_species][each_plot]['total_live_trees'],
+                        'total_dead_trees': Biomasses[each_year][each_species][each_plot]['total_dead_trees'],
+                        'total_ingrowth_trees': Biomasses[each_year][each_species][each_plot]['total_ingrowth_trees'],
+                        'total_live_basal': Biomasses[each_year][each_species][each_plot]['total_live_basal'],
+                        'total_dead_basal': Biomasses[each_year][each_species][each_plot]['total_dead_basal'],
+                        'total_ingrowth_basal': Biomasses[each_year][each_species][each_plot]['total_ingrowth_basal'],
+                        'total_live_bio': Biomasses[each_year][each_species][each_plot]['total_live_bio'],
+                        'total_dead_bio': Biomasses[each_year][each_species][each_plot]['total_dead_bio'],
+                        'total_ingrowth_bio': Biomasses[each_year][each_species][each_plot]['total_ingrowth_bio'],
+                        'total_live_volume': Biomasses[each_year][each_species][each_plot]['total_live_volume'],
+                        'total_dead_volume': Biomasses[each_year][each_species][each_plot]['total_dead_volume'],
+                        'total_ingrowth_volume': Biomasses[each_year][each_species][each_plot]['total_ingrowth_volume'],
+                        'total_live_jenkins': Biomasses[each_year][each_species][each_plot]['total_live_jenkins'],
+                        'total_dead_jenkins': Biomasses[each_year][each_species][each_plot]['total_dead_jenkins'],
+                        'total_ingrowth_jenkins': Biomasses[each_year][each_species][each_plot]['total_ingrowth_jenkins']}}
+
+                    elif each_plot in Biomasses_Agg:
+                        
+                        if each_year not in Biomasses_Agg[each_plot]:
+                            Biomasses_Agg[each_plot][each_year] = {'total_live_trees': Biomasses[each_year][each_species][each_plot]['total_live_trees'],'total_dead_trees': Biomasses[each_year][each_species][each_plot]['total_dead_trees'], 'total_ingrowth_trees': Biomasses[each_year][each_species][each_plot]['total_ingrowth_trees'], 'total_live_basal': Biomasses[each_year][each_species][each_plot]['total_live_basal'], 'total_dead_basal': Biomasses[each_year][each_species][each_plot]['total_dead_basal'], 'total_ingrowth_basal': Biomasses[each_year][each_species][each_plot]['total_ingrowth_basal'], 'total_live_bio': Biomasses[each_year][each_species][each_plot]['total_live_bio'], 'total_dead_bio': Biomasses[each_year][each_species][each_plot]['total_dead_bio'], 'total_ingrowth_bio': Biomasses[each_year][each_species][each_plot]['total_ingrowth_bio'], 'total_live_volume': Biomasses[each_year][each_species][each_plot]['total_live_volume'], 'total_dead_volume': Biomasses[each_year][each_species][each_plot]['total_dead_volume'], 'total_ingrowth_volume': Biomasses[each_year][each_species][each_plot]['total_ingrowth_volume'], 'total_live_jenkins': Biomasses[each_year][each_species][each_plot]['total_live_jenkins'], 'total_dead_jenkins': Biomasses[each_year][each_species][each_plot]['total_dead_jenkins'], 'total_ingrowth_jenkins': Biomasses[each_year][each_species][each_plot]['total_ingrowth_jenkins']}
+                        
+                        # if you already have that year and plot, just add whatever the heck species it is.
+                        elif each_year in Biomasses_Agg[each_plot]:
+                            Biomasses_Agg[each_plot][each_year]['total_live_trees'] += Biomasses[each_year][each_species][each_plot]['total_live_trees']
+                            Biomasses_Agg[each_plot][each_year]['total_dead_trees'] += Biomasses[each_year][each_species][each_plot]['total_dead_trees']
+                            Biomasses_Agg[each_plot][each_year]['total_ingrowth_trees'] += Biomasses[each_year][each_species][each_plot]['total_ingrowth_trees']
+                            Biomasses_Agg[each_plot][each_year]['total_live_basal'] += Biomasses[each_year][each_species][each_plot]['total_live_basal']
+                            Biomasses_Agg[each_plot][each_year]['total_dead_basal'] += Biomasses[each_year][each_species][each_plot]['total_dead_basal']
+                            Biomasses_Agg[each_plot][each_year]['total_ingrowth_basal'] += Biomasses[each_year][each_species][each_plot]['total_ingrowth_basal']
+                            Biomasses_Agg[each_plot][each_year]['total_live_bio'] += Biomasses[each_year][each_species][each_plot]['total_live_bio']
+                            Biomasses_Agg[each_plot][each_year]['total_dead_bio'] += Biomasses[each_year][each_species][each_plot]['total_dead_bio']
+                            Biomasses_Agg[each_plot][each_year]['total_ingrowth_bio'] += Biomasses[each_year][each_species][each_plot]['total_ingrowth_bio']
+                            Biomasses_Agg[each_plot][each_year]['total_live_volume'] += Biomasses[each_year][each_species][each_plot]['total_live_volume']
+                            Biomasses_Agg[each_plot][each_year]['total_dead_volume'] += Biomasses[each_year][each_species][each_plot]['total_dead_volume']
+                            Biomasses_Agg[each_plot][each_year]['total_ingrowth_volume'] += Biomasses[each_year][each_species][each_plot]['total_ingrowth_volume']
+                            Biomasses_Agg[each_plot][each_year]['total_live_jenkins'] += Biomasses[each_year][each_species][each_plot]['total_live_jenkins']
+                            Biomasses_Agg[each_plot][each_year]['total_dead_jenkins'] += Biomasses[each_year][each_species][each_plot]['total_dead_jenkins']
+                            Biomasses_Agg[each_plot][each_year]['total_ingrowth_jenkins'] += Biomasses[each_year][each_species][each_plot]['total_ingrowth_jenkins']
+
+        return Biomasses_Agg
+
+
+    def write_plot_composite(self, Biomasses, Biomasses_Agg, XFACTOR):
+        """ Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), Basal Area (m \ :sup:`2`) by species with a row of "all" containing the composite TPH, Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), and Basal Area (m \ :sup:`2`)
+
+        **INPUTS**
+
+        :Biomasses: data structure containing portions of biomass and other desired outputs, grouped by species
+        :Biomasses_Agg: data structure containing the aggregate biomass over all the species.
+        :XFACTOR: the reference object used for computing areas and such. You've already created it. No worries.
+
+        **OUTPUTS**
+
+        Writes a file named `standid + stand_composite_output.csv`
+        """
+
+        filename_out = self.Stand.standid + "_plot_composite_output.csv"
+        with open(filename_out,'w') as writefile:
+            writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
+
+            writer.writerow(['DBCODE','ENTITY','PLOTID','SPECIES','YEAR','PORTION','TPH_NHA','BA_M2HA','VOL_M3HA','BIO_MGHA','JENKBIO_MGHA'])
+
+            for each_year in sorted(Biomasses.keys()):
+
+                for each_species in Biomasses[each_year]:
+
+                    for each_plot in Biomasses[each_year][each_species]:
+                        # remember to multiply by 10000 to go from m2 to hectare
+                        new_row_1 = ['TP001', '08', each_plot.upper(), each_species.upper(), each_year,'INGROWTH', int(Biomasses[each_year][each_species][each_plot]['total_ingrowth_trees']), round(Biomasses[each_year][each_species][each_plot]['total_ingrowth_basal']*10000, 3), round(Biomasses[each_year][each_species][each_plot]['total_ingrowth_volume']*10000,3), round(Biomasses[each_year][each_species][each_plot]['total_ingrowth_bio']*10000,3), round(Biomasses[each_year][each_species][each_plot]['total_ingrowth_jenkins']*10000,3)]
+                        
+                    #writer.writerow(new_row)
+
+                        # remember to multiply by 10000 to go from m2 to hectare
+                        new_row_2 = ['TP001', '08', each_plot.upper(), each_species.upper(), each_year,'LIVE', int(Biomasses[each_year][each_species][each_plot]['total_live_trees']), round(Biomasses[each_year][each_species][each_plot]['total_live_basal']*10000, 3), round(Biomasses[each_year][each_species][each_plot]['total_live_volume']*10000,3), round(Biomasses[each_year][each_species][each_plot]['total_live_bio']*10000,3), round(Biomasses[each_year][each_species][each_plot]['total_live_jenkins']*10000,3)]
+                     
+                        #writer.writerow(new_row)
+
+                        # remember to multiply by 10000 to go from m2 to hectare
+                        new_row_3 = ['TP001', '08', each_plot.upper(), each_species.upper(), each_year,'MORTALITY', int(Biomasses[each_year][each_species][each_plot]['total_dead_trees']), round(Biomasses[each_year][each_species][each_plot]['total_dead_basal']*10000, 3), round(Biomasses[each_year][each_species][each_plot]['total_dead_volume']*10000,3), round(Biomasses[each_year][each_species][each_plot]['total_dead_bio']*10000,3), round(Biomasses[each_year][each_species][each_plot]['total_dead_jenkins']*10000,3)]
+
+                        writer.writerow(new_row_1)
+                        writer.writerow(new_row_2)
+                        writer.writerow(new_row_3)
+
+
+            for each_plot in sorted(Biomasses_Agg.keys()):
+
+                for each_year in sorted(Biomasses_Agg[each_plot].keys()):
+                
+                    # remember to multiply by 10000 to go from m2 to hectare
+                    new_row4 = ['TP001', '08', each_plot.upper(), 'ALL', each_year,'INGROWTH', int(Biomasses_Agg[each_plot][each_year]['total_ingrowth_trees']), round(Biomasses_Agg[each_plot][each_year]['total_ingrowth_basal']*10000, 3), round(Biomasses_Agg[each_plot][each_year]['total_ingrowth_volume']*10000,3), round(Biomasses_Agg[each_plot][each_year]['total_ingrowth_bio']*10000,3), round(Biomasses_Agg[each_plot][each_year]['total_ingrowth_jenkins']*10000,3)]
+                        
+
+                    new_row5 = ['TP001', '08', each_plot.upper(), 'ALL', each_year,'LIVE', int(Biomasses_Agg[each_plot][each_year]['total_live_trees']), round(Biomasses_Agg[each_plot][each_year]['total_live_basal']*10000, 3), round(Biomasses_Agg[each_plot][each_year]['total_live_volume']*10000,3), round(Biomasses_Agg[each_plot][each_year]['total_live_bio']*10000,3), round(Biomasses_Agg[each_plot][each_year]['total_live_jenkins']*10000,3)]
+
+                    # remember to multiply by 10000 to go from m2 to hectare
+
+                    new_row6 = ['TP001', '08', each_plot.upper(), 'ALL', each_year,'MORTALITY', int(Biomasses_Agg[each_plot][each_year]['total_dead_trees']), round(Biomasses_Agg[each_plot][each_year]['total_dead_basal']*10000, 3), round(Biomasses_Agg[each_plot][each_year]['total_dead_volume']*10000,3), round(Biomasses_Agg[each_plot][each_year]['total_dead_bio']*10000,3), round(Biomasses_Agg[each_plot][each_year]['total_dead_jenkins']*10000,3)]
+                    writer.writerow(new_row4)
+                    writer.writerow(new_row5)
+                    writer.writerow(new_row6)
 
 class QC(object):
     """ Conducts Stand level quality control if needed. Do not excute this with every run.
@@ -1033,9 +1320,23 @@ if __name__ == "__main__":
 
         BMA = A.aggregate_biomasses(BM)
 
-        import pdb; pdb.set_trace()
+        # testing a single plot or two
+        K = Plot(A, XFACTOR, ['ncna0001','ncna0002'])
+
+    
+        BM_plot = K.compute_biomasses_plot(XFACTOR)
+        
+          
+        BMA_plot = K.aggregate_biomasses_plot(BM_plot)
+        
+
+        
 
         A.write_stand_composite(BM, BMA, XFACTOR)
+
+        K.write_plot_composite(BM_plot, BMA_plot, XFACTOR)
+
+        import pdb; pdb.set_trace()
 
         print("computed static attributes for stand " + each_stand)
 

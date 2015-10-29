@@ -477,54 +477,6 @@ class Capture(object):
             except Exception:
                 pass
 
-    # def create_num_plots(self):
-    #     """ Creates a number of plots count for each stand and year.
-
-    #     **RETURNS**
-
-    #     :Capture.num_plots: the number of plots for that stand and year. Serves no purpose in computation and is only used to generated the required outputs. 
-
-    #     .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
-    #     """
-
-    #     np = {}
-    #     sql = YamlConn().queries['plot']['query_dist_plots']
-    #     self.pcur.execute(sql)
-
-    #     for row in self.pcur:
-    #         try: 
-    #             plot = str(row[2])
-    #         except Exception:
-    #             plot = "None"
-
-    #         try:
-    #             stand = str(row[0])
-    #         except Exception:
-    #             stand = "None"
-
-    #         try:
-    #             year = int(row[1])
-    #         except Exception:
-    #             year = None
-
-    #         try:
-    #             if stand.rstrip().lower() not in np:
-    #                 np[stand.rstrip().lower()] = {year: [plot]}
-    #             elif str(stand.rstrip().lower()) in np:
-    #                 if year not in np[stand.rstrip().lower()]:
-    #                     np[stand.rstrip().lower()][year] = [plot]
-    #                 elif year in np[stand.rstrip().lower()]: 
-    #                     np[stand.rstrip().lower()][year].append(plot)
-    #         except Exception:
-    #             pass
-
-    #     for each_stand in np.keys():
-    #         if each_stand not in self.num_plots.keys():
-    #             self.num_plots[each_stand] = {x:len(np[each_stand][x]) for x in np[each_stand].keys()}
-
-    #         elif each_stand in self.num_plots.keys():
-    #             pass
-
 if __name__ =="__main__":
     DATABASE_CONNECTION = YamlConn()
     conn, cur = DATABASE_CONNECTION.sql_connect()
