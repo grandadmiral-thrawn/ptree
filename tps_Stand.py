@@ -46,7 +46,6 @@ class Stand(object):
         self.proxy_dict = {}
         self.decent_years = []
         self.missings= {}
-        self.study_id = ""
         self.mortalities ={}
         self.mort_replacements = {}
         self.total_area_ref = {}
@@ -300,15 +299,6 @@ class Stand(object):
             except Exception:
                 dbh_code = None
 
-            try:
-                study_id = str(row[8]).strip()
-            except Exception:
-                study_id = "None"
-
-            if self.study_id == "":
-                self.study_id = study_id
-            else:
-                pass
 
             # if the additions are not blank... 
             if self.additions != {}:
@@ -802,19 +792,19 @@ class Stand(object):
                             pass
                         else:
                             for each_tree in BadTreeRef[each_year][each_species][each_plot]['dead']:
-                                writer.writerow([self.study_id.upper,each_year, each_species, each_plot, each_tree, 'dead', 'dbh is None'])
+                                writer.writerow([self.standid, each_year, each_species, each_plot, each_tree, 'dead', 'dbh is None'])
 
                         if BadTreeRef[each_year][each_species][each_plot]['live'] == []:
                             pass
                         else:
                             for each_tree in BadTreeRef[each_year][each_species][each_plot]['live']:
-                                writer.writerow([each_year, each_species, each_plot, each_tree, 'live', 'dbh is None'])
+                                writer.writerow([self.standid, each_year, each_species, each_plot, each_tree, 'live', 'dbh is None'])
 
                         if BadTreeRef[each_year][each_species][each_plot]['ingrowth'] == []:
                             pass
                         else:
                             for each_tree in BadTreeRef[each_year][each_species][each_plot]['ingrowth']:
-                                writer.writerow([each_year, each_species, each_plot, each_tree, 'ingrowth', 'dbh is None'])
+                                writer.writerow([self.standid, each_year, each_species, each_plot, each_tree, 'ingrowth', 'dbh is None'])
 
 class QC(object):
     """ Conducts Stand level quality control if needed. Do not excute this with every run.
@@ -1042,6 +1032,8 @@ if __name__ == "__main__":
         BM, BTR = A.compute_biomasses(XFACTOR)
 
         BMA = A.aggregate_biomasses(BM)
+
+        import pdb; pdb.set_trace()
 
         A.write_stand_composite(BM, BMA, XFACTOR)
 
