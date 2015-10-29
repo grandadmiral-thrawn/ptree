@@ -477,7 +477,6 @@ class Capture(object):
             except Exception:
                 pass
 
-
     # def create_num_plots(self):
     #     """ Creates a number of plots count for each stand and year.
 

@@ -40,12 +40,13 @@ class Stand(object):
         self.species_list = queries['stand']['query_species']
         self.eqn_query = queries['tree']['sql_1tree_eqn']
         self.replacement_query = queries['stand']['query_replacements']
-        self.study_id = ""
-        self.woodden_dict = {}
-        self.proxy_dict = {}
         self.eqns = {}
         self.od = {}
-        self.shifted = {}
+        self.woodden_dict ={}
+        self.proxy_dict = {}
+        self.decent_years = []
+        self.missings= {}
+        self.study_id = ""
         self.mortalities ={}
         self.mort_replacements = {}
         self.total_area_ref = {}
@@ -62,12 +63,9 @@ class Stand(object):
         self.check_additions_and_mort(XFACTOR)
         self.get_all_live_trees()
         self.get_all_dead_trees()
-        
 
-        # # checks if it is a mortality plot, and, if so, shifts the dbhs to the year they should be on for the death totals
-        # is_mort = self.check_mort()
-        # self.update_mort(is_mort)
-
+        # looks to the missing trees and matches their ids to live trees, assigns that dbh to the subsequent year.
+        self.update_all_missing_trees()
         
 
     def select_eqns(self):
@@ -171,6 +169,7 @@ class Stand(object):
         if self.standid.lower() in XFACTOR.additions.keys():
             # store the additions for when you analyze
             self.additions = XFACTOR.additions[self.standid]
+            
             # get the years in which there are additions
             additions_years = sorted(list(XFACTOR.additions[self.standid].keys()))
 
@@ -193,25 +192,26 @@ class Stand(object):
             for row in self.cur:
                 decent_years.append(int(row[0]))
 
-            decent_years_sorted = sorted(decent_years)
+            self.decent_years = sorted(decent_years)
 
             # each additions year is replaced by a correct year from the table and the replacements table is updated. 
             if additions_years != []:
+                
                 for each_year in additions_years:
                     
                     try:
-                        if each_year not in decent_years:
-                            index = bisect.bisect_left(decent_years, each_year)-1
-                        elif each_year in decent_years:
-                            index = bisect.bisect_left(decent_years, each_year)
+                        if each_year not in self.decent_years:
+                            # bisect left marks the left token in case you are checking for a value already in the list so subtract 1.
+                            index = bisect.bisect_left(self.decent_years, each_year)-1
+                        elif each_year in self.decent_years:
+                            index = bisect.bisect_left(self.decent_years, each_year)
                         
-                        replacement_year = decent_years[index]
-                        print("the replacement year is" + str(replacement_year))
+                        replacement_year = self.decent_years[index]
                         plots_applied_to = XFACTOR.additions[self.standid][each_year]
                         self.replacements.update({each_year:{'replacement_year': replacement_year, 'plots': plots_applied_to}})
                     
                     except Exception:
-                        print("exception thrown at line 2012")
+                        print("exception thrown while trying to list replacement years")
                         import pdb; pdb.set_trace()
             else:
                 pass
@@ -220,13 +220,15 @@ class Stand(object):
             if mortality_years != []:
                 for each_year in mortality_years:
                     try:
-                        index = bisect.bisect_right(decent_years, each_year)
-                        replacement_year = decent_years[index]
+                        index = bisect.bisect_right(self.decent_years, each_year)
+                        replacement_year = self.decent_years[index]
                         plots_applied_to = XFACTOR.mortalities[self.standid][each_year]
                         self.mort_replacements.update({each_year:{'replacement_year': replacement_year, 'plots': plots_applied_to}})
                     
                     except Exception:
+                        print("exception thrown while trying to list mortality years")
                         import pdb; pdb.set_trace()
+
 
 
     def get_total_area(self, XFACTOR):
@@ -308,6 +310,7 @@ class Stand(object):
             else:
                 pass
 
+            # if the additions are not blank... 
             if self.additions != {}:
                 
                 # if the tree is in an additions year, roll it back to where it belongs
@@ -319,19 +322,37 @@ class Stand(object):
             else:
                 pass
 
-            
-            if year not in self.od and status in ["6", "9"]:
+            # if the tree is dead we need to get its dbh from elsewhere
+            if self.mortalities != {} and status == "6":
 
-                # if the tree is in a mortality year, go ahead and roll it forward.
+                # if the tree is dead and is in a mortality year, go ahead and roll it forward.
                 if year in self.mortalities.keys() and plotid in self.mortalities[year]:
                     new_year = self.mort_replacements[year]['replacement_year']
                     year = new_year
                 else:
                     pass
 
+            # if the tree is missing we'll add it to the missing table. Then, after we've loaded in all the regular trees, we'll update the live table with a replicate of the last tree that was not missing with the same id, but in this new year.
+            if status in ["9"]:
+
+                if year not in self.missings:
+                    self.missings[year] = {species:{plotid:[tid]}}
+                elif year in self.missings:
+                    if species not in self.missings[year]:
+                        self.missings[year][species] = {plotid:[tid]}
+                    elif species in self.missings[year]:
+                        if plotid not in self.missings[year][species]:
+                            self.missings[year][species][plotid] = [tid]
+                        elif plotid in self.missings[year][species]:
+                            self.missings[year][species][plotid].append(tid)
+            else:
+                pass
+
+            if year not in self.od and status in ["6"]:
+
                 self.od[year]={species:{plotid: {'live': {}, 'ingrowth': {}, 'dead': {tid: (dbh, status, dbh_code)}}}}
             
-            elif year not in self.od and status not in ["6", "9"]:
+            elif year not in self.od and status not in ["6"]:
                 self.od[year]={species: {plotid: {'live': {tid: (dbh, status, dbh_code)}, 'ingrowth': {}, 'dead': {}}}}
 
                 if status == "2":
@@ -341,10 +362,10 @@ class Stand(object):
 
             elif year in self.od:
 
-                if species not in self.od[year] and status in ["6", "9"]:
+                if species not in self.od[year] and status in ["6"]:
                     self.od[year][species] ={plotid: {'live': {}, 'ingrowth': {}, 'dead': {tid: (dbh, status, dbh_code)}}}
                     
-                elif species not in self.od[year] and status not in ["6","9"]: 
+                elif species not in self.od[year] and status not in ["6"]: 
                     self.od[year][species] ={plotid: {'live': {tid: (dbh, status, dbh_code)}, 'ingrowth': {}, 'dead': {}}}
 
                     if status == "2":
@@ -354,10 +375,10 @@ class Stand(object):
 
                 elif species in self.od[year]:
                     
-                    if status in ["6", "9"] and plotid not in self.od[year][species]:
+                    if status in ["6"] and plotid not in self.od[year][species]:
                         self.od[year][species][plotid] = {'dead': {tid: (dbh, status, dbh_code)}, 'live': {}, 'ingrowth': {}}
                     
-                    elif status not in ["6", "9"] and plotid not in self.od[year][species]:
+                    elif status not in ["6"] and plotid not in self.od[year][species]:
                         self.od[year][species][plotid] = {'live': {tid: (dbh, status, dbh_code)}, 'dead': {}, 'ingrowth': {}}
                         
                         if status == "2":
@@ -365,7 +386,7 @@ class Stand(object):
                         else:
                             pass
 
-                    elif status not in ["6", "9"] and plotid in self.od[year][species]:
+                    elif status not in ["6"] and plotid in self.od[year][species]:
                         
                         self.od[year][species][plotid]['live'].update({tid: (dbh, status, dbh_code)})
                         
@@ -374,7 +395,7 @@ class Stand(object):
                         else:
                             pass
 
-                    elif status in ["6", "9"] and plotid in self.od[year][species][plotid]['dead']:
+                    elif status in ["6"] and plotid in self.od[year][species][plotid]['dead']:
                         self.od[year][species][plotid]['dead'].update({tid: (dbh, status, dbh_code)})
 
 
@@ -445,319 +466,51 @@ class Stand(object):
                     elif plotid in self.od[year][species]:   
                         self.od[year][species][plotid]['dead'].update({tid: (dbh, status, dbh_code)})
 
-    # def check_mort(self):
-    #     """ Checks if the year is a mortality year. 
-
-    #     Populates self.mortality_years if there are any mortality years. Also sets self.shifted to the output dictionary if there are no mortality years. The mortality years are those with only dead trees but no live ones. Effectively, if this happened in the wild, it would be a "mortality year" even if it weren't intended to be, so the math will resolve.
-
-    #     **INTERNAL VARIABLES**
-
-    #     :list_all_years_possible_mortality: holds the years that might be mortality years, which are discovered based on if they have counts of mortality, but no live or ingrowth trees.
-    #     """
-    #     # a year is a mortality year if there is no live biomass in that year for all species on a plot. include species because maybe useful for species
-    #     list_all_years_possible_mortality = []
-        
-    #     for each_year in self.od.keys():
-
-    #         if each_year not in self.total_area_ref.keys() and each_year < 2010:
-    #             list_all_years_possible_mortality.append(each_year)
-    #         else:
-    #             pass
-
-    #     # if there are no mortality years, return a false, and self.shifted for that year is the exact same as the actual values
-    #     if list_all_years_possible_mortality == []:
-    #         self.shifted = self.od
-    #         return False
-        
-    #     else:
-    #         # the mortality years attribute is set for the list of mortality years, and sorted. A true return triggers update mort function
-    #         self.mortality_years = sorted(list_all_years_possible_mortality)
-    #         return True
-
-
-    # def update_mort(self, is_mort):
-    #     """ Returns a new dbh dictionary for the stand based on whether or not a year is a mortality year. If it is not a mortality year, the dictionary is the same as the original. If it is a mortality year, the dead trees are shifted to the subsequent year.
-
-    #     The bisect right function determines the windowing years from a given list around a given input year. 
-
-    #     **INTERNAL VARIABLES**
-
-    #     :list_of_live_years: a list of years when checks were performed that were not mortality only
-    #     :dead_year: the year of the mortality check to be aggregated to a selection from list_of_live_years
-    #     :is_mort: Boolean value of whether or not we should update mortality. If it was not a mortality year, we shifted the original output into the shifted dictionary using check_mort, without changing a value!
-    #     """
-    #     if is_mort != True:
-    #         pass
-        
-    #     else:
-    #         # in this list, all the years which are NOT mortality years, no matter what
-
-    #         list_live_years = [x for x in sorted(self.od.keys()) if x not in self.mortality_years]
-    #         self.shifted = {x: self.od[x] for x in list_live_years}
-            
-    #         for each_year in self.mortality_years:
-    #             mort_data = self.od[each_year]
-
-    #             # if the mortality year is not in the live year list, then the mortality belongs to the inventory to its "right"
-    #             if each_year not in list_live_years:
-    #                 index = bisect.bisect_right(list_live_years, each_year)
-    #                 try:
-    #                     update_year = list_live_years[index]
-    #                 except Exception:
-    #                     import pdb; pdb.set_trace()
-    #             else:
-    #                 update_year = each_year
-                
-    #             # if the new mortality year isn't listed in the "shifted" data which was generated from the existing data in "od" add it in; this might happen if the mort was the very last inventory to happen
-    #             if update_year not in self.shifted.keys():
-    #                 self.shifted[update_year] = mort_data
-                
-    #             elif update_year in self.shifted.keys():
-    #                 for each_species in mort_data.keys():
-    #                     if each_species not in self.shifted[update_year].keys():
-    #                         self.shifted[update_year][each_species] = mort_data[each_species]
-
-    #                     elif each_species in self.shifted[update_year].keys():
-    #                         for each_plot in mort_data[each_species].keys():
-    #                             if each_plot not in self.shifted[update_year][each_species].keys():
-    #                                 self.shifted[update_year][each_species][each_plot] = mort_data[each_species][each_plot]
-
-    #                             elif each_plot in self.shifted[update_year][each_species].keys():
-    #                                 try:
-    #                                     self.shifted[update_year][each_species][each_plot]['dead'].update(mort_data[each_species][each_plot]['dead'])
-    #                                 except Exception:
-                            
-    #                                     import pdb; pdb.set_trace()
-
-
-    def compute_normal_biomasses(self, XFACTOR):
-        """ Compute the biomass, volume, jenkins. Use for "normal" stands.
-
-        First use XFACTOR to tell if a fancy computation needs to be performed.
-
-        :XFACTOR: a Capture object containing the detail plots, minimum dbhs, etc.
-        :XFACTOR.detail_reference: plots which are detail plots and when
-        :XFACTOR.stands_with_unusual_mins: plots which have minimums that are not 15 and are not detail plots
-        :XFACTOR.unusual_plot_areas: plots whose areas are not 625 m
+    def update_all_missing_trees(self):
+        """ Get the missing trees from self.missing and try to match each to a tree in the main dictionary that is alive in the preceding year from self.decent_years, and then return a copy of that tree to the year it is missing, so we can compute its biomass.
 
         **INTERNAL VARIABLES**
 
-        :Biomasses: The output dictionary which will ultimately contain the biomass, Jenkins' biomass, volume, etc. for the stand. 
-        
-        .. Example: Compute the number of trees per hectare represented by this one 'PSME' from 1984.
-
-        >>> A.shifted[1984].keys()
-        >>> dict_keys(['alru', 'psme', 'pisi', 'thpl', 'tshe'])
-        >>> A.shifted[1984]['psme']
-        >>> {44: {'ingrowth': [], 'live': [('ncna004400023', 109.7, '1', '1984')], 'dead': []}}
-        
-        >>> 10000*(1/625)
-        >>> 16.0
+        :replacement_year_index: the index in the list of valid years to get the year of replacement from. It needs to precede the missing year
+        :replacement_year: the year whose data we use to replace the missing eyar
 
         """
 
-        Biomasses = {}
-        BadTreeRef = {}
+        for each_year in self.missings:
 
-        p_list = {}
-
-        # if the stand id is one that should not be treated as a "normal" stand, return the empty dictionary, which is a signal that we should process using the special processing
-        if self.standid in XFACTOR.detail_reference.keys() or self.standid in XFACTOR.uplot_areas.keys() or self.standid in XFACTOR.umins_reference.keys():
+            replacement_year_index = bisect.bisect_left(self.decent_years, each_year) - 1
             
-            return Biomasses, BadTreeRef
+            replacement_year = self.decent_years[replacement_year_index]
 
-        else:
-            all_years = sorted(self.shifted.keys())
+            for each_species in self.missings[each_year].keys():
+                for each_plot in self.missings[each_year][each_species].keys():
 
-            for index, each_year in enumerate(all_years):
+                    for each_treeid in self.missings[each_year][each_species][each_plot]:
 
-                try:
-                    # get the total area
-                    total_area = self.total_area_ref[each_year]
-                
-                except KeyError:
-                    # if the area is missing, then take the most recent one to it
-                    list_areas = [x for x in sorted(list(self.total_area_ref.keys())) if x <=each_year]
-                    total_area = self.total_area_ref[list_areas[-1]]
+                        try:
+                            replacement_tree_dbh = self.od[replacement_year][each_species][each_plot]['live'][each_treeid][0]
+                        except Exception:
+                            try:
+                                # if it has been missing for more than 1 year
+                                replacement_year = self.decent_years[replacement_year_index-1]
+                                replacement_tree_dbh = self.od[replacement_year][each_species][each_plot]['live'][each_treeid][0]
+                            except Exception:
+                                try:
+                                    # if it has been missing since the first year
+                                    replacement_year = self.decent_years[0]
+                                    replacement_tree_dbh = self.od[replacement_year][each_species][each_plot]['live'][each_treeid][0]
+                                except Exception:
+                                    print("cannot find a match for the missing tree: " + each_treeid + " -- check the fsdb!")
+                                    import pdb; pdb.set_trace()
 
+                        # this tree should have a dbh but also a status of '9' and 'M'
+                        adjusted_replacement_tree_tuple = (replacement_tree_dbh, '9', 'M')
 
-                for each_species in self.shifted[each_year].keys():
-                    num_plots = len(self.shifted[each_year][each_species].keys())
+                        # update the main database with a replica of this tree for the missing one
+                        self.od[each_year][each_species][each_plot]['live'].update({each_treeid: adjusted_replacement_tree_tuple})
 
-                    for each_plot in self.shifted[each_year][each_species].keys():
-
-
-                        #print("processing now .... (delete me later) ..." + str(each_year) + " | species " + str(each_species) + " | on plot " + str(each_plot))
                         
-                        # figure out the representative percentage of all the area of the stand that this plot represents in the given year
-                        percent_area_of_total = 625./total_area
-
-                        # compute the dead trees first
-                        if each_species == "acci": 
-
-                            large_dead_trees = {k: {'bio': biomass_basis.as_compbio(v[0], self.eqns['acci']), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k, v in self.shifted[each_year][each_species][each_plot]['dead'].items() if v[0] >= 15.0 and v[0] != None}
-                            small_dead_trees = {k: {'bio': biomass_basis.as_compbio(v[0], self.eqns['acci']),'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k, v in self.shifted[each_year][each_species][each_plot]['dead'].items() if v[0] < 15.0 and v[0] != None}
-
-                            large_live_trees = {k: {'bio': biomass_basis.as_compbio(v[0], self.eqns['acci']),'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k, v in self.shifted[each_year][each_species][each_plot]['live'].items() if v[0] >= 15.0 and v[0] != None}
-                            small_live_trees = {k: {'bio': biomass_basis.as_compbio(v[0], self.eqns['acci']),'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k, v in self.shifted[each_year][each_species][each_plot]['live'].items() if v[0] < 15.0 and v[0] != None}
-
-                            large_ingrowth_trees = {k: {'bio': biomass_basis.as_compbio(v[0], self.eqns['acci']),'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k, v in self.shifted[each_year][each_species][each_plot]['ingrowth'].items() if v[0] >= 15.0 and v[0] != None}
-                            small_ingrowth_trees = {k: {'bio': biomass_basis.as_compbio(v[0], self.eqns['acci']),'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k, v in self.shifted[each_year][each_species][each_plot]['ingrowth'].items() if v[0] < 15.0 and v[0] != None}
-
-                        elif each_species != "acci":
-                            
-                            
-                            large_dead_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.shifted[each_year][each_species][each_plot]['dead'].items() if v[0] != None and v[0] >= 15.0}
-                            small_dead_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.shifted[each_year][each_species][each_plot]['dead'].items() if v[0] != None and v[0] < 15.0}
-
-                            large_live_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.shifted[each_year][each_species][each_plot]['live'].items() if v[0] != None and v[0] >= 15.0}
-                            small_live_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.shifted[each_year][each_species][each_plot]['live'].items() if v[0] != None and v[0] < 15.0}
-
-                            large_ingrowth_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.shifted[each_year][each_species][each_plot]['ingrowth'].items() if v[0] != None and v[0] >= 15.0}
-                            small_ingrowth_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.shifted[each_year][each_species][each_plot]['ingrowth'].items() if v[0] != None and v[0] < 15.0}
-                            
-                        bad_dead_trees = [k for k in self.shifted[each_year][each_species][each_plot]['dead'].keys() if self.shifted[each_year][each_species][each_plot]['dead'][k] == None]
-                        bad_live_trees = [k for k in self.shifted[each_year][each_species][each_plot]['live'].keys() if self.shifted[each_year][each_species][each_plot]['live'][k] == None]
-                        bad_ingrowth_trees = [k for k in self.shifted[each_year][each_species][each_plot]['ingrowth'].keys() if self.shifted[each_year][each_species][each_plot]['ingrowth'][k] == None]
-                        
-                    
-                        # write the "bad trees" to a reference
-                        if bad_dead_trees == [] and bad_live_trees == [] and bad_ingrowth_trees ==[]:
-                            pass
-                        else: 
-                            if each_year not in BadTreeRef:
-                                BadTreeRef[each_year] = {each_species:{each_plot: {'dead': bad_dead_trees, 'live': bad_live_trees, 'ingrowth': bad_ingrowth_trees}}}
-                            elif each_year in BadTreeRef:
-                                if each_species not in BadTreeRef[each_year]:
-                                    BadTreeRef[each_year][each_species] = {each_plot:{'dead': bad_dead_trees, 'live': bad_live_trees, 'ingrowth': bad_ingrowth_trees}}
-                                elif each_species in BadTreeRef[each_year]:
-                                    if each_plot not in BadTreeRef[each_year][each_species]:
-                                        BadTreeRef[each_year][each_species][each_plot] = {'dead': bad_dead_trees, 'live': bad_live_trees, 'ingrowth': bad_ingrowth_trees}
-                                    elif each_plot in BadTreeRef[each_year][each_species]:
-                                        BadTreeRef[each_year][each_species][each_plot]['dead'] += bad_dead_trees
-                                        BadTreeRef[each_year][each_species][each_plot]['live'] += bad_live_trees
-                                        BadTreeRef[each_year][each_species][each_plot]['ingrowth'] += bad_ingrowth_trees
-
-                        # dead trees of the "right size", and inclusive of the "small size" - do not divide by m2 yet here
-                        try:
-                            total_dead_trees = len(large_dead_trees)
-                        except Exception:
-                            total_dead_trees = 0.
-                        try:
-                            total_dead_trees_inclusive = (len(large_dead_trees) + len(small_dead_trees))
-                        except Exception:
-                            total_dead_trees_inclusive = 0.
-
-                        # live trees of the "right size", and inclusive of the "small size"- do not divide by m2 yet here
-                        try:
-                            total_live_trees = len(large_live_trees)
-                        except Exception:
-                            total_live_trees = 0.
-                        try:
-                            total_live_trees_inclusive = (len(large_live_trees) + len(small_live_trees)) 
-                        except Exception:
-                            total_live_trees_inclusive = 0.
-
-                        # ingrowth trees of the "right size", and inclusive of the "small size"- do not divide by m2 yet here
-                        try:
-                            total_ingrowth_trees = len(large_ingrowth_trees)
-                        except Exception:
-                            total_ingrowth_trees = 0.
-                        try:
-                            total_ingrowth_trees_inclusive = (len(large_ingrowth_trees) + len(small_ingrowth_trees))
-                        except Exception:
-                            total_ingrowth_trees_inclusive = 0.
-
-                        #print("completed gathering for " + str(each_year) + ", " + str(each_species) + ", " + str(each_plot))
-
-                        ## All these are "normal" so we know there is not any multiplying to do and we can divide the area by 625 to get the per Mg/m2 values for the species on that plot, that year. Multiply result by the percentage area of the total area that plot represents for that stand that year.
-
-                        # the live trees, dead trees, and ingrowth trees counts have already been determined.
-                        total_live_bio = round(sum([large_live_trees[tree]['bio'][0]/625. for tree in large_live_trees.keys()])*percent_area_of_total, 10)
-                        total_ingrowth_bio = round(sum([large_ingrowth_trees[tree]['bio'][0]/625. for tree in large_ingrowth_trees.keys()])*percent_area_of_total, 10)
-                        total_dead_bio = round(sum([large_dead_trees[tree]['bio'][0]/625. for tree in large_dead_trees.keys()])*percent_area_of_total, 10)
-
-                        total_live_bio_inclusive = round(sum([large_live_trees[tree]['bio'][0]/625. for tree in large_live_trees.keys()])*percent_area_of_total + sum([small_live_trees[tree]['bio'][0]/625. for tree in small_live_trees.keys()])*percent_area_of_total, 10)
-                        total_ingrowth_bio_inclusive = round(sum([large_ingrowth_trees[tree]['bio'][0]/625. for tree in large_ingrowth_trees.keys()])*percent_area_of_total + sum([small_ingrowth_trees[tree]['bio'][0]/625. for tree in small_ingrowth_trees.keys()])*percent_area_of_total, 10)
-                        total_dead_bio_inclusive = round(sum([large_dead_trees[tree]['bio'][0]/625. for tree in large_dead_trees.keys()])*percent_area_of_total + sum([small_dead_trees[tree]['bio'][0]/625. for tree in small_dead_trees.keys()])*percent_area_of_total, 10)
-
-                        total_live_jenkins = round(sum([large_live_trees[tree]['bio'][2]/625. for tree in large_live_trees.keys()])*percent_area_of_total, 10)
-                        total_ingrowth_jenkins = round(sum([large_ingrowth_trees[tree]['bio'][2]/625. for tree in large_ingrowth_trees.keys()])*percent_area_of_total, 10)
-                        total_dead_jenkins = round(sum([large_dead_trees[tree]['bio'][2]/625. for tree in large_dead_trees.keys()])*percent_area_of_total, 10)
-
-                        total_live_jenkins_inclusive= round(sum([large_live_trees[tree]['bio'][2]/625. for tree in large_live_trees.keys()])*percent_area_of_total + sum([small_live_trees[tree]['bio'][2]/625. for tree in small_live_trees.keys()])*percent_area_of_total, 10)
-                        total_ingrowth_jenkins_inclusive = round(sum([large_ingrowth_trees[tree]['bio'][2]/625. for tree in large_ingrowth_trees.keys()])*percent_area_of_total + sum([small_ingrowth_trees[tree]['bio'][2]/625. for tree in small_ingrowth_trees.keys()])*percent_area_of_total, 10)
-                        total_dead_jenkins_inclusive = round(sum([large_dead_trees[tree]['bio'][2]/625. for tree in large_dead_trees.keys()])*percent_area_of_total + sum([small_dead_trees[tree]['bio'][2]/625. for tree in small_dead_trees.keys()])*percent_area_of_total, 10)
-
-                        total_live_volume = round(sum([large_live_trees[tree]['bio'][1]/625. for tree in large_live_trees.keys()])*percent_area_of_total, 10)
-                        total_ingrowth_volume = round(sum([large_ingrowth_trees[tree]['bio'][1]/625. for tree in large_ingrowth_trees.keys()])*percent_area_of_total, 10)
-                        total_dead_volume = round(sum([large_dead_trees[tree]['bio'][1]/625. for tree in large_dead_trees.keys()])*percent_area_of_total, 10)
-
-                        total_live_basal = round(sum([large_live_trees[tree]['ba']/625. for tree in large_live_trees.keys()])*percent_area_of_total, 10)
-                        total_ingrowth_basal = round(sum([large_ingrowth_trees[tree]['ba']/625. for tree in large_ingrowth_trees.keys()])*percent_area_of_total, 10)
-                        total_dead_basal = round(sum([large_dead_trees[tree]['ba']/625. for tree in large_dead_trees.keys()])*percent_area_of_total, 10)
-
-                        # just take the wood density from a fake tree at a fake dbh one time.
-                        try:
-                            wooddensity = self.eqns[each_species][biomass_basis.maxref(25.0, each_species)](25.0)[3]
-                        except Exception:
-                            if each_species == "acci":
-                                wooddensity = 0.44
-                            else:
-                                # a default value 
-                                wooddensity = 0.5
-
-                        # get a list of tree names for checking
-                        living_trees = list(large_live_trees.keys())
-                        living_trees_small = list(small_live_trees.keys())
-                        ingrowth_trees = list(large_ingrowth_trees.keys())
-                        ingrowth_trees_small = list(small_ingrowth_trees.keys())
-                        dead_trees = list(large_dead_trees.keys())
-                        dead_trees_small = list(small_dead_trees.keys())
-
-                        # add the year to plot list if not there
-                        if each_year not in Biomasses:
-                            Biomasses[each_year] = {each_species : {'total_live_bio': total_live_bio, 'total_dead_bio' : total_dead_bio, 'total_ingrowth_bio': total_ingrowth_bio, 'total_live_jenkins': total_live_jenkins, 'total_ingrowth_jenkins': total_ingrowth_jenkins, 'total_dead_jenkins' : total_dead_jenkins, 'total_live_volume' : total_live_volume, 'total_dead_volume' : total_dead_volume, 'total_ingrowth_volume': total_ingrowth_volume, 'wooddensity': wooddensity, 'total_live_basal': total_live_basal, 'total_dead_basal': total_dead_basal, 'name_live': living_trees, 'total_ingrowth_basal': total_ingrowth_basal, 'total_live_trees': total_live_trees, 'total_dead_trees': total_dead_trees, 'total_ingrowth_trees': total_ingrowth_trees, 'name_live': living_trees, 'name_dead': dead_trees, 'name_ingrowth': ingrowth_trees, 'total_live_bio_inclusive': total_live_bio_inclusive, 'total_dead_bio_inclusive' : total_dead_bio_inclusive, 'total_ingrowth_bio_inclusive' : total_ingrowth_bio_inclusive, 'total_live_jenkins_inclusive' : total_live_jenkins_inclusive, 'total_dead_jenkins_inclusive' : total_dead_jenkins_inclusive, 'total_ingrowth_jenkins_inclusive': total_ingrowth_jenkins_inclusive, 'num_plots': num_plots}}
-                        
-
-                        elif each_year in Biomasses:
-                            # do not need to augment the wood density :)
-                            if each_species not in Biomasses[each_year]:
-                                Biomasses[each_year][each_species] = {'total_live_bio': total_live_bio, 'total_dead_bio' : total_dead_bio, 'total_ingrowth_bio': total_ingrowth_bio, 'total_live_jenkins': total_live_jenkins, 'total_ingrowth_jenkins': total_ingrowth_jenkins, 'total_dead_jenkins' : total_dead_jenkins, 'total_live_volume' : total_live_volume, 'total_dead_volume' : total_dead_volume, 'total_ingrowth_volume': total_ingrowth_volume, 'total_live_basal': total_live_basal, 'total_dead_basal': total_dead_basal, 'name_live': living_trees, 'total_ingrowth_basal': total_ingrowth_basal,'total_live_trees': total_live_trees, 'total_dead_trees': total_dead_trees, 'total_ingrowth_trees': total_ingrowth_trees, 'name_live': living_trees, 'name_dead': dead_trees, 'wooddensity': wooddensity, 'name_ingrowth': ingrowth_trees, 'total_live_bio_inclusive': total_live_bio_inclusive, 'total_dead_bio_inclusive' : total_dead_bio_inclusive, 'total_ingrowth_bio_inclusive' : total_ingrowth_bio_inclusive, 'total_live_jenkins_inclusive' : total_live_jenkins_inclusive, 'total_dead_jenkins_inclusive' : total_dead_jenkins_inclusive, 'total_ingrowth_jenkins_inclusive': total_ingrowth_jenkins_inclusive, 'num_plots': num_plots}
-                            
-                            # all the plots can be added together for that species and year, no need to keep separate - area division has already happened for all except for the number of trees
-                            elif each_species in Biomasses[each_year]:
-                                
-                                Biomasses[each_year][each_species]['total_live_bio'] += total_live_bio
-                                Biomasses[each_year][each_species]['total_dead_bio'] += total_dead_bio
-                                Biomasses[each_year][each_species]['total_ingrowth_bio'] += total_ingrowth_bio
-                                Biomasses[each_year][each_species]['total_live_jenkins'] +=total_live_jenkins
-                                Biomasses[each_year][each_species]['total_ingrowth_jenkins'] += total_ingrowth_jenkins
-                                Biomasses[each_year][each_species]['total_dead_jenkins'] += total_dead_jenkins
-                                Biomasses[each_year][each_species]['total_live_volume'] += total_live_volume
-                                Biomasses[each_year][each_species]['total_dead_volume'] += total_dead_volume
-                                Biomasses[each_year][each_species]['total_ingrowth_volume'] += total_ingrowth_volume
-                                
-                                # count of all the live trees/ dead trees / ingrowth trees
-                                Biomasses[each_year][each_species]['total_live_trees'] += total_live_trees
-                                Biomasses[each_year][each_species]['total_dead_trees'] += total_dead_trees 
-                                Biomasses[each_year][each_species]['total_ingrowth_trees'] += total_ingrowth_trees
-                                
-                                # names of all the live trees / dead trees / ingrowth trees
-                                Biomasses[each_year][each_species]['name_live'] += living_trees
-                                Biomasses[each_year][each_species]['name_dead'] += dead_trees
-                                Biomasses[each_year][each_species]['name_ingrowth'] += ingrowth_trees
-
-                                Biomasses[each_year][each_species]['num_plots'] = num_plots
-
-                            else:
-                                pass
-
-
-        print("completed all normal biomass on " + str(self.standid))       
-        return Biomasses, BadTreeRef
-
-    def compute_special_biomasses(self, XFACTOR):
+    def compute_biomasses(self, XFACTOR):
         """ Compute the biomass, volume, jenkins. Use for stands with alternate minimums, areas, or detail plots 
 
         First use the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.
@@ -778,13 +531,16 @@ class Stand(object):
         Biomasses = {}
         BadTreeRef = {}
         
-        all_years = sorted(self.shifted.keys())
+        all_years = sorted(self.od.keys())
         
         for index, each_year in enumerate(all_years):
 
             try:
+                
                 total_area = self.total_area_ref[each_year]
+            
             except Exception:
+                
                 try:
                     # get most recent similar year
                     total_area = self.total_area_ref[all_years[index-1]]
@@ -793,68 +549,52 @@ class Stand(object):
                     total_area = self.total_area_ref[all_years[-1]]
 
 
-            for each_species in self.shifted[each_year].keys():
+            for each_species in self.od[each_year].keys():
                 
-                if each_species == 'pimo':
-                    #print("found a pimo on {stand}".format(stand=self.standid))
-                    continue
-
-                else:
-                    pass
-
-                num_plots = len(self.shifted[each_year][each_species].keys())
-                
-                for each_plot in self.shifted[each_year][each_species].keys():
+                for each_plot in self.od[each_year][each_species].keys():
 
                     # try to find the plot in the unusual mins reference
                     try:
-                        mindbh = XFACTOR.umins_reference[self.standid][each_year][each_species][each_plot]
+                        mindbh = XFACTOR.umins_reference[self.standid][each_year][each_plot]
                     except KeyError as exc:
                         mindbh = 15.0
 
                     # try to find the plot in the unusual areas reference
                     try:
-                        area = XFACTOR.uplot_areas[self.standid][each_year][each_species][each_plot]
+                        area = XFACTOR.uplot_areas[self.standid][each_plot][each_year]
                     except KeyError as exc:
                         area = 625.
 
                     # test if the plot is a detail plot
                     if self.standid not in XFACTOR.detail_reference.keys():
                         Xw = 1.0
+                    
                     else:
                         Xw = XFACTOR.expansion[self.standid][each_year]
                         mindbh = XFACTOR.detail_reference[self.standid][each_year][each_plot]['min']
                         area = XFACTOR.detail_reference[self.standid][each_year][each_plot]['area']
 
                     # figure out the representative percentage of all the area of the stand that this plot represents in the given year
-                    percent_area_of_total = area/total_area
+                    percent_area_of_total = area/total_area  
+                    print("the area of the plot " + each_plot + " is " + str(area) + " and the total area is " + str(total_area))                  
 
-                    # compute the dead trees first, if the dbh is not None - this is just for one plot!
-                    if each_species == "acci":
-
-                        large_dead_trees = {k: {'bio': biomass_basis.as_compbio(v[0], self.eqns['acci']), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k, v in self.shifted[each_year][each_species][each_plot]['dead'].items() if v[0] >= 15.0 and v[0] != None}
-                        small_dead_trees = {k: {'bio': biomass_basis.as_compbio(v[0], self.eqns['acci']),'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k, v in self.shifted[each_year][each_species][each_plot]['dead'].items() if v[0] < 15.0 and v[0] > mindbh and v[0] != None}
-
-                        large_live_trees = {k: {'bio': biomass_basis.as_compbio(v[0], self.eqns['acci']),'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k, v in self.shifted[each_year][each_species][each_plot]['live'].items() if v[0] >= 15.0 and v[0] != None}
-                        small_live_trees = {k: {'bio': biomass_basis.as_compbio(v[0], self.eqns['acci']),'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k, v in self.shifted[each_year][each_species][each_plot]['live'].items() if v[0] < 15.0 and v[0] > mindbh and v[0] != None}
-
-                        large_ingrowth_trees = {k: {'bio': biomass_basis.as_compbio(v[0], self.eqns['acci']),'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k, v in self.shifted[each_year][each_species][each_plot]['ingrowth'].items() if v[0] >= 15.0 and v[0] != None}
-                        small_ingrowth_trees = {k: {'bio': biomass_basis.as_compbio(v[0], self.eqns['acci']),'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k, v in self.shifted[each_year][each_species][each_plot]['ingrowth'].items() if v[0] < 15.0 and v[0] > mindbh and v[0] != None}
-                
-                    elif each_species != "acci":
-
-                        large_dead_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.shifted[each_year][each_species][each_plot]['dead'].items() if v[0] != None and v[0] >= 15.0}
-                        small_dead_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.shifted[each_year][each_species][each_plot]['dead'].items() if v[0] != None and v[0] < 15.0 and v[0] > mindbh}
-
-                        large_live_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.shifted[each_year][each_species][each_plot]['live'].items() if v[0] != None and v[0] >= 15.0}
-                        small_live_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.shifted[each_year][each_species][each_plot]['live'].items() if v[0] != None and v[0] < 15.0 and v[0] > mindbh}
-
-                        large_ingrowth_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.shifted[each_year][each_species][each_plot]['ingrowth'].items() if v[0] != None and v[0] >= 15.0}
-                        small_ingrowth_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.shifted[each_year][each_species][each_plot]['ingrowth'].items() if v[0] != None and v[0] < 15.0 and v[0] > mindbh}
+                    large_dead_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.od[each_year][each_species][each_plot]['dead'].items() if v[0] != None and v[0] >= 15.0}
                     
-                    bad_dead_trees = [k for k in self.shifted[each_year][each_species][each_plot]['dead'].keys() if self.shifted[each_year][each_species][each_plot]['dead'][k] == None]
-                    bad_live_trees = [k for k in self.shifted[each_year][each_species][each_plot]['live'].keys() if self.shifted[each_year][each_species][each_plot]['live'][k] == None]
-                    bad_ingrowth_trees = [k for k in self.shifted[each_year][each_species][each_plot]['ingrowth'].keys() if self.shifted[each_year][each_species][each_plot]['ingrowth'][k] == None]
+                    small_dead_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.od[each_year][each_species][each_plot]['dead'].items() if v[0] != None and v[0] < 15.0 and v[0] > mindbh}
+
+                    large_live_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.od[each_year][each_species][each_plot]['live'].items() if v[0] != None and v[0] >= 15.0}
+                    
+                    small_live_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.od[each_year][each_species][each_plot]['live'].items() if v[0] != None and v[0] < 15.0 and v[0] > mindbh}
+
+                    large_ingrowth_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.od[each_year][each_species][each_plot]['ingrowth'].items() if v[0] != None and v[0] >= 15.0}
+                    
+                    small_ingrowth_trees = {k: {'bio': self.eqns[each_species][biomass_basis.maxref(v[0], each_species)](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4)} for k,v in self.od[each_year][each_species][each_plot]['ingrowth'].items() if v[0] != None and v[0] < 15.0 and v[0] > mindbh}
+                    
+                    bad_dead_trees = [k for k in self.od[each_year][each_species][each_plot]['dead'].keys() if self.od[each_year][each_species][each_plot]['dead'][k] == None]
+                    
+                    bad_live_trees = [k for k in self.od[each_year][each_species][each_plot]['live'].keys() if self.od[each_year][each_species][each_plot]['live'][k] == None]
+                    
+                    bad_ingrowth_trees = [k for k in self.od[each_year][each_species][each_plot]['ingrowth'].keys() if self.od[each_year][each_species][each_plot]['ingrowth'][k] == None]
 
                     # write the "bad trees" to a reference
                     if bad_dead_trees == [] and bad_live_trees == [] and bad_ingrowth_trees ==[]:
@@ -872,6 +612,8 @@ class Stand(object):
                                     BadTreeRef[each_year][each_species][each_plot]['dead'] += bad_dead_trees
                                     BadTreeRef[each_year][each_species][each_plot]['live'] += bad_live_trees
                                     BadTreeRef[each_year][each_species][each_plot]['ingrowth'] += bad_ingrowth_trees
+                    
+                    # count the number of total dead, live, and ingrowth trees.
                     try:
                         total_dead_trees = (len(large_dead_trees) + len(small_dead_trees)*Xw)
                     except Exception:
@@ -888,35 +630,40 @@ class Stand(object):
                         total_ingrowth_trees = 0.
 
                     # compute the totals
-                    total_live_bio = sum([large_live_trees[tree]['bio'][0]/area for tree in large_live_trees.keys()])*percent_area_of_total + sum([(small_live_trees[tree]['bio'][0]/area)*Xw for tree in small_live_trees.keys()])*percent_area_of_total
-                    total_ingrowth_bio = sum([large_ingrowth_trees[tree]['bio'][0]/area for tree in large_ingrowth_trees.keys()]) * percent_area_of_total + sum([(small_ingrowth_trees[tree]['bio'][0]/area)*Xw for tree in small_ingrowth_trees.keys()]) * percent_area_of_total
-                    total_dead_bio = sum([large_dead_trees[tree]['bio'][0]/area for tree in large_dead_trees.keys()]) * percent_area_of_total + sum([(small_dead_trees[tree]['bio'][0]/area)*Xw for tree in small_dead_trees.keys()]) * percent_area_of_total
+                    # total_live_bio = sum([large_live_trees[tree]['bio'][0]/area for tree in large_live_trees.keys()])*percent_area_of_total + sum([(small_live_trees[tree]['bio'][0]/area)*Xw for tree in small_live_trees.keys()])*percent_area_of_total
+                    # total_ingrowth_bio = sum([large_ingrowth_trees[tree]['bio'][0]/area for tree in large_ingrowth_trees.keys()]) * percent_area_of_total + sum([(small_ingrowth_trees[tree]['bio'][0]/area)*Xw for tree in small_ingrowth_trees.keys()]) * percent_area_of_total
+                    # total_dead_bio = sum([large_dead_trees[tree]['bio'][0]/area for tree in large_dead_trees.keys()]) * percent_area_of_total + sum([(small_dead_trees[tree]['bio'][0]/area)*Xw for tree in small_dead_trees.keys()]) * percent_area_of_total
+
+
+                    total_live_bio = (sum([large_live_trees[tree]['bio'][0]/area for tree in large_live_trees.keys()]) + sum([(small_live_trees[tree]['bio'][0]/area)*Xw for tree in small_live_trees.keys()]))*percent_area_of_total
+                    total_ingrowth_bio = (sum([large_ingrowth_trees[tree]['bio'][0]/area for tree in large_ingrowth_trees.keys()])+ sum([(small_ingrowth_trees[tree]['bio'][0]/area)*Xw for tree in small_ingrowth_trees.keys()]))* percent_area_of_total
+                    total_dead_bio = (sum([large_dead_trees[tree]['bio'][0]/area for tree in large_dead_trees.keys()]) + sum([(small_dead_trees[tree]['bio'][0]/area)*Xw for tree in small_dead_trees.keys()]))* percent_area_of_total
+
                     
-                    total_live_jenkins = sum([large_live_trees[tree]['bio'][2]/area for tree in large_live_trees.keys()]) * percent_area_of_total + sum([(small_live_trees[tree]['bio'][2]/area)*Xw for tree in small_live_trees.keys()]) * percent_area_of_total
-                    total_ingrowth_jenkins = sum([large_ingrowth_trees[tree]['bio'][2]/area for tree in large_ingrowth_trees.keys()]) * percent_area_of_total + sum([(small_ingrowth_trees[tree]['bio'][2]/area)*Xw for tree in small_ingrowth_trees.keys()]) * percent_area_of_total
-                    total_dead_jenkins = sum([large_dead_trees[tree]['bio'][2]/area for tree in large_dead_trees.keys()]) * percent_area_of_total + sum([(small_dead_trees[tree]['bio'][2]/area)*Xw for tree in small_dead_trees.keys()]) * percent_area_of_total
+                    total_live_jenkins = (sum([large_live_trees[tree]['bio'][2]/area for tree in large_live_trees.keys()]) + sum([(small_live_trees[tree]['bio'][2]/area)*Xw for tree in small_live_trees.keys()])) * percent_area_of_total
+                    total_ingrowth_jenkins = (sum([large_ingrowth_trees[tree]['bio'][2]/area for tree in large_ingrowth_trees.keys()])  + sum([(small_ingrowth_trees[tree]['bio'][2]/area)*Xw for tree in small_ingrowth_trees.keys()])) * percent_area_of_total
+                    total_dead_jenkins = (sum([large_dead_trees[tree]['bio'][2]/area for tree in large_dead_trees.keys()]) + sum([(small_dead_trees[tree]['bio'][2]/area)*Xw for tree in small_dead_trees.keys()])) * percent_area_of_total
 
-                    total_live_volume = sum([large_live_trees[tree]['bio'][1]/area for tree in large_live_trees.keys()]) * percent_area_of_total + sum([(small_live_trees[tree]['bio'][1]/area)*Xw for tree in small_live_trees.keys()]) * percent_area_of_total
-                    total_ingrowth_volume = sum([large_ingrowth_trees[tree]['bio'][1]/area for tree in large_ingrowth_trees.keys()]) * percent_area_of_total + sum([(small_ingrowth_trees[tree]['bio'][1]/area)*Xw for tree in small_ingrowth_trees.keys()]) * percent_area_of_total
-                    total_dead_volume = sum([large_dead_trees[tree]['bio'][1]/area for tree in large_dead_trees.keys()]) * percent_area_of_total+ sum([(small_dead_trees[tree]['bio'][1]/area)*Xw for tree in small_dead_trees.keys()]) * percent_area_of_total
+                    total_live_volume = (sum([large_live_trees[tree]['bio'][1]/area for tree in large_live_trees.keys()])  + sum([(small_live_trees[tree]['bio'][1]/area)*Xw for tree in small_live_trees.keys()])) * percent_area_of_total
+                    total_ingrowth_volume = (sum([large_ingrowth_trees[tree]['bio'][1]/area for tree in large_ingrowth_trees.keys()]) + sum([(small_ingrowth_trees[tree]['bio'][1]/area)*Xw for tree in small_ingrowth_trees.keys()])) * percent_area_of_total
+                    total_dead_volume = (sum([large_dead_trees[tree]['bio'][1]/area for tree in large_dead_trees.keys()]) + sum([(small_dead_trees[tree]['bio'][1]/area)*Xw for tree in small_dead_trees.keys()])) * percent_area_of_total
 
-                    total_live_basal = sum([large_live_trees[tree]['ba']/area for tree in large_live_trees.keys()]) * percent_area_of_total + sum([(small_live_trees[tree]['ba']/area)*Xw for tree in small_live_trees.keys()]) * percent_area_of_total
-                    total_ingrowth_basal = sum([large_ingrowth_trees[tree]['ba']/area for tree in large_ingrowth_trees.keys()])* percent_area_of_total +  sum([(small_ingrowth_trees[tree]['ba']/area)*Xw for tree in small_ingrowth_trees.keys()]) * percent_area_of_total
-                    total_dead_basal = sum([large_dead_trees[tree]['ba'] for tree in large_dead_trees.keys()])/area + sum([(small_dead_trees[tree]['ba']/area)*Xw for tree in small_dead_trees.keys()]) * percent_area_of_total
+                    total_live_basal = (sum([large_live_trees[tree]['ba']/area for tree in large_live_trees.keys()]) + sum([(small_live_trees[tree]['ba']/area)*Xw for tree in small_live_trees.keys()])) * percent_area_of_total
+                    total_ingrowth_basal = (sum([large_ingrowth_trees[tree]['ba']/area for tree in large_ingrowth_trees.keys()])+  sum([(small_ingrowth_trees[tree]['ba']/area)*Xw for tree in small_ingrowth_trees.keys()])) * percent_area_of_total
+                    total_dead_basal = (sum([large_dead_trees[tree]['ba']/area for tree in large_dead_trees.keys()]) + sum([(small_dead_trees[tree]['ba']/area)*Xw for tree in small_dead_trees.keys()])) * percent_area_of_total
 
+
+                    num_plots = 1
                     
                     # just take the wood density from one tree to have
 
                     try:
-                        wooddensity = self.eqns[each_species][biomass_basis.maxref(25.0, each_species)](25.0)[3]
+                        wooddensity = self.eqns[each_species][biomass_basis.maxref(16.0, each_species)](16.0)[3]
                         
                     except Exception:
+                        print("stuck trying to compute wood density")
                         import pdb; pdb.set_trace()
                         # find the wood density by pretending that you need to compute a 25 cm tree
-                        if each_species == "acci":
-                            wooddensity = 0.44
-                        else:
-                            wooddensity = 0.5
                         
 
                     # get a list of tree names for checking
@@ -957,6 +704,7 @@ class Stand(object):
                             Biomasses[each_year][each_species]['num_plots'] = num_plots
                         else:
                             pass
+        
         return Biomasses, BadTreeRef
 
     def aggregate_biomasses(self, Biomasses):
@@ -979,200 +727,61 @@ class Stand(object):
         return Biomasses_Agg
 
 
-    def write_stand_live(self, Biomasses):
-        """ Generates an output file containing ingrowth Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins'' Biomass ( Mg ), and wood density, by species
-        
-        """
-        filename_out = self.standid + "_stand_live_output.csv"
-
-        with open(filename_out,'w') as writefile:
-            writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
-
-            writer.writerow(['studyid','standid', 'year','species','total_live_bio_mg_ha','total_live_jenkins_mg_ha','total_live_volume_m3_ha','total_live_num_trees_ha','total_live_basal_m2_ha','wooddensity_g_cm3'])
-
-            for each_year in Biomasses:
-                for each_species in Biomasses[each_year]:
-                  
-                    # remember to multiply by 10000 to go from m2 to hectare
-                    new_row = [self.study_id.upper(), self.standid.upper(), each_year, each_species, round(Biomasses[each_year][each_species]['total_live_bio']*10000,3), round(Biomasses[each_year][each_species]['total_live_jenkins']*10000,3), round(Biomasses[each_year][each_species]['total_live_volume']*10000,3), int(Biomasses[each_year][each_species]['total_live_trees']), round(Biomasses[each_year][each_species]['total_live_basal']*10000,3), Biomasses[each_year][each_species]['wooddensity']]
-                    
-                    writer.writerow(new_row)
-
-    def write_stand_dead(self, Biomasses):
-        """ Generates an output file containing dead Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins'' Biomass ( Mg ), and wood density, by species
-        
-        """
-        filename_out = self.standid + "_stand_dead_output.csv"
-        with open(filename_out,'w') as writefile:
-            writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
-
-            writer.writerow(['studyid', 'standid','year','species','total_dead_bio_mg_ha','total_dead_jenkins_mg_ha','total_dead_volume_m3_ha','total_dead_num_trees_ha','total_dead_basal_m2_ha','wooddensity_g_cm3'])
-
-            for each_year in Biomasses:
-                for each_species in Biomasses[each_year]:
-                    # remember to multiply by 10000 to go from m2 to hectare
-                    new_row = [self.studyid.upper(), self.standid.upper(), each_year, each_species, round(Biomasses[each_year][each_species]['total_dead_bio']*10000,3), round(Biomasses[each_year][each_species]['total_dead_jenkins']*10000,3), round(Biomasses[each_year][each_species]['total_dead_volume']*10000,3), int(Biomasses[each_year][each_species]['total_dead_trees']), round(Biomasses[each_year][each_species]['total_dead_basal']*10000, 3), Biomasses[each_year][each_species]['wooddensity']]
-                    
-                    writer.writerow(new_row)
-
-    def write_stands_ingrowth(self, Biomasses):
-        """ Generates an output file for stands which does NOT break the live, dead, and ingrowth Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), and wood density, by species, into separate files
-
-        """
-
-        filename_out = self.standid + "_stand_all_output.csv"
-
-        with open(filename_out, 'w') as writefile:
-
-            writer.writerow(['study_id','stand_id','year','species','total_ingrowth_bio_mg_ha','total_ingrowth_jenkins_mg_ha','total_ingrowth_volume_m3_ha','total_ingrowth_num_trees_ha','total_ingrowth_basal_m2_ha','wooddensity_g_cm3'])
-
-            for each_year in Biomasses:
-                for each_species in Biomasses[each_year]:
-                    # remember to multiply by 10000 to go from m2 to hectare
-                    new_row = [self.study_id.upper(), self.standid.upper(), each_year, each_species, round(Biomasses[each_year][each_species]['total_ingrowth_bio']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_jenkins']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_volume']*10000,3), int(Biomasses[each_year][each_species]['total_ingrowth_trees']), round(Biomasses[each_year][each_species]['total_ingrowth_basal']*10000, 3), Biomasses[each_year][each_species]['wooddensity']]
-                    
-                    writer.writerow(new_row)
-
-    def write_stand_normalized(self, Biomasses):
-        """ Generates an output file containing ingrowth Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), and wood density, by species
-        """
-        filename_out = self.standid + "_stand_normalized_output.csv"
-        with open(filename_out,'w') as writefile:
-            writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
-
-            writer.writerow(['DBCODE','ENTITY','STUDYID', 'STANDID', 'SPECIES', 'YEAR', 'STATUS','TPH','BA_M2HA','VOLM3_HA','BIO_MGHA','JBIO_MGHA','WOODDEN','NPLOTS_SPECIES'])
-
-            for each_year in sorted(Biomasses.keys()):
-                for each_species in Biomasses[each_year]:
-                    # remember to multiply by 10000 to go from m2 to hectare
-                    new_row = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_species, each_year,'INGROWTH', int(Biomasses[each_year][each_species]['total_ingrowth_trees']), round(Biomasses[each_year][each_species]['total_ingrowth_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_ingrowth_volume']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_bio']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_jenkins']*10000,3), Biomasses[each_year][each_species]['wooddensity'], Biomasses[each_year][each_species]['num_plots']]
-                    
-                    writer.writerow(new_row)
-
-                    # remember to multiply by 10000 to go from m2 to hectare
-                    new_row = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_species, each_year,'LIVE', int(Biomasses[each_year][each_species]['total_live_trees']), round(Biomasses[each_year][each_species]['total_live_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_live_volume']*10000,3), round(Biomasses[each_year][each_species]['total_live_bio']*10000,3), round(Biomasses[each_year][each_species]['total_live_jenkins']*10000,3), Biomasses[each_year][each_species]['wooddensity'], Biomasses[each_year][each_species]['num_plots']]
-                 
-                    writer.writerow(new_row)
-
-                    # remember to multiply by 10000 to go from m2 to hectare
-                    new_row = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_species, each_year,'MORT', int(Biomasses[each_year][each_species]['total_dead_trees']), round(Biomasses[each_year][each_species]['total_dead_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_dead_volume']*10000,3), round(Biomasses[each_year][each_species]['total_dead_bio']*10000,3), round(Biomasses[each_year][each_species]['total_dead_jenkins']*10000,3), Biomasses[each_year][each_species]['wooddensity'], Biomasses[each_year][each_species]['num_plots']]
-
-                    writer.writerow(new_row)
-
-    def write_stand_normalized_aggregate(self, Biomasses_Agg, XFACTOR):
-        """ Generates an output file containing ingrowth Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), and wood density, not by species but for the whole stand.
-
-        Uses the Capture object to tell the total number of plots on that stand during that year
-
-        """
-        filename_out = self.standid + "_stand_aggregate_output.csv"
-        
-        with open(filename_out,'w') as writefile:
-            writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
-
-            writer.writerow(['DBCODE','ENTITY','STUDYID', 'STANDID', 'YEAR', 'STATUS','TPH','BA_M2HA','VOLM3_HA','BIO_MGHA','JBIO_MGHA', 'NUM_PLOTS_STAND'])
-
-            #print(sorted(Biomasses_Agg.keys()))
-
-            for each_year in sorted(Biomasses_Agg.keys()):
-
-                try:
-                    # remember to multiply by 10000 to go from m2 to hectare
-                    new_row1 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_year,'INGROWTH', int(Biomasses_Agg[each_year]['total_ingrowth_trees']), round(Biomasses_Agg[each_year]['total_ingrowth_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_ingrowth_volume']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_bio']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_jenkins']*10000,3), XFACTOR.num_plots[self.standid.lower()][each_year]]
-                except Exception:
-                    try:
-                        new_row1 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_year,'INGROWTH', int(Biomasses_Agg[each_year]['total_ingrowth_trees']), round(Biomasses_Agg[each_year]['total_ingrowth_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_ingrowth_volume']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_bio']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_jenkins']*10000,3), None]
-                        print("temp plot table does not include " + self.standid + "in " + str(each_year))
-                    except Exception:
-                        import pdb; pdb.set_trace()
-
-                # remember to multiply by 10000 to go from m2 to hectare
-                try:
-                    new_row2 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_year,'LIVE', int(Biomasses_Agg[each_year]['total_live_trees']), round(Biomasses_Agg[each_year]['total_live_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_live_volume']*10000,3), round(Biomasses_Agg[each_year]['total_live_bio']*10000,3), round(Biomasses_Agg[each_year]['total_live_jenkins']*10000,3), XFACTOR.num_plots[self.standid.lower()][each_year]]
-                except Exception:
-                    try:
-                        new_row2 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_year,'LIVE', int(Biomasses_Agg[each_year]['total_live_trees']), round(Biomasses_Agg[each_year]['total_live_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_live_volume']*10000,3), round(Biomasses_Agg[each_year]['total_live_bio']*10000,3), round(Biomasses_Agg[each_year]['total_live_jenkins']*10000,3), None]
-                    except Exception:
-                        import pdb; pdb.set_trace()
-
-                # remember to multiply by 10000 to go from m2 to hectare
-                try:
-                    new_row3 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_year,'MORT', int(Biomasses_Agg[each_year]['total_dead_trees']), round(Biomasses_Agg[each_year]['total_dead_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_dead_volume']*10000,3), round(Biomasses_Agg[each_year]['total_dead_bio']*10000,3), round(Biomasses_Agg[each_year]['total_dead_jenkins']*10000,3), XFACTOR.num_plots[self.standid.lower()][each_year]]
-                except Exception:
-                    try:
-                        new_row3 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_year,'MORT', int(Biomasses_Agg[each_year]['total_dead_trees']), round(Biomasses_Agg[each_year]['total_dead_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_dead_volume']*10000,3), round(Biomasses_Agg[each_year]['total_dead_bio']*10000,3), round(Biomasses_Agg[each_year]['total_dead_jenkins']*10000,3), None]
-                    except Exception:
-                        import pdb; pdb.set_trace()
-
-                writer.writerow(new_row1)
-                writer.writerow(new_row2)
-                writer.writerow(new_row3)
-
-
     def write_stand_composite(self, Biomasses, Biomasses_Agg, XFACTOR):
-        """ Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins'' Biomass ( Mg ), Basal Area (m \ :sup:`2`) and wood density by species with a row of "all" containing only the TPH, Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), and Basal Area (m \ :sup:`2`)
+        """ Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), Basal Area (m \ :sup:`2`) by species with a row of "all" containing the composite TPH, Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), and Basal Area (m \ :sup:`2`)
+
+        **INPUTS**
+
+        :Biomasses: data structure containing portions of biomass and other desired outputs, grouped by species
+        :Biomasses_Agg: data structure containing the aggregate biomass over all the species.
+        :XFACTOR: the reference object used for computing areas and such. You've already created it. No worries.
+
+        **OUTPUTS**
+
+        Writes a file named `standid + stand_composite_output.csv`
         """
 
         filename_out = self.standid + "_stand_composite_output.csv"
         with open(filename_out,'w') as writefile:
             writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
 
-            writer.writerow(['DBCODE','ENTITY','STUDYID', 'STANDID', 'SPECIES', 'YEAR', 'STATUS','TPH','BA_M2HA','VOLM3_HA','BIO_MGHA','JBIO_MGHA','WOODDEN','NPLOTS_SPECIES'])
+            writer.writerow(['DBCODE','ENTITY','STANDID','SPECIES','YEAR','PORTION','TPH_NHA','BA_M2HA','VOL_M3HA','BIO_MGHA','JENKBIO_MGHA'])
 
             for each_year in sorted(Biomasses.keys()):
 
                 for each_species in Biomasses[each_year]:
+
                     # remember to multiply by 10000 to go from m2 to hectare
-                    new_row_1 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_species, each_year,'INGROWTH', int(Biomasses[each_year][each_species]['total_ingrowth_trees']), round(Biomasses[each_year][each_species]['total_ingrowth_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_ingrowth_volume']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_bio']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_jenkins']*10000,3), Biomasses[each_year][each_species]['wooddensity'], Biomasses[each_year][each_species]['num_plots']]
+                    new_row_1 = ['TP001', '07', self.standid.upper(), each_species, each_year,'INGROWTH', int(Biomasses[each_year][each_species]['total_ingrowth_trees']), round(Biomasses[each_year][each_species]['total_ingrowth_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_ingrowth_volume']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_bio']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_jenkins']*10000,3)]
                     
                     #writer.writerow(new_row)
 
                     # remember to multiply by 10000 to go from m2 to hectare
-                    new_row_2 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_species, each_year,'LIVE', int(Biomasses[each_year][each_species]['total_live_trees']), round(Biomasses[each_year][each_species]['total_live_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_live_volume']*10000,3), round(Biomasses[each_year][each_species]['total_live_bio']*10000,3), round(Biomasses[each_year][each_species]['total_live_jenkins']*10000,3), Biomasses[each_year][each_species]['wooddensity'], Biomasses[each_year][each_species]['num_plots']]
+                    new_row_2 = ['TP001', '07', self.standid.upper(), each_species, each_year,'LIVE', int(Biomasses[each_year][each_species]['total_live_trees']), round(Biomasses[each_year][each_species]['total_live_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_live_volume']*10000,3), round(Biomasses[each_year][each_species]['total_live_bio']*10000,3), round(Biomasses[each_year][each_species]['total_live_jenkins']*10000,3)]
                  
                     #writer.writerow(new_row)
 
                     # remember to multiply by 10000 to go from m2 to hectare
-                    new_row_3 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), each_species, each_year,'MORT', int(Biomasses[each_year][each_species]['total_dead_trees']), round(Biomasses[each_year][each_species]['total_dead_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_dead_volume']*10000,3), round(Biomasses[each_year][each_species]['total_dead_bio']*10000,3), round(Biomasses[each_year][each_species]['total_dead_jenkins']*10000,3), Biomasses[each_year][each_species]['wooddensity'], Biomasses[each_year][each_species]['num_plots']]
+                    new_row_3 = ['TP001', '07', self.standid.upper(), each_species, each_year,'MORT', int(Biomasses[each_year][each_species]['total_dead_trees']), round(Biomasses[each_year][each_species]['total_dead_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_dead_volume']*10000,3), round(Biomasses[each_year][each_species]['total_dead_bio']*10000,3), round(Biomasses[each_year][each_species]['total_dead_jenkins']*10000,3)]
 
                     writer.writerow(new_row_1)
                     writer.writerow(new_row_2)
                     writer.writerow(new_row_3)
 
-           # for each_year in sorted(Biomasses_Agg.keys()):
 
-                    try:
-                        # remember to multiply by 10000 to go from m2 to hectare
-                        new_row1 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), 'ALL', each_year,'INGROWTH', int(Biomasses_Agg[each_year]['total_ingrowth_trees']), round(Biomasses_Agg[each_year]['total_ingrowth_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_ingrowth_volume']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_bio']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_jenkins']*10000,3), None, XFACTOR.num_plots[self.standid.lower()][each_year]]
-                    except Exception:
-                        try:
-                            new_row1 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), 'ALL', each_year,'INGROWTH', int(Biomasses_Agg[each_year]['total_ingrowth_trees']), round(Biomasses_Agg[each_year]['total_ingrowth_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_ingrowth_volume']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_bio']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_jenkins']*10000,3), None, None]
-                            print("temp plot table does not include " + self.standid + "in " + str(each_year))
-                        except Exception:
-                            import pdb; pdb.set_trace()
+            for each_year in sorted(Biomasses_Agg.keys()):
+                # remember to multiply by 10000 to go from m2 to hectare
+                new_row4 = ['TP001', '07', self.standid.upper(), 'ALL', each_year,'INGROWTH', int(Biomasses_Agg[each_year]['total_ingrowth_trees']), round(Biomasses_Agg[each_year]['total_ingrowth_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_ingrowth_volume']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_bio']*10000,3), round(Biomasses_Agg[each_year]['total_ingrowth_jenkins']*10000,3)]
+                    
 
-                    # remember to multiply by 10000 to go from m2 to hectare
-                    try:
-                        new_row2 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), 'ALL', each_year,'LIVE', int(Biomasses_Agg[each_year]['total_live_trees']), round(Biomasses_Agg[each_year]['total_live_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_live_volume']*10000,3), round(Biomasses_Agg[each_year]['total_live_bio']*10000,3), round(Biomasses_Agg[each_year]['total_live_jenkins']*10000,3), None, XFACTOR.num_plots[self.standid.lower()][each_year]]
-                    except Exception:
-                        try:
-                            new_row2 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), 'ALL', each_year,'LIVE', int(Biomasses_Agg[each_year]['total_live_trees']), round(Biomasses_Agg[each_year]['total_live_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_live_volume']*10000,3), round(Biomasses_Agg[each_year]['total_live_bio']*10000,3), round(Biomasses_Agg[each_year]['total_live_jenkins']*10000,3), None, None]
-                        except Exception:
-                            import pdb; pdb.set_trace()
+                new_row5 = ['TP001', '07', self.standid.upper(), 'ALL', each_year,'LIVE', int(Biomasses_Agg[each_year]['total_live_trees']), round(Biomasses_Agg[each_year]['total_live_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_live_volume']*10000,3), round(Biomasses_Agg[each_year]['total_live_bio']*10000,3), round(Biomasses_Agg[each_year]['total_live_jenkins']*10000,3)]
 
                 # remember to multiply by 10000 to go from m2 to hectare
-                try:
-                    new_row3 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), 'ALL', each_year,'MORT', int(Biomasses_Agg[each_year]['total_dead_trees']), round(Biomasses_Agg[each_year]['total_dead_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_dead_volume']*10000,3), round(Biomasses_Agg[each_year]['total_dead_bio']*10000,3), round(Biomasses_Agg[each_year]['total_dead_jenkins']*10000,3), None, XFACTOR.num_plots[self.standid.lower()][each_year]]
-                except Exception:
-                    try:
-                        new_row3 = ['TP001', '08', self.study_id.upper(), self.standid.upper(), 'ALL', each_year,'MORT', int(Biomasses_Agg[each_year]['total_dead_trees']), round(Biomasses_Agg[each_year]['total_dead_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_dead_volume']*10000,3), round(Biomasses_Agg[each_year]['total_dead_bio']*10000,3), round(Biomasses_Agg[each_year]['total_dead_jenkins']*10000,3), None, None]
-                    except Exception:
-                        import pdb; pdb.set_trace()
 
-                
-                writer.writerow(new_row1)
-                writer.writerow(new_row2)
-                writer.writerow(new_row3)
+                new_row6 = ['TP001', '07', self.standid.upper(), 'ALL', each_year,'MORT', int(Biomasses_Agg[each_year]['total_dead_trees']), round(Biomasses_Agg[each_year]['total_dead_basal']*10000, 3), round(Biomasses_Agg[each_year]['total_dead_volume']*10000,3), round(Biomasses_Agg[each_year]['total_dead_bio']*10000,3), round(Biomasses_Agg[each_year]['total_dead_jenkins']*10000,3)]
+                writer.writerow(new_row4)
+                writer.writerow(new_row5)
+                writer.writerow(new_row6)
 
 
     def check_stand_members(self, BadTreeRef):
@@ -1180,10 +789,11 @@ class Stand(object):
         
         """
         filename_out = self.standid + "_stand_member_check.csv"
+        
         with open(filename_out, 'w') as writefile:
             writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
             
-            writer.writerow(['studyid','standid','year', 'species', 'plot', 'treeid', 'state', 'issue'])
+            writer.writerow(['standid','year', 'species', 'plot', 'treeid', 'state', 'issue'])
 
             for each_year in BadTreeRef:
                 for each_species in BadTreeRef[each_year]:
@@ -1417,54 +1027,27 @@ if __name__ == "__main__":
     # creates lookups for expansion factors
     XFACTOR = poptree_basis.Capture(cur, queries)
 
-    #A = Stand(cur, pcur, XFACTOR, queries, 'CFMF')
-    #import pdb; pdb.set_trace()
+    #### A set of test stands ####
     #test_stands = ['CFMF','AV06','WI01','NCNA', 'AG05', 'AB08', 'AX15', 'PP17', 'TO11', 'AV14', 'RS31', 'RS28', 'RS01', 'RS02', 'RS30', 'TB13', 'AR07', 'AM16', 'RS29', 'RS32', 'AE10', 'AV06', 'TO04']
     
+    ### A shorter set of test stands ###
     test_stands = ["NCNA", "AX15", "WI01"]
+    
     for each_stand in test_stands:
 
         each_stand=each_stand.lower()
         
         A = Stand(cur, XFACTOR, queries, each_stand)
-        A.shifted = A.od
 
-        BM, BTR = A.compute_normal_biomasses(XFACTOR)
-        
-        if BM == {}:
-            Biomasses, BadTreeSpec = A.compute_special_biomasses(XFACTOR)
-            #A.write_stand_normalized(Biomasses)
+        BM, BTR = A.compute_biomasses(XFACTOR)
 
-            Biomasses_aggregate = A.aggregate_biomasses(Biomasses)
-            #A.write_stand_normalized_aggregate(Biomasses_aggregate, XFACTOR)
+        BMA = A.aggregate_biomasses(BM)
 
-            A.write_stand_composite(Biomasses, Biomasses_Agg, XFACTOR)
-            #A.write_stand_live(Biomasses)
-            #A.write_stand_dead(Biomasses)
-            #A.write_stand_ingrowth(Biomasses)
+        A.write_stand_composite(BM, BMA, XFACTOR)
 
-            if BadTreeSpec == {}:
-                pass
-            else:
-                A.check_stand_members(BadTreeSpec)
-            del Biomasses, BadTreeSpec
+        print("computed static attributes for stand " + each_stand)
 
-    
-        else:
-            #A.write_stand_normalized(BM) 
-            BMA = A.aggregate_biomasses(BM)
-
-            A.write_stand_composite(BM, BMA, XFACTOR)
-            #A.write_stand_normalized_aggregate(BMA, XFACTOR)
-            #A.write_stand_live(BM)
-            #A.write_stand_dead(BM)
-            #A.write_stand_ingrowth(BM)
-
-            if BTR == {}:
-                pass
-            else:
-                A.check_stand_members(BTR)
-        del BM, BTR
-        
-
-
+        # delete objects. This may not be necessary.
+        del A
+        del BM
+        del BMA
