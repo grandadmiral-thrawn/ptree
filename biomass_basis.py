@@ -4,7 +4,7 @@
 import math
 
 def maxref(dbh, species):
-    """ Check if given dbh and given species is bigger than the maximum for that combination. The max was found from determining the top 1 percent of dbh's for each species.
+    """ Check if given dbh in cm and given species is bigger than the maximum for that combination. The maximum was found from determining the top 1 percent of dbh's in cm for each species from all the historical data. This function operates behind the scenes on inputs from TP00102 (dbh's) and TP00101(species). It populates the eqns attribute of the Tree or Stand classes so that the right equation or set of equations will be called. 
 
     **INPUTS**
     
@@ -75,9 +75,9 @@ def maxref(dbh, species):
             return "normal"
 
 def as_lnln(woodden, dbh, b1, b2, b3, j1, j2, *args):
-    """ Generates biomass equations based on inputs of b1, b2, b3, and wood density for dbh, in cm. 
+    """ Generates biomass equations based on inputs of `b1`, `b2`, `b3`, and wood density for dbh, in cm. 
 
-    Generates Jenkin's biomass equations based on inputs of j1 and j2 for dbh, also in cm. 
+    Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm. 
 
     **INPUTS**
 
@@ -95,15 +95,15 @@ def as_lnln(woodden, dbh, b1, b2, b3, j1, j2, *args):
         volume = round(biomass/woodden,7)
         jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
         return (biomass, volume, jbio, woodden)
-    except ValueError as e1:
+    except ValueError:
         
         return (0., 0., 0., woodden)
 
 
 def as_d2ht(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
-    """ Generates biomass equations based on inputs of b1, b2, b3, h1, h2, and h3 and wood density for dbh, in cm.
+    """ Generates biomass equations based on inputs of `b1`, `b2`, `b3`, `h1`, `h2`, and `h3` and wood density for dbh, in cm.
 
-    Generates Jenkin's biomass equations based on inputs of j1 and j2 for dbh, also in cm.
+    Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm.
 
     **INPUTS**
 
@@ -124,42 +124,16 @@ def as_d2ht(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
         jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
         volume = round(biomass/woodden,7)
         return (biomass, volume, jbio, woodden)
-    except ValueError as e1:
+    except ValueError:
         
         return (0., 0., 0., woodden)
-
-def as_d2htcasc(woodden, dbh, b1, b2, b3, j1, j2, *args):
-    """ Generates biomass equations based on inputs of b1, b2, b3 and wood density for dbh, in cm.
-
-    Generates Jenkin's biomass equations based on inputs of j1 and j2 for dbh, also in cm. 
-
-    **INPUTS**
-
-    :woodden: wood density, 
-    :dbh: cm diameter at breast height
-    :b1: first biomass parameter
-    :b2: second biomass parameter
-    :b3: third biomass parameter
-    :j1: first Jenkins parameter
-    :j2: second Jenkins parameter
-    :args: the remainder of arguments passed to the function, which are not called in this case
-    """
-    try:
-        biomass = round(b1*woodden*(b2*dbh**b3),7)
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
-        volume = round(biomass/woodden,7)
-        return (biomass, volume, jbio, woodden)
-    except ValueError as e1:
-        
-        return (0., 0., 0., woodden)
-
 
 def as_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
     """ Generates biomass equations based on inputs of `b1`, `b2`, `b3` and wood density for dbh, in cm.
 
     Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm. 
 
-    The BioPak method computes Biomass explicitly, rather than from volume. In most cases, the original output was in grams, but in this case, it is converted into Megagrams.
+    The BioPak method computes total aboveground biomass explicitly, rather than from volume. In most cases, the original output from the equations as specified in BioPak was in grams, and here it is converted into Megagrams.
 
     **INPUTS**
 
@@ -177,7 +151,7 @@ def as_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
         jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
         volume = round(biomass/woodden,7)
         return (biomass, volume, jbio, woodden)
-    except ValueError as e1:
+    except ValueError:
         
         return (0., 0., 0., woodden)
 
@@ -186,7 +160,7 @@ def as_chinq_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
 
     Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm. 
 
-    Unlike many other BioPak methods, the chinquapin functions usually need height. 
+    Unlike many other BioPak methods, the chinquapin functions usually need height. Height is calculated here. The height equations are also from BioPak.
 
     **INPUTS**
 
@@ -207,7 +181,7 @@ def as_chinq_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
         jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
         volume = round(biomass/woodden,7)
         return (biomass, volume, jbio, woodden)
-    except ValueError as e1:
+    except ValueError:
         
         return (0., 0., 0., woodden)
 
@@ -216,7 +190,7 @@ def as_oak_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
 
     Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm. 
 
-    Species in the Quercus (oak) family almost uniquely use this form in BioPak for doing the dbh.
+    Species in the Quercus (oak) family almost uniquely use this form in BioPak for doing the biomass computation.
 
     **INPUTS**
 
@@ -237,49 +211,15 @@ def as_oak_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
         biomass = round(math.exp(b1 + b2*math.log(0.01*dbh) + b3*math.log(height)),7)
         volume = round(biomass/woodden,7)
         return (biomass, volume, jbio, woodden)
-    except ValueError as e1:
+    except ValueError:
         
         return (0., 0., 0., woodden)
 
-def as_compbio(dbh, component_dict):
-    """ Generates biomass equations based on inputs of dbh and the parameter "rows" for ACCI. 
-
-    Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm.
-
-    The function of `compbio` and how it is called programmatically is vastly different from all other functions. 
-    This system was made originally not to have a storage of equations but to operate efficiently for any species, and because of this, component biomass needs to temporarily store its equations within the function caller and pass that whole reference structure to the Tree or Stand using it.
-
-    **INPUTS**
-
-    :woodden: wood density, 
-    :dbh: cm diameter at breast height
-    :b1: first biomass parameter
-    :b2: second biomass parameter
-    :b3: third biomass parameter
-    :j1: first Jenkins parameter
-    :j2: second Jenkins parameter
-    :h1: first height parameter
-    :h2: second height parameter
-    :h3: third height parameter
-    """
-    try:
-        biomass = 0.
-        volume = 0.
-
-        for index, each_component in enumerate(list(component_dict.keys())):
-            bio_1, vol_1, jbio, woodden = component_dict[each_component](dbh)
-            biomass += bio_1
-            volume += vol_1
-        return (biomass, volume, jbio, woodden)
-    
-    except ValueError as e1:
-        
-        return (0.,0.,0.,woodden)
 
 def jenkins2014(dbh, j3, j4):
-    """ Computes 2014 jenkins values for some species. Just here for testing.
+    """ Computes 2014 jenkins values for some species. If you add in new parameters, you might want this.
 
-    ** INPUTS **
+    **INPUTS**
     :dbh: cm diameter at breast height
     :j3: first Jenkins2014 parameter
     :j4: second Jenkins2014 parameter
@@ -290,8 +230,8 @@ def jenkins2014(dbh, j3, j4):
     return jbio2
 
 def which_fx(function_string):
-    """ Find the correct function for doing the biomass, volume, Jenkins, and wood density in the lookup table.
-    The keys for the lookup table are the same as the FORM field in TP00110. The component biomass method we used for ACCI is being removed.
+    """ Find the correct function for doing the Biomass ( Mg ), Jenkins Biomass ( Mg ), Volume ( m\ :sup:`3` ) , and Basal Area ( m\ :sup:`2` ) and wood density in the lookup table.
+    The keys for the lookup table are the same as the FORM field in TP00110
 
     **INTERNAL VARIABLES**
 
@@ -304,8 +244,6 @@ def which_fx(function_string):
     **RETURNS**
 
     This function will return a lambda to another function that is then assembled in tps_Tree or tps_Stand for the species at hand, and called with the dbhs there.
-
-    .. warning: requires pymssql
     """
 
     lookup = {'lnln': as_lnln,

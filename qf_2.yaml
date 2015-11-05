@@ -35,6 +35,7 @@ tree:
     lite_1tree_dtl: "SELECT detailPlot from plotAreas where standID like '{standid}' and plot like '{plot}' and year like '{year}' and minDBH_cm_dbh <= '{dbh}'"
     lite_1tree_context_dtl: "SELECT Area_m2_corr, detailPlot from plotAreas where standID like '{standid}' and year like '{year}'"
     cli_stand_tree: "SELECT distinct(treeid) from fsdbdata.dbo.tp00101 where standID like '{standid}'"
+    tag_and_notes: "SELECT year, tag, check_notes from fsdbdata.dbo.tp00102 where treeid like '{treeid}'"
 testing:
     test_tree: "select distinct(treeid) from fsdbdata.dbo.tp00101 where treeid like 'NCNA%'"
 execution:
@@ -42,3 +43,4 @@ execution:
     all_tree_one_stand: "select distinct(treeid) from fsdbdata.dbo.tp00101 where standid like '{STANDID}'"
     list_of_trees: "select treeid from fsdbdata.dbo.tp00101 where treeid in ({list_of_ids})"
     list_of_stands: "select distinct(standid) from fsdbdata.dbo.tp00101 where PSP_STUDYID like '{studyid}'"
+    list_of_all_stands: "select distinct(standid) from fsdbdata.dbo.tp00101"

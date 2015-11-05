@@ -19,13 +19,6 @@ class YamlConn(object):
     >>> A.config = <class 'dict'>
     >>> A.queries= <class 'dict'>
     >>> <pymssql.connection, pymssql.cursor> = A.sql_connect()
-
-    .. warning:: pymssql dependency. pymssql is required to connect to FSDB.
-
-    .. note: SQLite3 support removed 10-27-2015
-
-    **METHODS**
-
     """
     def __init__( self ):
         self.configfilename = os.path.join( HERE, "config_2.yaml" )
@@ -48,9 +41,9 @@ class YamlConn(object):
         return conn, cur
 
 class Capture(object):
-    """ This class contains dictionaries to be used in Stand computations for indexing the unique cases of minimum dbh's, stand areas, and detail plot expansions. Stands use the parameters in Capture to do specific calculations when the default case of area 625 m\ :sup:`2`,  minimum dbh 15.0 cm, detailPlot is False does not apply.
+    """ This class contains dictionaries to be used in Stand computations for indexing the unique cases of minimum dbh's, stand areas, and detail plot expansions. If there is not data about a stand, a default case of area 625 m\ :sup:`2`,  minimum dbh 15.0 cm, detailPlot is False is generally assumed unless programmatic failure occurs.
 
-    Here is a brief display of the common usage of Capture attributes within TPS.
+    Here is a brief display of the common usage of Capture attributes within ``tps``.
 
     .. warning: To initiate a class of capture, you must first create a connection and a cursor explicitly using YamlConn(), like so: conn, cur = A.sql_connect()
 
@@ -60,49 +53,49 @@ class Capture(object):
     >>> A = poptree_basis.Capture()
 
     >>> A.detail_reference.keys()
-    >>> dict_keys(['AB08', 'AV14', 'AR07', 'RS01', 'TO11', 'AM16', 'AX15', 'RS29', 'RS02', 'RS30', 'RS28', 'TB13', 'RS32', 'AG05', 'TO04', 'AE10', 'RS31', 'PP17', 'AV06'])
-    >>> A.detail_reference['AV14'].keys()
+    >>> dict_keys(['ab08', 'av14', 'ar07', 'rs01', 'to11', 'am16', 'ax15', 'rs29', 'rs02', 'rs30', 'rs28', 'tb13', 'rs32', 'ag05', 'to04', 'ae10', 'rs31', 'pp17', 'av06'])
+    >>> A.detail_reference['av14'].keys()
     >>> dict_keys([1984, 2000, 1990, 2008, 1978, 1995])
-    >>> A.detail_reference['AV14'][1984].keys()
-    >>> dict_keys(['AV140001', 'AV140002', 'AV140003', 'AV140004', 'AV140005', 'AV140006', 'AV140007', 'AV140008', 'AV140009', 'AV140010', 'AV140011', 'AV140012', 'AV140013', 'AV140014', 'AV140015', 'AV140016'])
-    >>> A.detail_reference['AV14'][1984][1]
+    >>> A.detail_reference['av14'][1984].keys()
+    >>> dict_keys(['av140001', 'av140002', 'av140003', 'av140004', 'av140005', 'av140006', 'av140007', 'av140008', 'av140009', 'av140010', 'av140011', 'av140012', 'av140013', 'av140014', 'av140015', 'av140016'])
+    >>> A.detail_reference['av14'][1984][1]
     >>> {'detail': False, 'area': 625, 'min': 5.0}
 
-    >>> A.umins_reference['HR02'][1984]['HR020001']
+    >>> A.umins_reference['hr02'][1984]['HR020001']
     >>> 5.0
 
-    >>> A.uplot_areas['MH03'].keys()
+    >>> A.uplot_areas['mh03'].keys()
     >>> dict_keys([1952, 1989, 1994, 1965, 1934, 1999, 1971, 2005, 1945, 1939, 1930, 1983])
-    >>> A.uplot_areas['MH03'][1952].keys()
-    >>> dict_keys(['MH030001'])
-    >>> A.uplot_areas['MH03'][1952]['MH030001']
+    >>> A.uplot_areas['mh03'][1952].keys()
+    >>> dict_keys(['mh030001'])
+    >>> A.uplot_areas['mh03'][1952]['mh030001']
     >>> 4047.0
 
-    >>> A.expansion['RS32'][2006]
+    >>> A.expansion['rs32'][2006]
     >>> 4.0
 
-    >>> A.additions['PILA']
-    >>> {1983: ['PILA0010', 'PILA0011', 'PILA0012', 'PILA0013', 'PILA0014', 'PILA0015', 'PILA0016', 'PILA0017', 'PILA0018']}
+    >>> A.additions['pila']
+    >>> {1983: ['pila0010', 'pila0011', 'pila0012', 'pila0013', 'pila0014', 'pila0015', 'pila0016', 'pila0017', 'pila0018']}
 
     **METHODS**
 
     :A: in this example, an instance of the Capture class.
     :A.detail_reference.keys(): the standids that contain detail plots for at least 1 plot in 1 remeasurement.
-    :A.detail_reference.[standid]: the years that `standid` contains at least 1 detail plot
-    :A.detail_reference.[standid][year]: the `plotnos` on that stand and year when at least 1 plot is a detail plot
+    :A.detail_reference.[standid]: the years that the standid contains at least 1 detail plot
+    :A.detail_reference.[standid][year]: the plotids on that standid and year when at least 1 plot is a detail plot
     :A.detail_reference.[standid][year][plotno]['detail']: Boolean True or False if a detail plot on that stand and plot and year
-    :A.detail_reference.[standid][year][plotno]['area']: the area m\ :sup:`2` of that plot
+    :A.detail_reference.[standid][year][plotno]['area']: the area m\ :sup:`2` of the detail plot (not expanded)
     :A.detail_reference.[standid][year][plotno]['min']: the minimum dbh on that detail plot
 
-    :A.umins_reference.[standid]: stands whose minimum dbhs in at least 1 year are not 15.0 cm.
-    :A.umins_reference.[standid][year]: the plots on that stand and year when at least 1 plot has a minimum dbh that is not 15.0 cm
-    :A.umins_reference[standid][year][plotno]: the minimum dbh for that stand, plot, and year, which is not 15.0 cm.
+    :A.umins_reference.[standid]: standids whose minimum dbhs in at least 1 year are not 15.0 cm
+    :A.umins_reference.[standid][year]: the plotids on that standid and year when at least 1 plot has a minimum dbh that is not 15.0 cm
+    :A.umins_reference[standid][year][plotno]: the minimum dbh for that standid, plotid, and year, which is not 15.0 cm
 
-    :A.uplots_areas[standid]: stands whose areas in at least 1 year are not 625 m\ :sup:`2`
-    :A.uplots_areas[standid][year]: the plots on that stand and year when at least 1 plot has an area not 625 m\ :sup:`2`
-    :A.uplots_areas[standid][year][plotno]: the area for the stand, year, and plot that is not 625 m\ :sup:`2`
+    :A.uplots_areas[standid]: standids for stands whose areas in at least 1 year are not 625 m\ :sup:`2`
+    :A.uplots_areas[standid][year]: the plotids on that standid and year when at least 1 plot has an area not 625 m\ :sup:`2`
+    :A.uplots_areas[standid][year][plotno]: the area for the standid, year, and plotid that is not 625 m\ :sup:`2`
 
-    :A.expansion[standid][year][plotid]: the expansion factor for the stand, year, and plot which will not be 1.0
+    :A.expansion[standid][year][plotid]: the expansion factor for the standid, year, and plotid which will not be 1.0
 
     """
     def __init__(self, cursor, queries):
@@ -113,12 +106,7 @@ class Capture(object):
         self.total_areas = {}
         self.num_plots = {}
         self.additions = {}
-        # {'gmnf': 1996, 'hgbk': 1982, 'ncna': 1980, 'pila': 1983, 'rs01': 1978, 'rs02': 1978, 'rs03': 1977, 'rs13':[1981, 1982], 'sucr': 1983, 'tctr': 1997, 'ws02': 1982
-        # }
         self.mortalities = {}
-        # not sure how replacements differ from additions?
-        # {'gmnf': 1994, 'hgbk': 1988, 'ncna': 1984, 'pila': 1988, 'rs01': 1983, 'rs02': 1983, 'rs03': 1981, 'rs13':1986, 'sucr': 1988, 'tctr': 2001, 'ws02': 1988
-        # }
         self.cur = cursor
         self.queries = queries
         self.create_additions()
@@ -131,7 +119,11 @@ class Capture(object):
         #self.create_num_plots()
 
     def create_additions(self):
-        """ generates the look-up of plots which are "additions"
+        """ Generates the look-up of plots which are "additions" in the database (activity code is A).
+
+        **RETURNS**
+
+        :Capture.additions: Additions plots, indexed by standid, year, and plot id.
         """
         sql = self.queries['stand']['query_additions']
 
@@ -156,7 +148,11 @@ class Capture(object):
         return self.additions
 
     def create_mortalities(self):
-        """ generates the look-up of stands, years, and plots which are "mortality checks"
+        """ Generates the look-up of stands, years, and plots which are "mortality checks"
+
+        **RETURNS**
+
+        :Capture.mortalities: Mortality plots, indexed by standid, year, and plotid
         """
         sql = self.queries['stand']['query_mortalities']
 
@@ -181,38 +177,37 @@ class Capture(object):
         return self.mortalities
 
     def create_detail_reference(self):
-        """ Creates a reference for detail plots that any instance of Tree (called by tps_Tree) or Stand (calld by tps_Stand) can use. The reference contains the area of the plot in question (`area`), the status as detail or not detail plot in that given year (`detail`), and the minimum dbh for the plot (whether detail or not, `min`).
+        """ Creates a reference for detail plots that any instance of Tree (called by tps_Tree) or Stand (calld by tps_Stand) can use. The reference contains the area of the plot in question (``area``), the status as detail or not detail plot in that given year (``detail``), and the minimum dbh for the plot (whether the plot is detail or not, as ``min``).
 
         Here is a case where the stand, year, and plot in question is NOT a detail plot.
 
         .. Example: 
 
         >>> H = Capture.detail_reference.keys()
-        >>> dict_keys(['AB08', 'AV14', 'AR07', 'RS01', 'TO11', 'AM16', 'AX15', 'RS29', 'RS02', 'RS30', 'RS28', 'TB13', 'RS32', 'AG05', 'TO04', 'AE10', 'RS31', 'PP17', 'AV06'])
-        >>> H.detail_reference['RS01'].keys()
+        >>> dict_keys(['ab08', 'av14', 'ar07', 'rs01', 'to11', 'am16', 'ax15', 'rs29', 'rs02', 'rs30', 'rs28', 'tb13', 'rs32', 'ag05', 'to04', 'ae10', 'rs31', 'pp17', 'av06'])
+        >>> H.detail_reference['rs01'].keys()
         >>> dict_keys([1976, 1971, 1988, 2009, 1992, 2004, 1978, 1998, 1983])
-        >>> H.detail_reference['RS01'][2004]['RS010001']['area']
+        >>> H.detail_reference['rs01'][2004]['rs010001']['area']
         >>> 625
-        >>> H.detail_reference['RS01'][2004]['RS010001']['detail']
+        >>> H.detail_reference['rs01'][2004]['rs010001']['detail']
         >>> False
-        >>> H.detail_reference['RS01'][2004]['RS010001']['min']
+        >>> H.detail_reference['rs01'][2004]['rs010001']['min']
         >>> 15.0
 
         Here is a case where the stand, year, and plot in question is a detail plot. See how the `min` is smaller.
 
         .. Example :
         
-        >>> H.detail_reference['RS01'][2004]['RS010003']['area']
+        >>> H.detail_reference['rs01'][2004]['rs010003']['area']
         >>> 625
-        >>> H.detail_reference['RS01'][2004]['RS010003']['detail']
+        >>> H.detail_reference['rs01'][2004]['rs010003']['detail']
         >>> True
-        >>> H.detail_reference['RS01'][2004]['RS010003']['min']
+        >>> H.detail_reference['rs01'][2004]['rs010003']['min']
         >>> 5.0
 
         **RETURNS**
 
-        :Capture.detail_reference: The name of the lookup table for detail plots and their areas and minimum dbh's. If not otherwise specified, the minimum dbh for a tree on a non-detail plot or the cutoff for a big tree on a detail plot is 15 cm. 
-
+        :Capture.detail_reference: The name of the lookup table for detail plots and their areas and minimum dbh's. If not otherwise specified, the minimum dbh for a tree on a non-detail plot or the cutoff for a big tree on a detail plot is 15.0 cm. 
         """
         stands_with_details = []
         sql = self.queries['stand']['query_context_dtl']
@@ -267,7 +262,7 @@ class Capture(object):
                     pass
 
     def create_unusual_mins_reference(self):
-        """ Creates a lookup for plots that do not have minimum dbh of 15 cm, but are also not detail plots. That is, they are still sampled proportionally to the rest of the stand in their given year, but for whatever reason in that year, the minimum dbh is not 15 cm. 
+        """ Creates a lookup for plots that do not have minimum dbh of 15.0 cm, but are also not detail plots. That is, they are still sampled proportionally to the rest of the stand in their given year, but for whatever reason in that year, the minimum dbh is not 15.0 cm. 
 
         :create_unusual_mins_reference: queries the database to create a reference for plots where detailPlot is not 'T' and minimum DBH is not 15.0 cm 
 
@@ -275,14 +270,13 @@ class Capture(object):
         
         >>> H = poptree_basis.Capture()
         >>> H.umins_reference.keys()
-        >>> dict_keys(['YBNF', 'SRNF', 'MRNA', 'CH10',...
-        >>> H.umins_reference['PF28'][1959][3]
+        >>> dict_keys(['ybnf', 'srnf', 'mrna', 'ch10',...
+        >>> H.umins_reference['pf28'][1959][3]
         >>> 10.0
 
         **RETURNS**
 
         :Capture.umins_reference: The unusual minimums table contains the stand, year, and plot that have a minimum that is not 15.0 cm and is also not a detail plot.
-
         """
         
         sql = self.queries['stand']['query_unusual_plot_minimums_sql']
@@ -335,8 +329,8 @@ class Capture(object):
 
         >>> H = poptree_basis.Capture()
         >>> H.expansion.keys()
-        >>> dict_keys(['RS32', 'AG05', 'RS02', 'RS01', 'TO04', 'AV14', 'AR07', 'TB13', 'AE10', 'TO11', 'PP17', 'AM16', 'RS31', 'RS28', 'AB08', 'AX15', 'RS29', 'AV06', 'RS30'])
-        >>> H.expansion['RS32'][2006]
+        >>> dict_keys(['rs32', 'ag05', 'rs02', 'rs01', 'to04', 'av14', 'ar07', 'tb13', 'ae10', 'to11', 'pp17', 'am16', 'rs31', 'rs28', 'ab08', 'ax15', 'rs29', 'av06', 'rs30'])
+        >>> H.expansion['rs32'][2006]
         >>> 4.0
 
         **RETURNS**
@@ -344,8 +338,6 @@ class Capture(object):
         :Capture.expansion: the name of the lookup table created, which can be referenced as an attribute of the Capture object.
 
         .. note: Unlike the other Capture methods, expansion does not require the "plot" attribute to be called. Expasion has already found the aggregate of the plots and that aggregate is the same regardless of which detail plot one is on.
-
-        .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
         """
         
         for each_stand in self.detail_reference.keys():
@@ -384,7 +376,7 @@ class Capture(object):
 
         >>> H = poptree_basis.Capture()
         >>> H.uplot_areas.keys()
-        >>> dict_keys(['YBNF', 'GP04', 'CH10', ...
+        >>> dict_keys(['ybnf', 'gp04', 'ch10', ...
         >>> H.uplot_areas['GP04'][1957][1]
         >>> 4047.0
 
@@ -392,8 +384,7 @@ class Capture(object):
 
         :Capture.uplot_areas: A referenced table for the areas of plots which are not 625 m\ :sup:`2`.
 
-        .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
-        .. warning: Discussions on watersheds lead us to thinking there may be another dimension for this which isn't in the current program.
+        .. warning: Discussions on watersheds lead us to thinking there may be another dimension for this which isn't in the current program. I.e. there are some plots whose shape matters?
         """
 
         sql = self.queries['stand']['query_unusual_plot_sql']
@@ -436,15 +427,13 @@ class Capture(object):
 
         >>> H = poptree_basis.Capture()
         >>> H.total_areas.keys()
-        >>> dict_keys(['YBNF', 'GP04', 'CH10', ...
+        >>> dict_keys(['ybnf', 'gp04', 'ch10', ...
         >>> H.total_areas['sp06'][2001]
         >>> 2500.0
 
         **RETURNS**
 
         :Capture.total_areas: the total area of all the plots for that stand and year. All stands and years are included here.
-
-        .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
         """
         sql = self.queries['stand']['query_total_stand_sql']
         self.cur.execute(sql)
