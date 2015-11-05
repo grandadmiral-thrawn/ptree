@@ -51,23 +51,85 @@ if args.action.lower() == 'bio':
                 for row in cur:
                     list_all_units.append(str(row[0]))
 
-                # get each stand from the list of stands
-                for each_stand in list_of_units:
+                # create the file with the first stand
+                A = tps_Stand.Stand(cur, XFACTOR, queries, list_of_units[0].lower())
+                BM, BTR, _ = A.compute_biomasses(XFACTOR)
+
+                BMA = A.aggregate_biomasses(BM)
+
+                A.write_stand_composite(BM, BMA, XFACTOR, 'all_stands_biomass_composite_output.csv', 'w')
+                    
+                del A
+                del BM
+                del BMA
+
+                # get each stand from the list of stands and append output to the file
+                for each_stand in list_of_units[1:]:
+
                     A = tps_Stand.Stand(cur, XFACTOR, queries, each_stand.lower())
 
+
+                    BM, BTR, _ = A.compute_biomasses(XFACTOR)
+
+                    BMA = A.aggregate_biomasses(BM)
+
+                    A.write_stand_composite(BM, BMA, XFACTOR, 'all_stands_biomass_composite_output.csv', 'a')
+                    
+                    del A
+                    del BM
+                    del BMA
             # if the first arguement is not all, no further arguements would be all
+
             elif args.number[0] != "--all":
+
+                # some number of stands which is more than 1
                 if len(args.number) > 1:
                     list_of_units = ", ".join(args.number)
 
+                    # create the output file based on the first given stand
+                    A = tps_Stand.Stand(cur, XFACTOR, queries, each_stand.lower())
+
+                    BM, BTR, _ = A.compute_biomasses(XFACTOR)
+
+                    BMA = A.aggregate_biomasses(BM)
+
+                    A.write_stand_composite(BM, BMA, XFACTOR, 'selected_stands_biomass_composite_output.csv', 'w')
+                    
+                    del A
+                    del BM
+                    del BMA
+
                     # get each stand from the given list
-                    for each_stand in list_of_units:
+                    for each_stand in list_of_units[1:]:
                         A = tps_Stand.Stand(cur, XFACTOR, queries, each_stand.lower())
+
+                        BM, BTR, _ = A.compute_biomasses(XFACTOR)
+
+                        BMA = A.aggregate_biomasses(BM)
+
+                        A.write_stand_composite(BM, BMA, XFACTOR, 'selected_stands_biomass_composite_output.csv', 'a')
+                        del A
+                        del BM
+                        del BMA
 
                 elif len(args.number) == 1:
                     list_of_units = args.number
+
+                    # one stand uses default naming
+                    A = tps_Stand.Stand(cur, XFACTOR, queries, each_stand.lower())
+
+                    BM, BTR, _ = A.compute_biomasses(XFACTOR)
+
+                    BMA = A.aggregate_biomasses(BM)
+
+                    A.write_stand_composite(BM, BMA, XFACTOR)
+                    
+                    del A
+                    del BM
+                    del BMA
                 else: 
                     print("You must specify at least one unit to compute, or use the --all tag at the end of your line, like : tps_cli.py bio stand composite --all")
+                
                 print("computing : " + list_of_units + " at the scale of " + args.scale.lower() + " with the " + args.analysis.lower() + " analysis for " + args.action.lower())
 
         ### BIOMASS > STAND > TREE ###

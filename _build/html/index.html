@@ -50,16 +50,17 @@
             
   <div class="section" id="welcome-to-the-tps-documentation">
 <h1>Welcome to the TPS documentation!<a class="headerlink" href="#welcome-to-the-tps-documentation" title="Permalink to this headline">¶</a></h1>
-<p>TPS (Tree, Plot, Stand) is a simple set of Python3 scripts for processing the &#8220;PSP Study&#8221; forest inventory data (contained in entity TP001) into the required Trees per Hectare (TPH), Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Volume ( m<sup>3</sup> ), and Basal Area ( m<sup>2</sup> ) tree, plot, and stand level summaries. It is also set up to compute the delta Trees Per Hectare (TPH), delta Biomass (Mg/Ha), delta Jenkins Biomass ( Mg/Ha ), delta Basal Area ( m<sup>2</sup> ), delta Volume ( m<sup>3</sup> ) between re-measurement intervals and to solve for Bole Net Primary Productivity (NPP, Mg/Ha/yr ) using the &#8220;change in biomass plus mortality and plus ingrowth&#8221; technique. It has the capacity to produce both species specific and aggregate metrics for each remeasurement or the interval between them.</p>
+<p>TPS (Tree, Plot, Stand) is a simple set of Python3 scripts for processing the &#8220;PSP Study&#8221; forest inventory data (contained in entity TP001) into necessary outputs. These output are number of trees per Hectare (TPHA), Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Volume ( m<sup>3</sup> ), and Basal Area ( m<sup>2</sup> ) tree, plot, and stand level summaries. It is also set up to compute the delta Trees Per Hectare (TPH), delta Biomass ( Mg/Ha ), delta Jenkins Biomass ( Mg/Ha ), delta Basal Area ( m<sup>2</sup> ), delta Volume ( m<sup>3</sup> ) between re-measurement intervals and to solve for aboveground Net Primary Productivity ( NPP, Mg/Ha/yr ) using the &#8220;change in biomass plus mortality and plus ingrowth&#8221; technique pioneered by <a class="reference external" href="http://and.lternet.edu/lter/pubs/pdf/pub2824.pdf">Acker</a>. Outputs are labelled as &#8220;composite&#8221; and contain both species-specific (labelled according to the <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=taxa%20%20%20%20&amp;dbcode=Tp001&amp;attid=7268&amp;topnav=8">taxa</a>) and aggregate metrics for each remeasurement or the interval between them. When trees are measured as &#8220;additions&#8221; to an existing remeasurement, they are included in the prior remeasurement or establishment year; when they are labelled as &#8220;mortalities&#8221; they are included in the subsequent remeasurement or establishment year. Thus, recent &#8220;mortalities&#8221; data, such as on WS02, may not be included in any outputs other than individual tree, as it does not yet have a subsequent year of remeasurement to be passed to.</p>
+<p>Documentation for TP001 is found <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/abstract.cfm?dbcode=Tp001">here</a>.</p>
 <p>Outputs from TPS go to:</p>
 <ul class="simple">
-<li>TP00107 - By species and whole stand biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m<sup>2</sup>/Ha ), Volume ( m<sup>3</sup>/Ha ), and trees per hectare for stands by species</li>
-<li>TP00108 - By species and whole stand Bole NPP (NPP, Mg/Ha/yr ) and the change in Biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m<sup>2</sup>/Ha ), Volume ( m<sup>3</sup>/Ha ) between intervals.</li>
-<li>TP00109 - By species and whole plot biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m<sup>2</sup>/Ha ), Volume ( m<sup>3</sup>/Ha ), and trees per hectare for stands by species</li>
-<li>TP001XX - By species and whole plot Bole NPP (NPP, Mg/Ha/yr ) and the change in Biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m<sup>2</sup>/Ha ), Volume ( m<sup>3</sup>/Ha ) between intervals.</li>
-<li>TP00113 - Individual tree Biomass ( Mg ), Jenkins Biomass ( Mg ), Basal Area ( m<sup>2</sup> ), Volume ( m<sup>3</sup> ).</li>
+<li>TP00106 - Stand Composite Biomass - By species and whole stand biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m<sup>2</sup>/Ha ), Volume ( m<sup>3</sup>/Ha ), and trees per hectare for stands by species and in aggregate.</li>
+<li>TP00107 - Stand Composite NPP - By species and whole stand aboveground NPP ( NPP, Mg/Ha/yr ) and the change (delta) in Biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m<sup>2</sup>/Ha ), Volume ( m<sup>3</sup>/Ha ) between remeasurement intervals.</li>
+<li>TP00108 - Plot Composite Biomass - By species and whole plot biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m<sup>2</sup>/Ha ), Volume ( m<sup>3</sup>/Ha ), and trees per hectare for plots within stands by species and in aggregate.</li>
+<li>TP00109 - Plot Composite NPP - By species and whole plot aboveground NPP ( NPP, Mg/Ha/yr ) and the change (delta) in Biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m<sup>2</sup>/Ha ), Volume ( m<sup>3</sup>/Ha ) between remeasurement intervals.</li>
+<li>TP00113 - Individual Tree Biomass - Each individual Tree (by treeid) biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m<sup>2</sup>/Ha ), Volume ( m<sup>3</sup>/Ha ). The &#8220;component&#8221; calculated (volume of stem wood, total aboveground biomass, etc.) directly for each tree by the given equation is also included.</li>
 </ul>
-<p>TPS contains 3 core modules: <code class="docutils literal"><span class="pre">tps_Tree</span></code> (for individual trees), <code class="docutils literal"><span class="pre">tps_Stand</span></code> (for stands and plots), and <code class="docutils literal"><span class="pre">tps_NPP</span></code> (for differences between stands over time). <code class="docutils literal"><span class="pre">tps_CLI</span></code> is a command line interface for using the appropriate module. Within each tps program, reliance on a core data structure is consistent. This structure is basically:</p>
+<p>TPS contains 3 core modules: <code class="docutils literal"><span class="pre">tps_Tree</span></code> (for individual trees), <code class="docutils literal"><span class="pre">tps_Stand</span></code> (for stands and plots), and <code class="docutils literal"><span class="pre">tps_NPP</span></code> (for differences between stands over time). <code class="docutils literal"><span class="pre">tps_CLI</span></code> is a command line interface for using the appropriate module.  Within each <code class="docutils literal"><span class="pre">tps</span></code> program, reliance on a core data structure is consistent. This structure is basically:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">STAND</span> <span class="n">ID</span> <span class="p">:</span>
   <span class="p">{</span><span class="n">YEARS</span> <span class="p">:</span>
     <span class="p">{</span><span class="n">SPECIES</span> <span class="p">:</span>
@@ -70,7 +71,11 @@
   <span class="p">}</span>
 </pre></div>
 </div>
-<p>This structure helps to organize the inputs in such a way that they can be easily iterated across to summarize new outputs. This documentation has been auto-generated from these modules using the Sphinx Autodoc package. Documentation is also included from  two modules for parameterizing the computations, <code class="docutils literal"><span class="pre">biomass_basis</span></code> and <code class="docutils literal"><span class="pre">poptree_basis</span></code>. <code class="docutils literal"><span class="pre">biomass_basis</span></code> contains the rules for parsing the biomass computation equations (found in table TP00111) and generating functions that take DBH and produce the outputs needed; <code class="docutils literal"><span class="pre">poptree_basis</span></code> contains the database connectors and a parameter object, <code class="docutils literal"><span class="pre">Capture</span></code>, which contains the information about the stands, plots, and study protocols (detail plot or not, mortality survey or not, etc.) that is needed in the tps modules. When executing a script to process a number of trees or stands, the <code class="docutils literal"><span class="pre">Capture</span></code> object needs to only be created once, greatly reducing the amount of database queries that might otherwise occur.</p>
+<p>This structure helps to organize the inputs in such a way that they can be easily iterated across to summarize new outputs. Beyond this description, this documentation has been auto-generated from these modules using the Sphinx Autodoc package. Documentation is also included for two modules for parameterizing the computations, <code class="docutils literal"><span class="pre">biomass_basis</span></code> and <code class="docutils literal"><span class="pre">poptree_basis</span></code>. <code class="docutils literal"><span class="pre">biomass_basis</span></code> contains the rules for parsing the biomass computation equations (found in table TP00111) and generating functions that take DBH and produce the outputs needed; <code class="docutils literal"><span class="pre">poptree_basis</span></code> contains the database connectors and a parameter object, <code class="docutils literal"><span class="pre">Capture</span></code>, which contains the information about the stands, plots, and study protocols (detail plot or not, mortality survey or not, etc.) that is needed in the tps modules. When executing a script to process a number of trees or stands, the <code class="docutils literal"><span class="pre">Capture</span></code> object needs to only be created once, greatly reducing the amount of database queries that might otherwise occur.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All treeid&#8217;s, plots, and stands are specified programmatically in lower-case and as strings. Outputs place them in uppercase. In debugging, checking the case to lower-case will be useful.</p>
+</div>
 </div>
 <div class="section" id="contents">
 <h1>Contents:<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
@@ -87,48 +92,55 @@
 <span class="n">database</span><span class="p">:</span> <span class="n">FSDBDATA</span>
 
 <span class="n">query_file</span><span class="p">:</span> <span class="n">qf_2</span><span class="o">.</span><span class="n">yaml</span>
-
-<span class="n">litedb</span><span class="p">:</span> <span class="n">areas</span><span class="o">.</span><span class="n">db</span>
-<span class="n">litetable</span><span class="p">:</span> <span class="n">plotAreas</span>
 </pre></div>
 </div>
-<p>It is imperative that the <cite>keys</cite> on the left-side of the configuration file match the keys in the program. If TP00112 is not in place, I locally run a similar table in SQLite3, which is where the <code class="docutils literal"><span class="pre">litedb</span></code> parameter comes into play.</p>
-<p>Your SQL queries are in <code class="docutils literal"><span class="pre">qf_2.yaml</span></code>. This file is included with this program, and should also be located in the base directory with <code class="docutils literal"><span class="pre">poptree_basis</span></code>. You can re-configure or add queries there so that the changes propogate throughout the modules. This is done by creating an object called <code class="docutils literal"><span class="pre">YamlConn</span></code> with <code class="docutils literal"><span class="pre">poptree_basis</span></code> which is responsible for managing your connections and queries.</p>
-<p>In the <code class="docutils literal"><span class="pre">tps_CLI</span></code> commands can be issued to gather a specific tree, stand, set of trees, etc.</p>
+<p>It is imperative that the <cite>keys</cite> on the left-side of the configuration file match the keys in the <cite>pymssql</cite> driver so that the connection will work.</p>
+<p>SQL queries are in <code class="docutils literal"><span class="pre">qf_2.yaml</span></code>. This file is included with this program, and should also be located in the base directory with <code class="docutils literal"><span class="pre">poptree_basis</span></code>. You can re-configure or add queries there so that the changes propogate throughout the modules. This is done by creating an object called <code class="docutils literal"><span class="pre">YamlConn()</span></code> with <code class="docutils literal"><span class="pre">poptree_basis</span></code> which is responsible for managing your connections and queries. If you want to try out a query, you can use <code class="docutils literal"><span class="pre">YamlConn()</span></code> to generate a cursor to the database, like so:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">_</span><span class="p">,</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">YamlConn</span><span class="p">()</span><span class="o">.</span><span class="n">sql_connect</span><span class="p">()</span>
+<span class="n">sql</span><span class="o">=</span> <span class="s">&quot;select top 1 * from fsdbdata.dbo.tp00101&quot;</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+<span class="k">print</span><span class="p">([</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sql</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>In the command line interface, <code class="docutils literal"><span class="pre">tps_CLI</span></code>, commands can be issued to gather a specific tree, stand, set of trees, etc. See documentation below.</p>
 <span class="target" id="module-poptree_basis"></span><dl class="class">
 <dt id="poptree_basis.Capture">
 <em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">Capture</code><span class="sig-paren">(</span><em>cursor</em>, <em>queries</em><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class contains dictionaries to be used in Stand computations for indexing the unique cases of minimum dbh&#8217;s, stand areas, and detail plot expansions. Stands use the parameters in Capture to do specific calculations when the default case of area 625 m<sup>2</sup>,  minimum dbh 15.0 cm, detailPlot is False does not apply.</p>
-<p>Here is a brief display of the common usage of Capture attributes within TPS.</p>
+<p>This class contains dictionaries to be used in Stand computations for indexing the unique cases of minimum dbh&#8217;s, stand areas, and detail plot expansions. If there is not data about a stand, a default case of area 625 m<sup>2</sup>,  minimum dbh 15.0 cm, detailPlot is False is generally assumed unless programmatic failure occurs.</p>
+<p>Here is a brief display of the common usage of Capture attributes within <code class="docutils literal"><span class="pre">tps</span></code>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">poptree_basis</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">detail_reference</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;AB08&#39;</span><span class="p">,</span> <span class="s">&#39;AV14&#39;</span><span class="p">,</span> <span class="s">&#39;AR07&#39;</span><span class="p">,</span> <span class="s">&#39;RS01&#39;</span><span class="p">,</span> <span class="s">&#39;TO11&#39;</span><span class="p">,</span> <span class="s">&#39;AM16&#39;</span><span class="p">,</span> <span class="s">&#39;AX15&#39;</span><span class="p">,</span> <span class="s">&#39;RS29&#39;</span><span class="p">,</span> <span class="s">&#39;RS02&#39;</span><span class="p">,</span> <span class="s">&#39;RS30&#39;</span><span class="p">,</span> <span class="s">&#39;RS28&#39;</span><span class="p">,</span> <span class="s">&#39;TB13&#39;</span><span class="p">,</span> <span class="s">&#39;RS32&#39;</span><span class="p">,</span> <span class="s">&#39;AG05&#39;</span><span class="p">,</span> <span class="s">&#39;TO04&#39;</span><span class="p">,</span> <span class="s">&#39;AE10&#39;</span><span class="p">,</span> <span class="s">&#39;RS31&#39;</span><span class="p">,</span> <span class="s">&#39;PP17&#39;</span><span class="p">,</span> <span class="s">&#39;AV06&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;AV14&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;ab08&#39;</span><span class="p">,</span> <span class="s">&#39;av14&#39;</span><span class="p">,</span> <span class="s">&#39;ar07&#39;</span><span class="p">,</span> <span class="s">&#39;rs01&#39;</span><span class="p">,</span> <span class="s">&#39;to11&#39;</span><span class="p">,</span> <span class="s">&#39;am16&#39;</span><span class="p">,</span> <span class="s">&#39;ax15&#39;</span><span class="p">,</span> <span class="s">&#39;rs29&#39;</span><span class="p">,</span> <span class="s">&#39;rs02&#39;</span><span class="p">,</span> <span class="s">&#39;rs30&#39;</span><span class="p">,</span> <span class="s">&#39;rs28&#39;</span><span class="p">,</span> <span class="s">&#39;tb13&#39;</span><span class="p">,</span> <span class="s">&#39;rs32&#39;</span><span class="p">,</span> <span class="s">&#39;ag05&#39;</span><span class="p">,</span> <span class="s">&#39;to04&#39;</span><span class="p">,</span> <span class="s">&#39;ae10&#39;</span><span class="p">,</span> <span class="s">&#39;rs31&#39;</span><span class="p">,</span> <span class="s">&#39;pp17&#39;</span><span class="p">,</span> <span class="s">&#39;av06&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;av14&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1984</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">1990</span><span class="p">,</span> <span class="mi">2008</span><span class="p">,</span> <span class="mi">1978</span><span class="p">,</span> <span class="mi">1995</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;AV14&#39;</span><span class="p">][</span><span class="mi">1984</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;AV140001&#39;</span><span class="p">,</span> <span class="s">&#39;AV140002&#39;</span><span class="p">,</span> <span class="s">&#39;AV140003&#39;</span><span class="p">,</span> <span class="s">&#39;AV140004&#39;</span><span class="p">,</span> <span class="s">&#39;AV140005&#39;</span><span class="p">,</span> <span class="s">&#39;AV140006&#39;</span><span class="p">,</span> <span class="s">&#39;AV140007&#39;</span><span class="p">,</span> <span class="s">&#39;AV140008&#39;</span><span class="p">,</span> <span class="s">&#39;AV140009&#39;</span><span class="p">,</span> <span class="s">&#39;AV140010&#39;</span><span class="p">,</span> <span class="s">&#39;AV140011&#39;</span><span class="p">,</span> <span class="s">&#39;AV140012&#39;</span><span class="p">,</span> <span class="s">&#39;AV140013&#39;</span><span class="p">,</span> <span class="s">&#39;AV140014&#39;</span><span class="p">,</span> <span class="s">&#39;AV140015&#39;</span><span class="p">,</span> <span class="s">&#39;AV140016&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;AV14&#39;</span><span class="p">][</span><span class="mi">1984</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;av14&#39;</span><span class="p">][</span><span class="mi">1984</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;av140001&#39;</span><span class="p">,</span> <span class="s">&#39;av140002&#39;</span><span class="p">,</span> <span class="s">&#39;av140003&#39;</span><span class="p">,</span> <span class="s">&#39;av140004&#39;</span><span class="p">,</span> <span class="s">&#39;av140005&#39;</span><span class="p">,</span> <span class="s">&#39;av140006&#39;</span><span class="p">,</span> <span class="s">&#39;av140007&#39;</span><span class="p">,</span> <span class="s">&#39;av140008&#39;</span><span class="p">,</span> <span class="s">&#39;av140009&#39;</span><span class="p">,</span> <span class="s">&#39;av140010&#39;</span><span class="p">,</span> <span class="s">&#39;av140011&#39;</span><span class="p">,</span> <span class="s">&#39;av140012&#39;</span><span class="p">,</span> <span class="s">&#39;av140013&#39;</span><span class="p">,</span> <span class="s">&#39;av140014&#39;</span><span class="p">,</span> <span class="s">&#39;av140015&#39;</span><span class="p">,</span> <span class="s">&#39;av140016&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;av14&#39;</span><span class="p">][</span><span class="mi">1984</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="s">&#39;detail&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">&#39;area&#39;</span><span class="p">:</span> <span class="mi">625</span><span class="p">,</span> <span class="s">&#39;min&#39;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">}</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">umins_reference</span><span class="p">[</span><span class="s">&#39;HR02&#39;</span><span class="p">][</span><span class="mi">1984</span><span class="p">][</span><span class="s">&#39;HR020001&#39;</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">umins_reference</span><span class="p">[</span><span class="s">&#39;hr02&#39;</span><span class="p">][</span><span class="mi">1984</span><span class="p">][</span><span class="s">&#39;HR020001&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">5.0</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">uplot_areas</span><span class="p">[</span><span class="s">&#39;MH03&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">uplot_areas</span><span class="p">[</span><span class="s">&#39;mh03&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1952</span><span class="p">,</span> <span class="mi">1989</span><span class="p">,</span> <span class="mi">1994</span><span class="p">,</span> <span class="mi">1965</span><span class="p">,</span> <span class="mi">1934</span><span class="p">,</span> <span class="mi">1999</span><span class="p">,</span> <span class="mi">1971</span><span class="p">,</span> <span class="mi">2005</span><span class="p">,</span> <span class="mi">1945</span><span class="p">,</span> <span class="mi">1939</span><span class="p">,</span> <span class="mi">1930</span><span class="p">,</span> <span class="mi">1983</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">uplot_areas</span><span class="p">[</span><span class="s">&#39;MH03&#39;</span><span class="p">][</span><span class="mi">1952</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;MH030001&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">uplot_areas</span><span class="p">[</span><span class="s">&#39;MH03&#39;</span><span class="p">][</span><span class="mi">1952</span><span class="p">][</span><span class="s">&#39;MH030001&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">uplot_areas</span><span class="p">[</span><span class="s">&#39;mh03&#39;</span><span class="p">][</span><span class="mi">1952</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;mh030001&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">uplot_areas</span><span class="p">[</span><span class="s">&#39;mh03&#39;</span><span class="p">][</span><span class="mi">1952</span><span class="p">][</span><span class="s">&#39;mh030001&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">4047.0</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">expansion</span><span class="p">[</span><span class="s">&#39;RS32&#39;</span><span class="p">][</span><span class="mi">2006</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">expansion</span><span class="p">[</span><span class="s">&#39;rs32&#39;</span><span class="p">][</span><span class="mi">2006</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">4.0</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">additions</span><span class="p">[</span><span class="s">&#39;pila&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="mi">1983</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;pila0010&#39;</span><span class="p">,</span> <span class="s">&#39;pila0011&#39;</span><span class="p">,</span> <span class="s">&#39;pila0012&#39;</span><span class="p">,</span> <span class="s">&#39;pila0013&#39;</span><span class="p">,</span> <span class="s">&#39;pila0014&#39;</span><span class="p">,</span> <span class="s">&#39;pila0015&#39;</span><span class="p">,</span> <span class="s">&#39;pila0016&#39;</span><span class="p">,</span> <span class="s">&#39;pila0017&#39;</span><span class="p">,</span> <span class="s">&#39;pila0018&#39;</span><span class="p">]}</span>
 </pre></div>
 </div>
 <p><strong>METHODS</strong></p>
@@ -142,40 +154,40 @@
 <tr class="field-even field"><td>&nbsp;</td><td class="field-body">the standids that contain detail plots for at least 1 plot in 1 remeasurement.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.[standid]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the years that <cite>standid</cite> contains at least 1 detail plot</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the years that the standid contains at least 1 detail plot</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">A.detail_reference.[standid][year]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the <cite>plotnos</cite> on that stand and year when at least 1 plot is a detail plot</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the plotids on that standid and year when at least 1 plot is a detail plot</td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;detail&#8217;]:</th></tr>
 <tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Boolean True or False if a detail plot on that stand and plot and year</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;area&#8217;]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the area m<sup>2</sup> of that plot</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the area m<sup>2</sup> of the detail plot (not expanded)</td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;min&#8217;]:</th></tr>
 <tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the minimum dbh on that detail plot</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">A.umins_reference.[standid]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">stands whose minimum dbhs in at least 1 year are not 15.0 cm.</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">standids whose minimum dbhs in at least 1 year are not 15.0 cm</td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">A.umins_reference.[standid][year]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the plots on that stand and year when at least 1 plot has a minimum dbh that is not 15.0 cm</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the plotids on that standid and year when at least 1 plot has a minimum dbh that is not 15.0 cm</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">A.umins_reference[standid][year][plotno]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the minimum dbh for that stand, plot, and year, which is not 15.0 cm.</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the minimum dbh for that standid, plotid, and year, which is not 15.0 cm</td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">A.uplots_areas[standid]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">stands whose areas in at least 1 year are not 625 m<sup>2</sup></td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">standids for stands whose areas in at least 1 year are not 625 m<sup>2</sup></td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">A.uplots_areas[standid][year]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the plots on that stand and year when at least 1 plot has an area not 625 m<sup>2</sup></td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the plotids on that standid and year when at least 1 plot has an area not 625 m<sup>2</sup></td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">A.uplots_areas[standid][year][plotno]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the area for the stand, year, and plot that is not 625 m<sup>2</sup></td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the area for the standid, year, and plotid that is not 625 m<sup>2</sup></td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">A.expansion[standid][year][plotid]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the expansion factor for the stand, year, and plot which will not be 1.0</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the expansion factor for the standid, year, and plotid which will not be 1.0</td>
 </tr>
 </tbody>
 </table>
@@ -188,8 +200,8 @@
 <p>10 Mg Biomass in small trees on detail plots * (10000 (m<sup>2</sup>) all plots / 2000 (m<sup>2</sup>) detail plots) = 50 Mg Biomass on detail plots</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">expansion</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;RS32&#39;</span><span class="p">,</span> <span class="s">&#39;AG05&#39;</span><span class="p">,</span> <span class="s">&#39;RS02&#39;</span><span class="p">,</span> <span class="s">&#39;RS01&#39;</span><span class="p">,</span> <span class="s">&#39;TO04&#39;</span><span class="p">,</span> <span class="s">&#39;AV14&#39;</span><span class="p">,</span> <span class="s">&#39;AR07&#39;</span><span class="p">,</span> <span class="s">&#39;TB13&#39;</span><span class="p">,</span> <span class="s">&#39;AE10&#39;</span><span class="p">,</span> <span class="s">&#39;TO11&#39;</span><span class="p">,</span> <span class="s">&#39;PP17&#39;</span><span class="p">,</span> <span class="s">&#39;AM16&#39;</span><span class="p">,</span> <span class="s">&#39;RS31&#39;</span><span class="p">,</span> <span class="s">&#39;RS28&#39;</span><span class="p">,</span> <span class="s">&#39;AB08&#39;</span><span class="p">,</span> <span class="s">&#39;AX15&#39;</span><span class="p">,</span> <span class="s">&#39;RS29&#39;</span><span class="p">,</span> <span class="s">&#39;AV06&#39;</span><span class="p">,</span> <span class="s">&#39;RS30&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">expansion</span><span class="p">[</span><span class="s">&#39;RS32&#39;</span><span class="p">][</span><span class="mi">2006</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;rs32&#39;</span><span class="p">,</span> <span class="s">&#39;ag05&#39;</span><span class="p">,</span> <span class="s">&#39;rs02&#39;</span><span class="p">,</span> <span class="s">&#39;rs01&#39;</span><span class="p">,</span> <span class="s">&#39;to04&#39;</span><span class="p">,</span> <span class="s">&#39;av14&#39;</span><span class="p">,</span> <span class="s">&#39;ar07&#39;</span><span class="p">,</span> <span class="s">&#39;tb13&#39;</span><span class="p">,</span> <span class="s">&#39;ae10&#39;</span><span class="p">,</span> <span class="s">&#39;to11&#39;</span><span class="p">,</span> <span class="s">&#39;pp17&#39;</span><span class="p">,</span> <span class="s">&#39;am16&#39;</span><span class="p">,</span> <span class="s">&#39;rs31&#39;</span><span class="p">,</span> <span class="s">&#39;rs28&#39;</span><span class="p">,</span> <span class="s">&#39;ab08&#39;</span><span class="p">,</span> <span class="s">&#39;ax15&#39;</span><span class="p">,</span> <span class="s">&#39;rs29&#39;</span><span class="p">,</span> <span class="s">&#39;av06&#39;</span><span class="p">,</span> <span class="s">&#39;rs30&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">expansion</span><span class="p">[</span><span class="s">&#39;rs32&#39;</span><span class="p">][</span><span class="mi">2006</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">4.0</span>
 </pre></div>
 </div>
@@ -212,7 +224,7 @@
 <p>While many of the plots have the same area, those that do not can be called from the database explicitly. It is then easier to add all the plots together to get the total area of the stand, or to apply this area to the individual trees per hectare method.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">uplot_areas</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;YBNF&#39;</span><span class="p">,</span> <span class="s">&#39;GP04&#39;</span><span class="p">,</span> <span class="s">&#39;CH10&#39;</span><span class="p">,</span> <span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;ybnf&#39;</span><span class="p">,</span> <span class="s">&#39;gp04&#39;</span><span class="p">,</span> <span class="s">&#39;ch10&#39;</span><span class="p">,</span> <span class="o">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">uplot_areas</span><span class="p">[</span><span class="s">&#39;GP04&#39;</span><span class="p">][</span><span class="mi">1957</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">4047.0</span>
 </pre></div>
@@ -232,32 +244,42 @@
 <dl class="method">
 <dt id="poptree_basis.Capture.create_additions">
 <code class="descname">create_additions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.create_additions" title="Permalink to this definition">¶</a></dt>
-<dd><p>generates the look-up of plots which are &#8220;additions&#8221;</p>
+<dd><p>Generates the look-up of plots which are &#8220;additions&#8221; in the database (activity code is A).</p>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Capture.additions:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Additions plots, indexed by standid, year, and plot id.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="poptree_basis.Capture.create_detail_reference">
 <code class="descname">create_detail_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.create_detail_reference" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a reference for detail plots that any instance of Tree (called by tps_Tree) or Stand (calld by tps_Stand) can use. The reference contains the area of the plot in question (<cite>area</cite>), the status as detail or not detail plot in that given year (<cite>detail</cite>), and the minimum dbh for the plot (whether detail or not, <cite>min</cite>).</p>
+<dd><p>Creates a reference for detail plots that any instance of Tree (called by tps_Tree) or Stand (calld by tps_Stand) can use. The reference contains the area of the plot in question (<code class="docutils literal"><span class="pre">area</span></code>), the status as detail or not detail plot in that given year (<code class="docutils literal"><span class="pre">detail</span></code>), and the minimum dbh for the plot (whether the plot is detail or not, as <code class="docutils literal"><span class="pre">min</span></code>).</p>
 <p>Here is a case where the stand, year, and plot in question is NOT a detail plot.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">Capture</span><span class="o">.</span><span class="n">detail_reference</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;AB08&#39;</span><span class="p">,</span> <span class="s">&#39;AV14&#39;</span><span class="p">,</span> <span class="s">&#39;AR07&#39;</span><span class="p">,</span> <span class="s">&#39;RS01&#39;</span><span class="p">,</span> <span class="s">&#39;TO11&#39;</span><span class="p">,</span> <span class="s">&#39;AM16&#39;</span><span class="p">,</span> <span class="s">&#39;AX15&#39;</span><span class="p">,</span> <span class="s">&#39;RS29&#39;</span><span class="p">,</span> <span class="s">&#39;RS02&#39;</span><span class="p">,</span> <span class="s">&#39;RS30&#39;</span><span class="p">,</span> <span class="s">&#39;RS28&#39;</span><span class="p">,</span> <span class="s">&#39;TB13&#39;</span><span class="p">,</span> <span class="s">&#39;RS32&#39;</span><span class="p">,</span> <span class="s">&#39;AG05&#39;</span><span class="p">,</span> <span class="s">&#39;TO04&#39;</span><span class="p">,</span> <span class="s">&#39;AE10&#39;</span><span class="p">,</span> <span class="s">&#39;RS31&#39;</span><span class="p">,</span> <span class="s">&#39;PP17&#39;</span><span class="p">,</span> <span class="s">&#39;AV06&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;ab08&#39;</span><span class="p">,</span> <span class="s">&#39;av14&#39;</span><span class="p">,</span> <span class="s">&#39;ar07&#39;</span><span class="p">,</span> <span class="s">&#39;rs01&#39;</span><span class="p">,</span> <span class="s">&#39;to11&#39;</span><span class="p">,</span> <span class="s">&#39;am16&#39;</span><span class="p">,</span> <span class="s">&#39;ax15&#39;</span><span class="p">,</span> <span class="s">&#39;rs29&#39;</span><span class="p">,</span> <span class="s">&#39;rs02&#39;</span><span class="p">,</span> <span class="s">&#39;rs30&#39;</span><span class="p">,</span> <span class="s">&#39;rs28&#39;</span><span class="p">,</span> <span class="s">&#39;tb13&#39;</span><span class="p">,</span> <span class="s">&#39;rs32&#39;</span><span class="p">,</span> <span class="s">&#39;ag05&#39;</span><span class="p">,</span> <span class="s">&#39;to04&#39;</span><span class="p">,</span> <span class="s">&#39;ae10&#39;</span><span class="p">,</span> <span class="s">&#39;rs31&#39;</span><span class="p">,</span> <span class="s">&#39;pp17&#39;</span><span class="p">,</span> <span class="s">&#39;av06&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;rs01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1976</span><span class="p">,</span> <span class="mi">1971</span><span class="p">,</span> <span class="mi">1988</span><span class="p">,</span> <span class="mi">2009</span><span class="p">,</span> <span class="mi">1992</span><span class="p">,</span> <span class="mi">2004</span><span class="p">,</span> <span class="mi">1978</span><span class="p">,</span> <span class="mi">1998</span><span class="p">,</span> <span class="mi">1983</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="s">&#39;RS010001&#39;</span><span class="p">][</span><span class="s">&#39;area&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;rs01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="s">&#39;rs010001&#39;</span><span class="p">][</span><span class="s">&#39;area&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mi">625</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="s">&#39;RS010001&#39;</span><span class="p">][</span><span class="s">&#39;detail&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;rs01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="s">&#39;rs010001&#39;</span><span class="p">][</span><span class="s">&#39;detail&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="bp">False</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="s">&#39;RS010001&#39;</span><span class="p">][</span><span class="s">&#39;min&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;rs01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="s">&#39;rs010001&#39;</span><span class="p">][</span><span class="s">&#39;min&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">15.0</span>
 </pre></div>
 </div>
 <p>Here is a case where the stand, year, and plot in question is a detail plot. See how the <cite>min</cite> is smaller.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="s">&#39;RS010003&#39;</span><span class="p">][</span><span class="s">&#39;area&#39;</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;rs01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="s">&#39;rs010003&#39;</span><span class="p">][</span><span class="s">&#39;area&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mi">625</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="s">&#39;RS010003&#39;</span><span class="p">][</span><span class="s">&#39;detail&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;rs01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="s">&#39;rs010003&#39;</span><span class="p">][</span><span class="s">&#39;detail&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="bp">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;RS01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="s">&#39;RS010003&#39;</span><span class="p">][</span><span class="s">&#39;min&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">detail_reference</span><span class="p">[</span><span class="s">&#39;rs01&#39;</span><span class="p">][</span><span class="mi">2004</span><span class="p">][</span><span class="s">&#39;rs010003&#39;</span><span class="p">][</span><span class="s">&#39;min&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">5.0</span>
 </pre></div>
 </div>
@@ -267,7 +289,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Capture.detail_reference:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">The name of the lookup table for detail plots and their areas and minimum dbh&#8217;s. If not otherwise specified, the minimum dbh for a tree on a non-detail plot or the cutoff for a big tree on a detail plot is 15 cm.</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">The name of the lookup table for detail plots and their areas and minimum dbh&#8217;s. If not otherwise specified, the minimum dbh for a tree on a non-detail plot or the cutoff for a big tree on a detail plot is 15.0 cm.</td>
 </tr>
 </tbody>
 </table>
@@ -276,13 +298,23 @@
 <dl class="method">
 <dt id="poptree_basis.Capture.create_mortalities">
 <code class="descname">create_mortalities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.create_mortalities" title="Permalink to this definition">¶</a></dt>
-<dd><p>generates the look-up of stands, years, and plots which are &#8220;mortality checks&#8221;</p>
+<dd><p>Generates the look-up of stands, years, and plots which are &#8220;mortality checks&#8221;</p>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Capture.mortalities:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Mortality plots, indexed by standid, year, and plotid</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="poptree_basis.Capture.create_unusual_mins_reference">
 <code class="descname">create_unusual_mins_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.create_unusual_mins_reference" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a lookup for plots that do not have minimum dbh of 15 cm, but are also not detail plots. That is, they are still sampled proportionally to the rest of the stand in their given year, but for whatever reason in that year, the minimum dbh is not 15 cm.</p>
+<dd><p>Creates a lookup for plots that do not have minimum dbh of 15.0 cm, but are also not detail plots. That is, they are still sampled proportionally to the rest of the stand in their given year, but for whatever reason in that year, the minimum dbh is not 15.0 cm.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -294,8 +326,8 @@
 </table>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">umins_reference</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;YBNF&#39;</span><span class="p">,</span> <span class="s">&#39;SRNF&#39;</span><span class="p">,</span> <span class="s">&#39;MRNA&#39;</span><span class="p">,</span> <span class="s">&#39;CH10&#39;</span><span class="p">,</span><span class="o">...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">umins_reference</span><span class="p">[</span><span class="s">&#39;PF28&#39;</span><span class="p">][</span><span class="mi">1959</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;ybnf&#39;</span><span class="p">,</span> <span class="s">&#39;srnf&#39;</span><span class="p">,</span> <span class="s">&#39;mrna&#39;</span><span class="p">,</span> <span class="s">&#39;ch10&#39;</span><span class="p">,</span><span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">umins_reference</span><span class="p">[</span><span class="s">&#39;pf28&#39;</span><span class="p">][</span><span class="mi">1959</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">10.0</span>
 </pre></div>
 </div>
@@ -318,7 +350,7 @@
 <p>Summing must be done locally for this because we now list the plots independently</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">poptree_basis</span><span class="o">.</span><span class="n">Capture</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">total_areas</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;YBNF&#39;</span><span class="p">,</span> <span class="s">&#39;GP04&#39;</span><span class="p">,</span> <span class="s">&#39;CH10&#39;</span><span class="p">,</span> <span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;ybnf&#39;</span><span class="p">,</span> <span class="s">&#39;gp04&#39;</span><span class="p">,</span> <span class="s">&#39;ch10&#39;</span><span class="p">,</span> <span class="o">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">total_areas</span><span class="p">[</span><span class="s">&#39;sp06&#39;</span><span class="p">][</span><span class="mi">2001</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">2500.0</span>
 </pre></div>
@@ -357,11 +389,6 @@
 &gt;&gt;&gt; &lt;pymssql.connection, pymssql.cursor&gt; = A.sql_connect()
 </pre></div>
 </div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">pymssql dependency. pymssql is required to connect to FSDB.</p>
-</div>
-<p><strong>METHODS</strong></p>
 <dl class="method">
 <dt id="poptree_basis.YamlConn.sql_connect">
 <code class="descname">sql_connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.YamlConn.sql_connect" title="Permalink to this definition">¶</a></dt>
@@ -380,7 +407,7 @@
 <code class="descclassname">biomass_basis.</code><code class="descname">as_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_biopak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite> and wood density for dbh, in cm.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
-<p>The BioPak method computes Biomass explicitly, rather than from volume. In most cases, the original output was in grams, but in this case, it is converted into Megagrams.</p>
+<p>The BioPak method computes total aboveground biomass explicitly, rather than from volume. In most cases, the original output from the equations as specified in BioPak was in grams, and here it is converted into Megagrams.</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -411,43 +438,7 @@
 <code class="descclassname">biomass_basis.</code><code class="descname">as_chinq_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_chinq_biopak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, <cite>h1</cite>, <cite>h2</cite>, <cite>h3</cite> and wood density for dbh, in cm.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
-<p>Unlike many other BioPak methods, the chinquapin functions usually need height.</p>
-<p><strong>INPUTS</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Woodden:</th><td class="field-body">wood density,</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">cm diameter at breast height</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">B1:</th><td class="field-body">first biomass parameter</td>
-</tr>
-<tr class="field-even field"><th class="field-name">B2:</th><td class="field-body">second biomass parameter</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">B3:</th><td class="field-body">third biomass parameter</td>
-</tr>
-<tr class="field-even field"><th class="field-name">J1:</th><td class="field-body">first Jenkins parameter</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">J2:</th><td class="field-body">second Jenkins parameter</td>
-</tr>
-<tr class="field-even field"><th class="field-name">H1:</th><td class="field-body">first height parameter</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">H2:</th><td class="field-body">second height parameter</td>
-</tr>
-<tr class="field-even field"><th class="field-name">H3:</th><td class="field-body">third height parameter</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="biomass_basis.as_compbio">
-<code class="descclassname">biomass_basis.</code><code class="descname">as_compbio</code><span class="sig-paren">(</span><em>dbh</em>, <em>component_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_compbio" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates biomass equations based on inputs of dbh and the parameter &#8220;rows&#8221; for ACCI.</p>
-<p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
-<p>The function of <cite>compbio</cite> and how it is called programmatically is vastly different from all other functions. 
-This system was made originally not to have a storage of equations but to operate efficiently for any species, and because of this, component biomass needs to temporarily store its equations within the function caller and pass that whole reference structure to the Tree or Stand using it.</p>
+<p>Unlike many other BioPak methods, the chinquapin functions usually need height. Height is calculated here. The height equations are also from BioPak.</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -480,8 +471,8 @@ This system was made originally not to have a storage of equations but to operat
 <dl class="function">
 <dt id="biomass_basis.as_d2ht">
 <code class="descclassname">biomass_basis.</code><code class="descname">as_d2ht</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_d2ht" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates biomass equations based on inputs of b1, b2, b3, h1, h2, and h3 and wood density for dbh, in cm.</p>
-<p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
+<dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, <cite>h1</cite>, <cite>h2</cite>, and <cite>h3</cite> and wood density for dbh, in cm.</p>
+<p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -512,40 +503,10 @@ This system was made originally not to have a storage of equations but to operat
 </dd></dl>
 
 <dl class="function">
-<dt id="biomass_basis.as_d2htcasc">
-<code class="descclassname">biomass_basis.</code><code class="descname">as_d2htcasc</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_d2htcasc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates biomass equations based on inputs of b1, b2, b3 and wood density for dbh, in cm.</p>
-<p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
-<p><strong>INPUTS</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Woodden:</th><td class="field-body">wood density,</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">cm diameter at breast height</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">B1:</th><td class="field-body">first biomass parameter</td>
-</tr>
-<tr class="field-even field"><th class="field-name">B2:</th><td class="field-body">second biomass parameter</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">B3:</th><td class="field-body">third biomass parameter</td>
-</tr>
-<tr class="field-even field"><th class="field-name">J1:</th><td class="field-body">first Jenkins parameter</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">J2:</th><td class="field-body">second Jenkins parameter</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Args:</th><td class="field-body">the remainder of arguments passed to the function, which are not called in this case</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
 <dt id="biomass_basis.as_lnln">
 <code class="descclassname">biomass_basis.</code><code class="descname">as_lnln</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_lnln" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates biomass equations based on inputs of b1, b2, b3, and wood density for dbh, in cm.</p>
-<p>Generates Jenkin&#8217;s biomass equations based on inputs of j1 and j2 for dbh, also in cm.</p>
+<dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, and wood density for dbh, in cm.</p>
+<p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -576,7 +537,7 @@ This system was made originally not to have a storage of equations but to operat
 <code class="descclassname">biomass_basis.</code><code class="descname">as_oak_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_oak_biopak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, <cite>h1</cite>, <cite>h2</cite>, <cite>h3</cite>  and wood density for dbh, in cm.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
-<p>Species in the Quercus (oak) family almost uniquely use this form in BioPak for doing the dbh.</p>
+<p>Species in the Quercus (oak) family almost uniquely use this form in BioPak for doing the biomass computation.</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -609,8 +570,8 @@ This system was made originally not to have a storage of equations but to operat
 <dl class="function">
 <dt id="biomass_basis.jenkins2014">
 <code class="descclassname">biomass_basis.</code><code class="descname">jenkins2014</code><span class="sig-paren">(</span><em>dbh</em>, <em>j3</em>, <em>j4</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.jenkins2014" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes 2014 jenkins values for some species. Just here for testing.</p>
-<p>** INPUTS **
+<dd><p>Computes 2014 jenkins values for some species. If you add in new parameters, you might want this.</p>
+<p><strong>INPUTS</strong>
 :dbh: cm diameter at breast height
 :j3: first Jenkins2014 parameter
 :j4: second Jenkins2014 parameter</p>
@@ -619,7 +580,7 @@ This system was made originally not to have a storage of equations but to operat
 <dl class="function">
 <dt id="biomass_basis.maxref">
 <code class="descclassname">biomass_basis.</code><code class="descname">maxref</code><span class="sig-paren">(</span><em>dbh</em>, <em>species</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.maxref" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if given dbh and given species is bigger than the maximum for that combination. The max was found from determining the top 1 percent of dbh&#8217;s for each species.</p>
+<dd><p>Check if given dbh in cm and given species is bigger than the maximum for that combination. The maximum was found from determining the top 1 percent of dbh&#8217;s in cm for each species from all the historical data. This function operates behind the scenes on inputs from TP00102 (dbh&#8217;s) and TP00101(species). It populates the eqns attribute of the Tree or Stand classes so that the right equation or set of equations will be called.</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -640,8 +601,8 @@ This system was made originally not to have a storage of equations but to operat
 <dl class="function">
 <dt id="biomass_basis.which_fx">
 <code class="descclassname">biomass_basis.</code><code class="descname">which_fx</code><span class="sig-paren">(</span><em>function_string</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.which_fx" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the correct function for doing the biomass, volume, Jenkins, and wood density in the lookup table.
-The keys for the lookup table are the same as the FORM field in TP00110. The component biomass method we used for ACCI is being removed.</p>
+<dd><p>Find the correct function for doing the Biomass ( Mg ), Jenkins Biomass ( Mg ), Volume ( m<sup>3</sup> ) , and Basal Area ( m<sup>2</sup> ) and wood density in the lookup table.
+The keys for the lookup table are the same as the FORM field in TP00110</p>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -667,14 +628,14 @@ The keys for the lookup table are the same as the FORM field in TP00110. The com
 </div>
 <div class="section" id="individual-trees">
 <h2>Individual Trees:<a class="headerlink" href="#individual-trees" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">tps_Tree.py</span></code> contains classes and functions for computing the attributes of individual trees. Each individual tree as defined in TP00101 is an instance of a class of <code class="docutils literal"><span class="pre">Tree</span></code>. For example, <code class="docutils literal"><span class="pre">NCNA000300005</span></code> is one Tree, even if it alive for 5 remeasurements. All the remeasurements taken on one individual tree are encapsulated into a single instance of Tree for that individual, and can be accessed using the property of <code class="docutils literal"><span class="pre">Tree.state</span></code>. If desired, checks on the state of a tree are generated.</p>
+<p><code class="docutils literal"><span class="pre">tps_Tree.py</span></code> contains classes and functions for computing the attributes of individual trees. Each individual tree as defined in TP00101 is an instance of a class of <code class="docutils literal"><span class="pre">Tree</span></code>. For example, <code class="docutils literal"><span class="pre">NCNA000300005</span></code> is one Tree, even if it alive for 5 remeasurements. All the remeasurements taken on one individual tree are encapsulated into a single instance of Tree for that individual, and can be accessed using the property of <code class="docutils literal"><span class="pre">Tree.state</span></code>. If desired, checks on the state of a tree are generated. These are accessed through the QC portion of the interface.</p>
 <span class="target" id="module-tps_Tree"></span><dl class="class">
 <dt id="tps_Tree.Tree">
-<em class="property">class </em><code class="descclassname">tps_Tree.</code><code class="descname">Tree</code><span class="sig-paren">(</span><em>cur</em>, <em>pcur</em>, <em>queries</em>, <em>tid</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tps_Tree.</code><code class="descname">Tree</code><span class="sig-paren">(</span><em>cur</em>, <em>queries</em>, <em>tid</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>A Tree object contains the required metrics and functions to compute Biomass ( Mg ), Jenkins Biomass ( Mg ), Volume ( m<sup>3</sup> ) , and Basal Area ( m<sup>2</sup> ) for any one tree.</p>
-<p>Tree objects can also create a check file for individual tree history problems.</p>
-<p>Tree objects represent a tree as it is in TP00101; that is, each Tree object contains all the years of that tree&#8217;s re-measurements, no matter its status.</p>
+<p>Tree objects can also create a check file for individual tree history problems, although this is not automatically output.</p>
+<p>Tree objects represent a tree as it is in TP00101; that is, each Tree object contains all the years of that tree&#8217;s re-measurements, no matter its status. If a tree is dead, it&#8217;s dbh is taken from the last known not-dead measurement. If a tree is missing, it&#8217;s dbh is taken from the last-known not missing measurement.</p>
 <p>A Tree will also detail which of it&#8217;s components it calculates: most softwoods get initially the volume of stemwood and convert to biomass, and most hardwoods get initially the total aboveground biomass, and convert to volume. Jenkins equations always get the total aboveground biomass.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tps</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">poptree_basis</span>
@@ -689,6 +650,14 @@ The keys for the lookup table are the same as the FORM field in TP00110. The com
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">eqns</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;normal&#39;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span><span class="o">&lt;</span><span class="n">function</span> <span class="mo">03</span><span class="mi">9459</span><span class="n">x342</span><span class="o">&gt;</span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">woodden</span> <span class="o">=</span> <span class="mf">0.44</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><cite>Tree.state</cite> contains <cite>[year, dbh, status, dbh_code]</cite>. Although status is an integer, it is recorded as a string here because it is descriptive. <cite>1</cite> is OK, <cite>2</cite> is Ingrowth, <cite>3</cite> is merged or fused, <cite>6</cite> is Dead, and <cite>9</cite> is Missing. See : <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&amp;dbcode=Tp001&amp;attid=7291&amp;topnav=8/">Tree Status Codes</a> . DBH Codes are also all displayed as strings, although some are integers. See : <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&amp;dbcode=Tp001&amp;attid=7287&amp;topnav=8/">Tree DBH Codes</a>.</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last"><cite>Tree.cur</cite> must be created in an external variable, or this will be very slow, because the program will want to go to the database many times if you run more than one tree.</p>
 </div>
 <dl class="method">
 <dt id="tps_Tree.Tree.check_trees">
@@ -713,7 +682,7 @@ The keys for the lookup table are the same as the FORM field in TP00110. The com
 </tr>
 <tr class="field-even field"><th class="field-name">Statuses:</th><td class="field-body">strings containing pairs of statuses that follow one another in time</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Dbh_degrade:</th><td class="field-body">strings containing pairs of dbh_codes that follow one another in time</td>
+<tr class="field-odd field"><th class="field-name">Dbh_degrade:</th><td class="field-body">strings containing pairs of dbh codes that follow one another in time</td>
 </tr>
 </tbody>
 </table>
@@ -727,19 +696,31 @@ The keys for the lookup table are the same as the FORM field in TP00110. The com
 </tbody>
 </table>
 <ul class="simple">
-<li>Houdini trees: &#8220;9&#8221; then something not &#8220;9&#8221;</li>
-<li>Lazarus trees: &#8220;6&#8221; then something not &#8220;9&#8221;</li>
+<li>Houdini trees : &#8220;9&#8221; then something not &#8220;9&#8221;</li>
+<li>Lazarus trees : &#8220;6&#8221; then something not &#8220;9&#8221;</li>
 <li>Double-death: more than 1 &#8220;6&#8221;</li>
-<li>DegradeX: changes from dbh code of &#8220;G&#8221; (good) or &#8220;V&#8221; (verified) to &#8220;M&#8221; (missing) or &#8220;U&#8221; (unmeasured)</li>
-<li>ShrinkX : mean percentage shrink per year if mean percentage shrink &gt; 10 %</li>
-<li>GrowthX : mean percentage growth per year if mean percentage growth &gt; 10 %</li>
+<li>DegradeX : changes from dbh code of &#8220;G&#8221; (good) or &#8220;V&#8221; (verified) to &#8220;M&#8221; (missing) or &#8220;U&#8221; (unmeasured)</li>
+<li>ShrinkX : mean percentage shrink per year if mean percentage shrink more than 10 percent</li>
+<li>GrowthX : mean percentage growth per year if mean percentage growth more than 10 percent</li>
 </ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">if a tree does not fail the checks, it gets a &#8220;none&#8221; returned.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">the output of the checks are the the &#8220;Checks&#8221; file, which can be renamed.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">check_trees() is timely to run, and therefore is not automatically called by the program.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Tree.Tree.compute_biomasses">
 <code class="descname">compute_biomasses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.compute_biomasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute biomass (Mg) , volume (m<sup>3</sup>), Jenkins&#8217; biomass (Mg) and wood density (g/cm<sup>3</sup>) from equations</p>
+<dd><p>Compute biomass ( Mg ) , volume ( m<sup>3</sup> ), Jenkins&#8217; biomass ( Mg ) and wood density ( g/cm<sup>3</sup> ) from equations</p>
 <p>If a tree is in it&#8217;s death year (i.e. has a status of &#8216;6&#8217;), the dbh from the previous live measurement is used.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">cur</span><span class="p">,</span> <span class="n">pcur</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="s">&#39;NCNA000100014&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">state</span>
@@ -756,9 +737,9 @@ The keys for the lookup table are the same as the FORM field in TP00110. The com
 <tr class="field-odd field"><th class="field-name" colspan="2">List_of_biomasses:</th></tr>
 <tr class="field-odd field"><td>&nbsp;</td><td class="field-body">a list of tuples generated by the biomass equations&#8217; returns</td>
 </tr>
-<tr class="field-even field"><th class="field-name">List_of_basal:</th><td class="field-body">a list of basal areas created by dbh*dbh*0.00007854</td>
+<tr class="field-even field"><th class="field-name">List_of_basal:</th><td class="field-body">a list of basal areas created by <cite>dbh`*`dbh`*`0.00007854</cite></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Proxy_dbh:</th><td class="field-body">in years where the dbh is not extant because of mortality, the proxy dbh is used to compute the biomasses</td>
+<tr class="field-odd field"><th class="field-name">Proxy_dbh:</th><td class="field-body">in years where the dbh is not extant because of mortality, the proxy dbh is used to compute the biomasses. It is the dbh of the last live remeasurement.</td>
 </tr>
 </tbody>
 </table>
@@ -783,7 +764,22 @@ The keys for the lookup table are the same as the FORM field in TP00110. The com
 </tr>
 <tr class="field-odd field"><th class="field-name">Form:</th><td class="field-body">equation &#8216;form&#8217; such as as_lnln, as_compbio, etc.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Proxy:</th><td class="field-body">if a tree does not have its own equation, a proxy equation is used from a similar species. This proxy species is needed in the output.</td>
+<tr class="field-even field"><th class="field-name">Proxy:</th><td class="field-body">if a tree does not have its own equation, a proxy equation is used from a similar species. For example, <cite>prunu</cite> uses <cite>alru</cite> as both are small hardwoods.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Tree.Tree.get_additional_info">
+<code class="descname">get_additional_info</code><span class="sig-paren">(</span><em>mode='--screen'</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.get_additional_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the tag and check-notes from the database for the tree and outputs it to the screen</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Mode:</th><td class="field-body">either <cite>&#8211;screen</cite> (default) or <cite>&#8211;csv</cite> (specified). If <cite>&#8211;csv</cite> the outputs will have their own csv file</td>
 </tr>
 </tbody>
 </table>
@@ -860,6 +856,10 @@ The keys for the lookup table are the same as the FORM field in TP00110. The com
 <dt id="tps_Tree.Tree.only_output_attributes">
 <code class="descname">only_output_attributes</code><span class="sig-paren">(</span><em>Bios</em>, <em>datafile='all_indv_tree_output.csv'</em>, <em>mode='wt'</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.only_output_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes a csv file, containing both the tree measurements for the individual trees. Can accept a filename as arguement. Does not do checks.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method is slow if doing more than just a few trees. It only writes the attributes, rather than trying to write all the checks as well, which take longer.</p>
+</div>
 <p>When the program is executed on the stand level, and this output is given (see example in <cite>tps_Sample.py</cite>) trees are sorted by tree id (ascending alphabetical order.)</p>
 <p><strong>INPUT VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -899,6 +899,10 @@ The keys for the lookup table are the same as the FORM field in TP00110. The com
 <dt id="tps_Tree.Tree.output_tree_agg">
 <code class="descname">output_tree_agg</code><span class="sig-paren">(</span><em>Bios</em>, <em>Checks</em>, <em>datafile='all_indv_tree_output.csv'</em>, <em>checkfile='all_check_tree_output.csv'</em>, <em>mode='wt'</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.output_tree_agg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes a csv files, for both the biomasses and the &#8220;checks&#8221;. If filenames are given as arguements, these can be used, otherwise, default filenames will be assigned.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method is really slow if doing more than just a few trees.</p>
+</div>
 <p><strong>INPUT VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -922,155 +926,62 @@ The keys for the lookup table are the same as the FORM field in TP00110. The com
 </div>
 <div class="section" id="stands">
 <h2>Stands:<a class="headerlink" href="#stands" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">tps_Stand.py</span></code> contains classes and functions for computing the attributes on the stand scale. Each stand is defined as all the plots during a given re-measurement year. Stand attributes are computed on a per-hectare basis. Some stands contain <code class="docutils literal"><span class="pre">detail</span> <span class="pre">plots</span></code> with small trees representative of the stand as a whole. Plots sometimes have additional <code class="docutils literal"><span class="pre">meaning</span></code> we want to know beyond that of the stand. In all cases, we compute plot <code class="docutils literal"><span class="pre">on</span> <span class="pre">the</span> <span class="pre">way</span></code> to getting stand, so it&#8217;s easy for us to include it in the output as well.</p>
+<p><code class="docutils literal"><span class="pre">tps_Stand.py</span></code> contains classes and functions for computing the static attributes on the stand and plot scale. Each stand is defined as all the plots during a given re-measurement year. Both plot and stand attributes are computed on a per-hectare basis. Some stands contain <code class="docutils literal"><span class="pre">detail</span> <span class="pre">plots</span></code> with small trees representative of the stand as a whole. Plots sometimes have additional <code class="docutils literal"><span class="pre">meaning</span></code> we want to know beyond that of the stand. In all cases, we compute plot <code class="docutils literal"><span class="pre">on</span> <span class="pre">the</span> <span class="pre">way</span></code> to getting stand, so it&#8217;s easy for us to include it in the output as well. Stands can also be used for computing the individual trees they contain.</p>
 <span class="target" id="module-tps_Stand"></span><dl class="class">
-<dt id="tps_Stand.QC">
-<em class="property">class </em><code class="descclassname">tps_Stand.</code><code class="descname">QC</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.QC" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Conducts Stand level quality control if needed. Do not excute this with every run.</p>
-<p>Takes the list of trees who are on any one year of the stand and compare them to the prior year. Checks for the appearance and disappearance of individuals that cannot be attributed to death or a known status change.</p>
-<dl class="method">
-<dt id="tps_Stand.QC.check_many_stands">
-<code class="descname">check_many_stands</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.QC.check_many_stands" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets up the needed inputs</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Stand.QC.check_one_stand">
-<code class="descname">check_one_stand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.QC.check_one_stand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets up the needed inputs, such as database connectors. Creates instance of Stand from <cite>self.target</cite>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Stand.QC.parse_target">
-<code class="descname">parse_target</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.QC.parse_target" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enable QC on either one or many stands. Fails if no stands are given.</p>
-<p><strong>RETURNS</strong></p>
-<p>False if not inputs. Function for many stands if more than one is given. Function for one stand if one is given.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Stand.QC.population_check">
-<code class="descname">population_check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.QC.population_check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the tree check data from each year and species.</p>
-<ul class="simple">
-<li>Check if a tree dies in the first year, but is still present in the next year</li>
-<li>Check if a tree is alive in the first year, but is not present in the next year</li>
-<li>Check if a tree is ingrowth in the first year, but is not a live or dead tree in the next year</li>
-</ul>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="tps_Stand.Stand">
-<em class="property">class </em><code class="descclassname">tps_Stand.</code><code class="descname">Stand</code><span class="sig-paren">(</span><em>cur</em>, <em>pcur</em>, <em>XFACTOR</em>, <em>queries</em>, <em>standid</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Stands contain several plots, grouped by year and species. Stand produce outputs of biomass ( Mg/ha ), volume (m<sup>3</sup>), Jenkins biomass ( Mg/ha ), TPH (number of trees/ ha), and basal area (m<sup>2</sup> / ha).</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Stand</span><span class="p">(</span><span class="n">cur</span><span class="p">,</span> <span class="n">pcur</span><span class="p">,</span> <span class="n">XFACTOR</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="s">&#39;NCNA&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">cur</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">pymssql</span><span class="o">.</span><span class="n">Cursor</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x1007a4648</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">pcur</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">sqlite3</span><span class="o">.</span><span class="n">Cursor</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x10078cce0</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">tree_list</span> <span class="o">=</span> <span class="s">&quot;SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species...&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">species_list</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="n">SELECT</span> <span class="n">DISTINCT</span><span class="p">(</span><span class="n">fsdbdata</span><span class="o">.</span><span class="n">dbo</span><span class="o">.</span><span class="n">tp00101</span><span class="o">.</span><span class="n">species</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">...</span><span class="s">&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">eqn_query</span> <span class="o">=</span> <span class="s">&quot;SELECT SPECIES, EQNSET, FORM, H1, H2, H3, B1 ...&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">eqns</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;abam&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;normal&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">Stand</span><span class="o">.</span><span class="n">select_eqns</span><span class="o">.&lt;</span><span class="nb">locals</span><span class="o">&gt;.&lt;</span><span class="k">lambda</span><span class="o">&gt;</span> <span class="n">at</span> <span class="mh">0x1007d9730</span><span class="o">&gt;</span><span class="p">}</span><span class="o">...</span><span class="s">&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">od</span><span class="p">[</span><span class="mi">1985</span><span class="p">][</span><span class="s">&#39;abam&#39;</span><span class="p">][</span><span class="mi">4</span><span class="p">][</span><span class="s">&#39;dead&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="s">&#39;av06000400017&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;6&#39;</span><span class="p">,</span> <span class="s">&#39;1985&#39;</span><span class="p">)]</span>
+<dt id="tps_Stand.Plot">
+<em class="property">class </em><code class="descclassname">tps_Stand.</code><code class="descname">Plot</code><span class="sig-paren">(</span><em>Stand</em>, <em>XFACTOR</em>, <em>plotlist</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tps_Stand.Stand" title="tps_Stand.Stand"><code class="xref py py-class docutils literal"><span class="pre">tps_Stand.Stand</span></code></a></p>
+<p>Most of the functions of plot are actually the same as stand, so why re-write the class?</p>
+<p>Plots contain a Stand from which they are extracted, and a plot list enumerating what plots are to be analyzed. Otherwise, all of the methods and outputs are virtually identical to that in Stand, but scaled down.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Self.plotlist:</th><td class="field-body">is a list of plots for analysis. i.e. you could specify 3 plots of 40, 1 plot of 40, or no plots of 40 (in which case all would be assessed). You must always pass in an empty string for plotlist if you don&#8217;t specify plots.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">od</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1985</span><span class="p">,</span> <span class="mi">1987</span><span class="p">,</span> <span class="mi">1988</span><span class="p">,</span> <span class="mi">2007</span><span class="p">,</span> <span class="mi">1993</span><span class="p">,</span> <span class="mi">1978</span><span class="p">,</span> <span class="mi">1981</span><span class="p">,</span> <span class="mi">1998</span><span class="p">,</span> <span class="mi">1983</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">shifted</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1993</span><span class="p">,</span> <span class="mi">1978</span><span class="p">,</span> <span class="mi">1988</span><span class="p">,</span> <span class="mi">1998</span><span class="p">,</span> <span class="mi">2007</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">mortality_years</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="mi">1981</span><span class="p">,</span> <span class="mi">1983</span><span class="p">,</span> <span class="mi">1985</span><span class="p">,</span> <span class="mi">1987</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">tps_Stand</span><span class="o">.</span><span class="n">Stand</span><span class="p">(</span><span class="n">cur</span><span class="p">,</span> <span class="n">XFACTOR</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="s">&#39;ncna&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">tps_Stand</span><span class="o">.</span><span class="n">Plot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">XFACTOR</span><span class="p">,</span> <span class="p">[])</span>
 </pre></div>
 </div>
 <dl class="method">
-<dt id="tps_Stand.Stand.aggregate_biomasses">
-<code class="descname">aggregate_biomasses</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.aggregate_biomasses" title="Permalink to this definition">¶</a></dt>
+<dt id="tps_Stand.Plot.aggregate_biomasses">
+<code class="descname">aggregate_biomasses</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.aggregate_biomasses" title="Permalink to this definition">¶</a></dt>
 <dd><p>for each year in biomasses, add up all the trees from all the species, and output the stand summary over all the species as a nearly identical data structure.</p>
 <p>For every one of the attributes in Biomasses for Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. In the write out, we&#8217;ll multiply it out to the HA level</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tps_Stand.Stand.check_additions">
-<code class="descname">check_additions</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.check_additions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the stand may contain &#8220;additions&#8221;. If so, populate the additions attribute of yourself and do not include trees from those years</p>
-<p><strong>INTERNAL VARIABLES</strong>
-:additions: stand additions are years that have live trees measured that were not measured in previous year&#8217;s inventory. we allocate additions to the subsequent year&#8217;s inventory. There&#8217;s only about 15 plots this happens on. 
-:replacement: replaces the years of &#8220;additions&#8221; with the subsequent year</p>
+<dt id="tps_Stand.Plot.aggregate_biomasses_plot">
+<code class="descname">aggregate_biomasses_plot</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.aggregate_biomasses_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>for each year in biomasses, add up all the trees from all the species, and output the plot summary over all the species as a nearly identical data structure.</p>
+<p>For every one of the attributes in Biomasses for Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. In the write out, we&#8217;ll multiply it out to the HA level</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tps_Stand.Stand.check_mort">
-<code class="descname">check_mort</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.check_mort" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if the year is a mortality year.</p>
-<p>Populates self.mortality_years if there are any mortality years. Also sets self.shifted to the output dictionary if there are no mortality years. The mortality years are those with only dead trees but no live ones. Effectively, if this happened in the wild, it would be a &#8220;mortality year&#8221; even if it weren&#8217;t intended to be, so the math will resolve.</p>
+<dt id="tps_Stand.Plot.check_additions_and_mort">
+<code class="descname">check_additions_and_mort</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.check_additions_and_mort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the stand may contain &#8220;additions&#8221;. If so, replace the year with the subsequent year as long as it is not also additions or mortality. If additions or mortality is the final years in the data, we will not do those years.</p>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">List_all_years_possible_mortality:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">holds the years that might be mortality years, which are discovered based on if they have counts of mortality, but no live or ingrowth trees.</td>
+<tr class="field-odd field"><th class="field-name">Additions:</th><td class="field-body">stand additions are years that have live trees measured that were not measured in previous year&#8217;s inventory. we allocate additions to the subsequent year&#8217;s inventory. There&#8217;s only about 15 plots this happens on.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Replacement:</th><td class="field-body">replaces the years of &#8220;additions&#8221; with the subsequent year that is not an additions.</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="tps_Stand.Stand.check_stand_members">
-<code class="descname">check_stand_members</code><span class="sig-paren">(</span><em>BadTreeRef</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.check_stand_members" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates an output file containing ingrowth Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), and wood density, by species</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Stand.Stand.compute_normal_biomasses">
-<code class="descname">compute_normal_biomasses</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.compute_normal_biomasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the biomass, volume, jenkins. Use for &#8220;normal&#8221; stands.</p>
-<p>First use XFACTOR to tell if a fancy computation needs to be performed.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">a Capture object containing the detail plots, minimum dbhs, etc.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">XFACTOR.detail_reference:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">plots which are detail plots and when</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">XFACTOR.stands_with_unusual_mins:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">plots which have minimums that are not 15 and are not detail plots</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">XFACTOR.unusual_plot_areas:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">plots whose areas are not 625 m</td>
-</tr>
-</tbody>
-</table>
-<p><strong>INTERNAL VARIABLES</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Biomasses:</th><td class="field-body">The output dictionary which will ultimately contain the biomass, Jenkins&#8217; biomass, volume, etc. for the stand.</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">shifted</span><span class="p">[</span><span class="mi">1984</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="s">&#39;alru&#39;</span><span class="p">,</span> <span class="s">&#39;psme&#39;</span><span class="p">,</span> <span class="s">&#39;pisi&#39;</span><span class="p">,</span> <span class="s">&#39;thpl&#39;</span><span class="p">,</span> <span class="s">&#39;tshe&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">shifted</span><span class="p">[</span><span class="mi">1984</span><span class="p">][</span><span class="s">&#39;psme&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="mi">44</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;ingrowth&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s">&#39;live&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;ncna004400023&#39;</span><span class="p">,</span> <span class="mf">109.7</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">,</span> <span class="s">&#39;1984&#39;</span><span class="p">)],</span> <span class="s">&#39;dead&#39;</span><span class="p">:</span> <span class="p">[]}}</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">10000</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">625</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="mf">16.0</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Stand.Stand.compute_special_biomasses">
-<code class="descname">compute_special_biomasses</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.compute_special_biomasses" title="Permalink to this definition">¶</a></dt>
+<dt id="tps_Stand.Plot.compute_biomasses">
+<code class="descname">compute_biomasses</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.compute_biomasses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the biomass, volume, jenkins. Use for stands with alternate minimums, areas, or detail plots</p>
 <dl class="docutils">
 <dt>First use the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.</dt>
@@ -1095,6 +1006,280 @@ The keys for the lookup table are the same as the FORM field in TP00110. The com
 </table>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <p>Basically, this is the same as compute_normal_biomasses except the unique area of each plot and stand is referenced from a table rather than assumed to be 625 m:sup: 2.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Plot.compute_biomasses_plot">
+<code class="descname">compute_biomasses_plot</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.compute_biomasses_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the biomass ( Mg/ha ), volume (m<sup>3</sup>), Jenkins biomass ( Mg/ha ), TPH (number of trees/ ha), and basal area (m<sup>2</sup> / ha). Use at the plot scale, so no expansion factors are needed here.</p>
+<p><strong>INTERNAL VARIABLES</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Self.Stand:</th><td class="field-body">basically the same as the stand-level computation, but in this case we actually will output the biomasses at each plot&#8217;s level</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Plot.create_num_plots">
+<code class="descname">create_num_plots</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.create_num_plots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a number of plots count for each stand and year.</p>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Capture.num_plots:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the number of plots for that stand and year. Serves no purpose in computation and is only used to generated the required outputs.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Plot.get_all_dead_trees">
+<code class="descname">get_all_dead_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.get_all_dead_trees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all the dead trees from TP00103. Updates self.od, which was made in get_all_live_trees().</p>
+<p><strong>INTERNAL VARIABLES</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Self.tree_list_m:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">&#8220;SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00103.dbh_last, fsdbdata.dbo.tp00103.year FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00103 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00103.treeid WHERE fsdbdata.dbo.tp00101.standid like &#8216;{standid}&#8217; ORDER BY fsdbdata.dbo.tp00103.treeid ASC&#8221;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Plot.get_all_live_trees">
+<code class="descname">get_all_live_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.get_all_live_trees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the trees on that stand by querying FSDBDATA and sort them by year, plot, live or dead, and species.</p>
+<p>Queries both the live trees and the dead trees in the live database who do not have a DBH given. The dead trees then come in and replace the live ones without the DBH&#8217;s in get_all_dead_trees(). First get the live from self.tree_list.</p>
+<p><strong>INTERNAL VARIABLES</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Self.query:</th><td class="field-body">&#8220;SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, fsdbdata.dbo.tp00102.year, fsdbdata.dbo.tp00102.dbh_code, fsdbdata.dbo.tp00101.PSP_STUDYID FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00102 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid WHERE fsdbdata.dbo.tp00101.standid like &#8216;{standid}&#8217; ORDER BY fsdbdata.dbo.tp00102.treeid ASC&#8221;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Plot.get_total_area">
+<code class="descname">get_total_area</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.get_total_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the total area for each year on that stand and create a reference table to be used when figuring out the per hectare output. The percent of area on the plot over the percent of the area of the stand is the proportion represented by that plot.</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">XFACTOR.total_areas has the areas by stand, like this:</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">XFACTOR</span><span class="o">.</span><span class="n">total_areas</span><span class="p">[</span><span class="s">&#39;hr03&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="mi">1984</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1985</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1986</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1988</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1989</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">2000</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">2007</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1978</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1995</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Plot.select_eqns">
+<code class="descname">select_eqns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.select_eqns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets only the equations you need based on the species on that plot by querying the database for individual species that will be on this stand and makes an equation table.</p>
+<p><strong>INTERNAL VARIABLES</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">List_species:</th><td class="field-body">a list of the species on that stand in any year, used to query the database for distinct species</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Self.woodden_dict:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">a dictionary of wood densities by species</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Self.proxy_dict:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">a dictionary of equation proxies, by species</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Self.eqns:</th><td class="field-body">a dictionary of eqns keyed by &#8216;normal&#8217;, &#8216;big&#8217;, or &#8216;component&#8217; containing lambda functions to receive dbh (in cm) inputs and compute Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), and wood density.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RETURNS</strong></p>
+<p>Populates Stand.eqns with a reference of &#8216;species&#8217; : &#8216;function&#8217;, where the function is a pointer to the appropriate equation form populated by parameters extracted from TP00110</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Plot.update_all_missing_trees">
+<code class="descname">update_all_missing_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.update_all_missing_trees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the missing trees from self.missing and try to match each to a tree in the main dictionary that is alive in the preceding year from self.decent_years, and then return a copy of that tree to the year it is missing, so we can compute its biomass.</p>
+<p><strong>INTERNAL VARIABLES</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Replacement_year_index:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the index in the list of valid years to get the year of replacement from. It needs to precede the missing year</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Replacement_year:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the year whose data we use to replace the missing eyar</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Plot.write_individual_trees">
+<code class="descname">write_individual_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_individual_trees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a csv file, containing the tree measurements for the individual trees on the stand.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Plot.write_plot_composite">
+<code class="descname">write_plot_composite</code><span class="sig-paren">(</span><em>Biomasses</em>, <em>Biomasses_Agg</em>, <em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_plot_composite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), Basal Area (m <sup>2</sup>) by species with a row of &#8220;all&#8221; containing the composite TPH, Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), and Basal Area (m <sup>2</sup>)</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Biomasses:</th><td class="field-body">data structure containing portions of biomass and other desired outputs, grouped by species</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Biomasses_Agg:</th><td class="field-body">data structure containing the aggregate biomass over all the species.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">the reference object used for computing areas and such. You&#8217;ve already created it. No worries.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>OUTPUTS</strong></p>
+<p>Writes a file named <cite>standid + stand_composite_output.csv</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Plot.write_stand_composite">
+<code class="descname">write_stand_composite</code><span class="sig-paren">(</span><em>Biomasses</em>, <em>Biomasses_Agg</em>, <em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_stand_composite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), Basal Area (m <sup>2</sup>) by species with a row of &#8220;all&#8221; containing the composite TPH, Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), and Basal Area (m <sup>2</sup>)</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Biomasses:</th><td class="field-body">data structure containing portions of biomass and other desired outputs, grouped by species</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Biomasses_Agg:</th><td class="field-body">data structure containing the aggregate biomass over all the species.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">the reference object used for computing areas and such. You&#8217;ve already created it. No worries.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>OUTPUTS</strong></p>
+<p>Writes a file named <cite>standid + stand_composite_output.csv</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Plot.write_stand_rob">
+<code class="descname">write_stand_rob</code><span class="sig-paren">(</span><em>RobBiomass</em>, <em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_stand_rob" title="Permalink to this definition">¶</a></dt>
+<dd><p>quick little method that ignores all the detail plot (trees &lt; 15.)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tps_Stand.Stand">
+<em class="property">class </em><code class="descclassname">tps_Stand.</code><code class="descname">Stand</code><span class="sig-paren">(</span><em>cur</em>, <em>XFACTOR</em>, <em>queries</em>, <em>standid</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Stands contain several plots, grouped by year and species. Stand produce outputs of biomass ( Mg/ha ), volume (m<sup>3</sup>), Jenkins biomass ( Mg/ha ), TPH (number of trees/ ha), and basal area (m<sup>2</sup> / ha).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Stand</span><span class="p">(</span><span class="n">cur</span><span class="p">,</span> <span class="n">pcur</span><span class="p">,</span> <span class="n">XFACTOR</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="s">&#39;NCNA&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">cur</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">pymssql</span><span class="o">.</span><span class="n">Cursor</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x1007a4648</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">tree_list</span> <span class="o">=</span> <span class="s">&quot;SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species...&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">species_list</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="n">SELECT</span> <span class="n">DISTINCT</span><span class="p">(</span><span class="n">fsdbdata</span><span class="o">.</span><span class="n">dbo</span><span class="o">.</span><span class="n">tp00101</span><span class="o">.</span><span class="n">species</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">...</span><span class="s">&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">eqn_query</span> <span class="o">=</span> <span class="s">&quot;SELECT SPECIES, EQNSET, FORM, H1, H2, H3, B1 ...&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">eqns</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;abam&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;normal&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">Stand</span><span class="o">.</span><span class="n">select_eqns</span><span class="o">.&lt;</span><span class="nb">locals</span><span class="o">&gt;.&lt;</span><span class="k">lambda</span><span class="o">&gt;</span> <span class="n">at</span> <span class="mh">0x1007d9730</span><span class="o">&gt;</span><span class="p">}</span><span class="o">...</span><span class="s">&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">od</span><span class="p">[</span><span class="mi">1985</span><span class="p">][</span><span class="s">&#39;abam&#39;</span><span class="p">][</span><span class="mi">4</span><span class="p">][</span><span class="s">&#39;dead&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="s">&#39;av06000400017&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;6&#39;</span><span class="p">,</span> <span class="s">&#39;1985&#39;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">od</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1985</span><span class="p">,</span> <span class="mi">1987</span><span class="p">,</span> <span class="mi">1988</span><span class="p">,</span> <span class="mi">2007</span><span class="p">,</span> <span class="mi">1993</span><span class="p">,</span> <span class="mi">1978</span><span class="p">,</span> <span class="mi">1981</span><span class="p">,</span> <span class="mi">1998</span><span class="p">,</span> <span class="mi">1983</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Stands have mortalities, additions, and replacements dictionaries for both of these within themselves. These are very helpful for checking errors in the study set-up.</p>
+</div>
+<dl class="method">
+<dt id="tps_Stand.Stand.aggregate_biomasses">
+<code class="descname">aggregate_biomasses</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.aggregate_biomasses" title="Permalink to this definition">¶</a></dt>
+<dd><p>for each year in biomasses, add up all the trees from all the species, and output the stand summary over all the species as a nearly identical data structure.</p>
+<p>For every one of the attributes in Biomasses for Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. In the write out, we&#8217;ll multiply it out to the HA level</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Stand.check_additions_and_mort">
+<code class="descname">check_additions_and_mort</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.check_additions_and_mort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the stand may contain &#8220;additions&#8221;. If so, replace the year with the subsequent year as long as it is not also additions or mortality. If additions or mortality is the final years in the data, we will not do those years.</p>
+<p><strong>INTERNAL VARIABLES</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Additions:</th><td class="field-body">stand additions are years that have live trees measured that were not measured in previous year&#8217;s inventory. we allocate additions to the subsequent year&#8217;s inventory. There&#8217;s only about 15 plots this happens on.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Replacement:</th><td class="field-body">replaces the years of &#8220;additions&#8221; with the subsequent year that is not an additions.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Stand.compute_biomasses">
+<code class="descname">compute_biomasses</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.compute_biomasses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the biomass, volume, jenkins. Use for stands with alternate minimums, areas, or detail plots</p>
+<dl class="docutils">
+<dt>First use the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.</dt>
+<dd>Load in the appropriate parameters for this computation. Separate &#8220;small&#8221; trees from &#8220;large&#8221; ones so that small ones can get the expansion factor. If they aren&#8217;t on a detail plot, this number will just be &#8220;1&#8221;.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">a Capture object containing the detail plots, minimum dbhs, etc.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">XFACTOR.detail_reference:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">plots which are detail plots and when</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">XFACTOR.stands_with_unusual_mins:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">plots which have minimums that are not 15 and are not detail plots</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">XFACTOR.unusual_plot_areas:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">plots whose areas are not 625m</td>
+</tr>
+</tbody>
+</table>
+<p><strong>INTERNAL VARIABLES</strong></p>
+<p>Basically, this is the same as compute_normal_biomasses except the unique area of each plot and stand is referenced from a table rather than assumed to be 625 m:sup: 2.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Stand.create_num_plots">
+<code class="descname">create_num_plots</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.create_num_plots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a number of plots count for each stand and year.</p>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Capture.num_plots:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the number of plots for that stand and year. Serves no purpose in computation and is only used to generated the required outputs.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1131,18 +1316,23 @@ The keys for the lookup table are the same as the FORM field in TP00110. The com
 
 <dl class="method">
 <dt id="tps_Stand.Stand.get_total_area">
-<code class="descname">get_total_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.get_total_area" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_total_area</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.get_total_area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the total area for each year on that stand and create a reference table to be used when figuring out the per hectare output. The percent of area on the plot over the percent of the area of the stand is the proportion represented by that plot.</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Self.total_area_query:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">&#8220;SELECT year, sum(area_m2_corr) from plotAreas where standid like &#8216;{standid}&#8217; group by year&#8221;</td>
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">XFACTOR.total_areas has the areas by stand, like this:</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
 </tr>
 </tbody>
 </table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">XFACTOR</span><span class="o">.</span><span class="n">total_areas</span><span class="p">[</span><span class="s">&#39;hr03&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="mi">1984</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1985</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1986</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1988</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1989</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">2000</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">2007</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1978</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1995</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -1166,127 +1356,105 @@ The keys for the lookup table are the same as the FORM field in TP00110. The com
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong></p>
+<p>Populates Stand.eqns with a reference of &#8216;species&#8217; : &#8216;function&#8217;, where the function is a pointer to the appropriate equation form populated by parameters extracted from TP00110</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tps_Stand.Stand.update_mort">
-<code class="descname">update_mort</code><span class="sig-paren">(</span><em>is_mort</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.update_mort" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a new dbh dictionary for the stand based on whether or not a year is a mortality year. If it is not a mortality year, the dictionary is the same as the original. If it is a mortality year, the dead trees are shifted to the subsequent year.</p>
-<p>The bisect right function determines the windowing years from a given list around a given input year.</p>
+<dt id="tps_Stand.Stand.update_all_missing_trees">
+<code class="descname">update_all_missing_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.update_all_missing_trees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the missing trees from self.missing and try to match each to a tree in the main dictionary that is alive in the preceding year from self.decent_years, and then return a copy of that tree to the year it is missing, so we can compute its biomass.</p>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">List_of_live_years:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">a list of years when checks were performed that were not mortality only</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">Replacement_year_index:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the index in the list of valid years to get the year of replacement from. It needs to precede the missing year</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Dead_year:</th><td class="field-body">the year of the mortality check to be aggregated to a selection from list_of_live_years</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Is_mort:</th><td class="field-body">Boolean value of whether or not we should update mortality. If it was not a mortality year, we shifted the original output into the shifted dictionary using check_mort, without changing a value!</td>
+<tr class="field-even field"><th class="field-name" colspan="2">Replacement_year:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the year whose data we use to replace the missing eyar</td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Stand.write_individual_trees">
+<code class="descname">write_individual_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_individual_trees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a csv file, containing the tree measurements for the individual trees on the stand.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.write_stand_composite">
 <code class="descname">write_stand_composite</code><span class="sig-paren">(</span><em>Biomasses</em>, <em>Biomasses_Agg</em>, <em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_composite" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), Basal Area (m <sup>2</sup>) and wood density by species with a row of &#8220;all&#8221; containing only the TPH, Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), and Basal Area (m <sup>2</sup>)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Stand.Stand.write_stand_dead">
-<code class="descname">write_stand_dead</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_dead" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates an output file containing dead Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), and wood density, by species</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Stand.Stand.write_stand_live">
-<code class="descname">write_stand_live</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_live" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates an output file containing ingrowth Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), and wood density, by species</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Stand.Stand.write_stand_normalized">
-<code class="descname">write_stand_normalized</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_normalized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates an output file containing ingrowth Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), and wood density, by species</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Stand.Stand.write_stand_normalized_aggregate">
-<code class="descname">write_stand_normalized_aggregate</code><span class="sig-paren">(</span><em>Biomasses_Agg</em>, <em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_normalized_aggregate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates an output file containing ingrowth Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), and wood density, not by species but for the whole stand.</p>
-<p>Uses the Capture object to tell the total number of plots on that stand during that year</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tps_Stand.Stand.write_stands_ingrowth">
-<code class="descname">write_stands_ingrowth</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stands_ingrowth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates an output file for stands which does NOT break the live, dead, and ingrowth Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), and wood density, by species, into separate files</p>
-</dd></dl>
-
-</dd></dl>
-
-<span class="target" id="module-tps_cli"></span><dl class="function">
-<dt id="tps_cli.choose_operation">
-<code class="descclassname">tps_cli.</code><code class="descname">choose_operation</code><span class="sig-paren">(</span><em>analysis_type</em>, <em>target_type</em>, <em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.choose_operation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Selects which analyses to run based on inputs...</p>
-<p>By species and aggregate inputs are together in a file, but the aggregate is called &#8220;ALL&#8221; for its species, and it has no density.</p>
+<dd><p>Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), Basal Area (m <sup>2</sup>) by species with a row of &#8220;all&#8221; containing the composite TPH, Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), and Basal Area (m <sup>2</sup>)</p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Analysis_type:</th><td class="field-body">&#8220;t&#8221;, &#8220;s&#8221;, or &#8220;q&#8221; for tree, stand, or quality control.</td>
+<tr class="field-odd field"><th class="field-name">Biomasses:</th><td class="field-body">data structure containing portions of biomass and other desired outputs, grouped by species</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Target_type:</th><td class="field-body">&#8220;t&#8221;, &#8220;w&#8221;, &#8220;s&#8221;, &#8220;p&#8221;, &#8220;a&#8221; for one tree, whole stand by tree, one stand, one study, or &#8220;a&#8221; for all</td>
+<tr class="field-even field"><th class="field-name">Biomasses_Agg:</th><td class="field-body">data structure containing the aggregate biomass over all the species.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">the reference object used for computing areas and such. You&#8217;ve already created it. No worries.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>OUTPUTS</strong></p>
+<p>Writes a file named <cite>standid + stand_composite_output.csv</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tps_Stand.Stand.write_stand_rob">
+<code class="descname">write_stand_rob</code><span class="sig-paren">(</span><em>RobBiomass</em>, <em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_rob" title="Permalink to this definition">¶</a></dt>
+<dd><p>quick little method that ignores all the detail plot (trees &lt; 15.)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="npp">
+<h2>NPP:<a class="headerlink" href="#npp" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">tps_NPP.py</span></code> contains classes and functions for computing the dynamic attributes on the stand and plot scale. Each stand is defined as all the plots during a given re-measurement year. Deltas are defined as the difference between remeasurement years, where mortalities are moved &#8220;up&#8221; to subsequent remeasurements and additions are moved &#8220;down&#8221; to early remeasurements. Both plot and stand attributes are computed on a per-hectare basis. NPP is computed on an annual basis. The rest of the details regarding the static stand and plot attributes apply to the dynamic attributes as well. There is no such thing as NPP on individual trees.</p>
+<span class="target" id="module-tps_NPP"></span><dl class="function">
+<dt id="tps_NPP.compute_NPP">
+<code class="descclassname">tps_NPP.</code><code class="descname">compute_NPP</code><span class="sig-paren">(</span><em>Stand</em>, <em>Bios</em>, <em>type</em>, <em>breakdown_type</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.compute_NPP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes NPP from either a Biomasses data structure or a Biomasses_agg data structure. The Biomasses data structure is species-specific, while the Biomasses_agg data structure is a sum of all the species.</p>
+<p><strong>INPUT VARIABLES</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Stand:</th><td class="field-body">a tps_Stand generated Stand which has the metadata needed for the output</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Bios:</th><td class="field-body">a Biomasses or Biomasses_agg data structure</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">either <cite>species</cite> or <cite>agg</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Breakdown_type:</th><td class="field-body">either <cite>stand</cite> or <cite>plot</cite></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="function">
-<dt id="tps_cli.single_tree_on_tree">
-<code class="descclassname">tps_cli.</code><code class="descname">single_tree_on_tree</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.single_tree_on_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes a single tree&#8217;s values. Needs &#8220;t&#8221;,&#8221;t&#8221;, &#8220;tree id&#8221;.</p>
+<dt id="tps_NPP.plot_wrap_compute_NPP">
+<code class="descclassname">tps_NPP.</code><code class="descname">plot_wrap_compute_NPP</code><span class="sig-paren">(</span><em>Bios_plot</em>, <em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.plot_wrap_compute_NPP" title="Permalink to this definition">¶</a></dt>
+<dd><p>To compute NPP by plot we need to wrap around the stand method, so that the years for the plot are specific.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="tps_cli.single_tree_qc">
-<code class="descclassname">tps_cli.</code><code class="descname">single_tree_qc</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.single_tree_qc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes a single tree&#8217;s checks for qc. Needs &#8220;q&#8221;,&#8221;t&#8221;, &#8220;tree id&#8221;.</p>
+<dt id="tps_NPP.write_NPP_composite_plot">
+<code class="descclassname">tps_NPP.</code><code class="descname">write_NPP_composite_plot</code><span class="sig-paren">(</span><em>Plot</em>, <em>BM_plot</em>, <em>BMA_plot</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.write_NPP_composite_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Biomass for each species and for the stand as a whole together.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="tps_cli.stand_on_stand">
-<code class="descclassname">tps_cli.</code><code class="descname">stand_on_stand</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.stand_on_stand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the biomass for a single stand.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tps_cli.stand_on_stand_qc">
-<code class="descclassname">tps_cli.</code><code class="descname">stand_on_stand_qc</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.stand_on_stand_qc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks tree populations at the stand scale (no output function written yet!)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tps_cli.stand_on_tree">
-<code class="descclassname">tps_cli.</code><code class="descname">stand_on_tree</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.stand_on_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes all the trees on one stand as individuals. Needs &#8220;t&#8221;,&#8221;s&#8221;,&#8221;standid&#8221;.
-Standid should be four upper case characters.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tps_cli.stand_on_tree_qc">
-<code class="descclassname">tps_cli.</code><code class="descname">stand_on_tree_qc</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.stand_on_tree_qc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes all the trees on one stand as individuals. Needs &#8220;q&#8221;,&#8221;w&#8221;,&#8221;standid&#8221;.
-Standid should be four upper case characters.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tps_cli.study_on_stands">
-<code class="descclassname">tps_cli.</code><code class="descname">study_on_stands</code><span class="sig-paren">(</span><em>target</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_cli.study_on_stands" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes all the stands in a certain study code (biomass)</p>
+<dt id="tps_NPP.write_NPP_composite_stand">
+<code class="descclassname">tps_NPP.</code><code class="descname">write_NPP_composite_stand</code><span class="sig-paren">(</span><em>Stand</em>, <em>BM</em>, <em>BMA</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.write_NPP_composite_stand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Biomass for each species and for the stand as a whole together.</p>
 </dd></dl>
 
 </div>
@@ -1314,6 +1482,7 @@ Standid should be four upper case characters.</p>
 <li><a class="reference internal" href="#biomass-equations">Biomass Equations:</a></li>
 <li><a class="reference internal" href="#individual-trees">Individual Trees:</a></li>
 <li><a class="reference internal" href="#stands">Stands:</a></li>
+<li><a class="reference internal" href="#npp">NPP:</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>

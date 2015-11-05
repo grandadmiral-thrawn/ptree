@@ -855,14 +855,20 @@ class Stand(object):
 
         return Biomasses_Agg
 
-    def write_stand_rob(self, RobBiomass, XFACTOR):
+    def write_stand_rob(self, RobBiomass, XFACTOR, *args):
         """ quick little method that ignores all the detail plot (trees < 15.)
         """
 
-        dirout = "sample_output"
-        filename_out = self.standid + "_stand_rob_output.csv"
-        os.path.join(dirout, filename_out)
-        with open(filename_out,'w') as writefile:
+        if args and args != []:
+            filename_out = args[0]
+            mode = args[1]
+        else:
+            dirout = "sample_output"
+            filename_out = self.standid + "_stand_rob_output.csv"
+            os.path.join(dirout, filename_out)
+            mode = 'w'
+            
+        with open(filename_out,mode) as writefile:
             writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
 
             writer.writerow(['DBCODE','ENTITY','STANDID','SPECIES','YEAR','PORTION','TPH_NHA','BA_M2HA','VOL_M3HA','BIO_MGHA','JENKBIO_MGHA', 'NO_PLOTS'])
@@ -890,7 +896,7 @@ class Stand(object):
                     writer.writerow(new_row_2)
                     writer.writerow(new_row_3)
 
-    def write_stand_composite(self, Biomasses, Biomasses_Agg, XFACTOR):
+    def write_stand_composite(self, Biomasses, Biomasses_Agg, XFACTOR, *args):
         """ Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), Basal Area (m \ :sup:`2`) by species with a row of "all" containing the composite TPH, Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), and Basal Area (m \ :sup:`2`)
 
         **INPUTS**
@@ -904,10 +910,16 @@ class Stand(object):
         Writes a file named `standid + stand_composite_output.csv`
         """
 
-        dirout = "sample_output"
-        filename_out = self.standid + "_stand_composite_output.csv"
-        os.path.join(dirout, filename_out)
-        with open(filename_out,'w') as writefile:
+        if args and args != []:
+            filename_out = args[0]
+            mode = args[1]
+        else:
+
+            dirout = "sample_output"
+            filename_out = self.standid + "_stand_composite_output.csv"
+            os.path.join(dirout, filename_out)
+            mode = 'w'
+        with open(filename_out,mode) as writefile:
             writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
 
             writer.writerow(['DBCODE','ENTITY','STANDID','SPECIES','YEAR','PORTION','TPH_NHA','BA_M2HA','VOL_M3HA','BIO_MGHA','JENKBIO_MGHA', 'NO_PLOTS'])
@@ -953,17 +965,22 @@ class Stand(object):
                 writer.writerow(new_row5)
                 writer.writerow(new_row6)
 
-    def write_individual_trees(self):
+    def write_individual_trees(self, *args):
         """ Writes a csv file, containing the tree measurements for the individual trees on the stand.
 
         .. note: this method is faster than using `tps_Tree`
         """
 
-        dirout = "sample_output"
-        filename_out = self.standid + "_stand_indvtree_output.csv"
-        os.path.join(dirout, filename_out)
-        
-        with open(filename_out,'w') as writefile:
+        if args and args != []:
+            filename_out = args[0]
+            mode = args[1]
+        else:
+
+            dirout = "sample_output"
+            filename_out = self.standid + "_stand_indvtree_output.csv"
+            os.path.join(dirout, filename_out)
+            mode = 'w'
+        with open(filename_out, mode) as writefile:
             writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
 
             headers = ['DBCODE', 'ENTITY', 'TREEID', 'COMPONENT', 'STATUS', 'YEAR', 'BA_M2', 'VOL_M3', 'BIO_MG', 'JENKBIO_MG']
@@ -1189,7 +1206,7 @@ class Plot(Stand):
         return Biomasses_Agg
 
 
-    def write_plot_composite(self, Biomasses, Biomasses_Agg, XFACTOR):
+    def write_plot_composite(self, Biomasses, Biomasses_Agg, XFACTOR, *args):
         """ Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), Basal Area (m \ :sup:`2`) by species with a row of "all" containing the composite TPH, Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), and Basal Area (m \ :sup:`2`)
 
         **INPUTS**
@@ -1201,6 +1218,8 @@ class Plot(Stand):
         **OUTPUTS**
 
         Writes a file named `standid + stand_composite_output.csv`
+
+        If an additional argument is specified, this is the generic output file to write to for the `--all` command line method
         """
 
         try:
@@ -1208,10 +1227,17 @@ class Plot(Stand):
         except Exception:
             detail_reference = None
 
-        dirout = "sample_output"
-        filename_out = self.Stand.standid + "_plot_composite_output.csv"
-        os.path.join(dirout, filename_out)
-        with open(filename_out,'w') as writefile:
+        if args and args != []:
+            filename_out = args[0]
+            mode = args[1]
+        else:
+
+            dirout = "sample_output"
+            filename_out = self.Stand.standid + "_plot_composite_output.csv"
+            os.path.join(dirout, filename_out)
+            mode = 'w'
+        
+        with open(filename_out, mode) as writefile:
             writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
 
             writer.writerow(['DBCODE','ENTITY','PLOTID','SPECIES','YEAR','PORTION','TPH_NHA','BA_M2HA','VOL_M3HA','BIO_MGHA','JENKBIO_MGHA'])
