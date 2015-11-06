@@ -66,11 +66,10 @@ def maxref(dbh, species):
         try:
             if maxlookup[species.rstrip().lower()] <= float(dbh): 
                 return "big"
-            
             else:
                 return "normal"
 
-        except Exception as e5:
+        except Exception:
             
             return "normal"
 
