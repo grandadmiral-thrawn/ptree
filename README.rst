@@ -338,37 +338,4 @@ If you have more than one plot, your output will in a file named `selected_studi
 If you just have one plot, your output will be in a file named `[name of whatever study]_npp_output.csv`. It will be organized like `DBCODE`,`ENTITY`, `STANDID`, `YEAR_BEGIN`, `YEAR_END`, `SPECIES`, `DELTA_TPH_NHA`,`DELTA_BA_M2HA`,`DELTA_VOL_M3HA`,`DELTA_BIO_MGHA`,`DELTA_JENKBIO_MGHA`, `MEAN_ANNUAL_NPP_BIO`, `MEAN_ANNUAL_NPP_JENKBIO`.
 
 
-==============
-Output Options
-==============
-
-.. note: This section is in progress right now.
-
-
-By default, all stands and plots are in lower case.  If you receive an error, check that your inputs are in lower case.
-
-You can control the ``target`` to be a tree, stand, plot, or study.:
-
-=================   =====================================================
-``ncna000100005``   Only addresses the tree NCNA000100005.
-``ncna``            Addresses all trees on stand NCNA or NCNA the stand as a whole.
-``hsgy``            Addresses all stands in the HSGY study.
-``[ncna, ch11]`     Addresses all trees on stand NCNA and on stand CH11 or the stands NCNA and CH11 as wholes.
-=================   =====================================================
-
-
-More about the command line interface (cli).
-
-==========  ==================
-Character   Stands for
-==========  ==================
-``t``       tree.
-``s``       stand.
-``w``       stand by tree.
-``p``       study.
-``q``       quality control.
-``a``       all.
-``n``       net primary productivity
-==========  ==================
-
 
