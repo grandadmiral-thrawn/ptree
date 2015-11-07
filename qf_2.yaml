@@ -14,7 +14,6 @@ stand:
     query_mortalities: "select distinct plotid, year from fsdbdata.dbo.tp00112 where activity like 'M'"
     query_replacements: "select distinct(year) from fsdbdata.dbo.tp00112 where plotid like '{standid}%' and activity in ('R','E')"
     query_all_year: "select distinct(year) from fsdbdata.dbo.tp00102 where treeid like '{standid}%'"
-    lite_context_dtl_2: "SELECT plot, year, detailplot,PLOT_AREA_M2_CORR, DBH_MINIMUM from plotAreas where standid like '{standid}'"
     query: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, fsdbdata.dbo.tp00102.year, fsdbdata.dbo.tp00102.dbh_code, fsdbdata.dbo.tp00101.PSP_STUDYID FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00102 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid WHERE fsdbdata.dbo.tp00101.standid like '{standid}' ORDER BY fsdbdata.dbo.tp00102.year ASC, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.plotid"
     query_trees_m: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00103.dbh_last, fsdbdata.dbo.tp00103.year FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00103 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00103.treeid WHERE fsdbdata.dbo.tp00101.standid like '{standid}' ORDER BY fsdbdata.dbo.tp00103.year ASC"
     query_species: "SELECT DISTINCT(fsdbdata.dbo.tp00101.species) from fsdbdata.dbo.tp00101 WHERE fsdbdata.dbo.tp00101.standid like '{standid}'"
@@ -44,3 +43,5 @@ execution:
     list_of_trees: "select treeid from fsdbdata.dbo.tp00101 where treeid in ({list_of_ids})"
     list_of_stands: "select distinct(standid) from fsdbdata.dbo.tp00101 where PSP_STUDYID like '{studyid}'"
     list_of_all_stands: "select distinct(standid) from fsdbdata.dbo.tp00101"
+    list_of_all_studies: "select distinct(psp_studyid) from fsdbdata.dbo.tp00101"
+    list_of_stands_in_studies: "select distinct(standid) from fsdbdata.dbo.tp00101 where psp_studyid like '{studyid}'"

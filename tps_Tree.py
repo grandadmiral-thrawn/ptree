@@ -457,7 +457,7 @@ class Tree(object):
 
         self.cur.execute(sql)
 
-        for row in cur:
+        for row in self.cur:
             if int(row[0]) not in self.additional.keys():
                 self.additional[int(row[0])] = {'tag': str(row[1]), 'notes': str(row[2])}
             elif int(row[0]) in self.additional.keys():
@@ -615,7 +615,7 @@ class Tree(object):
 
                 try:
 
-                    new_row = ['TP001', '13', self.tid.upper(), self.component, each_state[0], round(Bios[1][index],6), round(Bios[0][index][1],4), round(Bios[0][index][0],4),  round(Bios[0][index][2],4)]
+                    new_row = ['TP001', '11', self.tid.upper(), self.component, each_state[0], round(Bios[1][index],6), round(Bios[0][index][1],4), round(Bios[0][index][0],4),  round(Bios[0][index][2],4)]
                     
                     writer.writerow(new_row)
 
@@ -625,7 +625,7 @@ class Tree(object):
                         self.state[-1][1] = self.state[-2][1]
 
 
-                        new_row = ['TP001', '13', self.tid.upper(), self.component, each_state[0],round(Bios[1][index],6), round(Bios[0][index][1],4), round(Bios[0][index][0],4), round(Bios[0][index][2],4)]
+                        new_row = ['TP001', '11', self.tid.upper(), self.component, each_state[0],round(Bios[1][index],6), round(Bios[0][index][1],4), round(Bios[0][index][0],4), round(Bios[0][index][2],4)]
                         
                         writer.writerow(new_row)
 

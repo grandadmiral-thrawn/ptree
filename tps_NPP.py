@@ -226,15 +226,22 @@ def compute_NPP(Stand, Bios, type, breakdown_type):
     return NPP_output
 
 
-def write_NPP_composite_stand(Stand, BM, BMA):
+def write_NPP_composite_stand(Stand, BM, BMA, *args):
     """ Computes the Biomass for each species and for the stand as a whole together.
     """
     npp_out = compute_NPP(Stand, BM, 'species', 'stand')
     npp_out_agg = compute_NPP(Stand, BMA, 'agg', 'stand')
 
-    filename_out = Stand.standid.lower() + "_stand_composite_NPP.csv"
+    if args and args != []:
+        filename_out = args[0]
+        mode = args[1]
+    else:
+        filename_out = Stand.standid.lower() + "_stand_composite_NPP.csv"
+        mode = 'w'
 
-    with open(filename_out, 'w') as writefile:
+    
+
+    with open(filename_out, mode) as writefile:
         writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
         header = ['DBCODE','ENTITY', 'STANDID', 'YEAR_BEGIN', 'YEAR_END', 'SPECIES', 'DELTA_TPH_NHA','DELTA_BA_M2HA','DELTA_VOL_M3HA','DELTA_BIO_MGHA','DELTA_JENKBIO_MGHA', 'MEAN_ANNUAL_NPP_BIO', 'MEAN_ANNUAL_NPP_JENKBIO', 'NO_PLOTS']
         writer.writerow(header)
@@ -259,15 +266,22 @@ def write_NPP_composite_stand(Stand, BM, BMA):
                 writer.writerow(new_row)
                 
 
-def write_NPP_composite_plot(Plot, BM_plot, BMA_plot):
+def write_NPP_composite_plot(Plot, BM_plot, BMA_plot, *args):
     """ Computes the Biomass for each species and for the stand as a whole together.
     """
     npp_out = plot_wrap_compute_NPP(BM_plot, 'species')
     npp_out_agg = plot_wrap_compute_NPP(BMA_plot, 'agg')
 
-    filename_out = Plot.Stand.standid.lower() + "_plot_composite_NPP.csv"
+    if args and args != []:
+        filename_out = args[0]
+        mode = args[1]
+    else:
+        filename_out = Plot.Stand.standid.lower() + "_plot_composite_NPP.csv"
+        mode = 'w'
 
-    with open(filename_out, 'w') as writefile:
+    
+
+    with open(filename_out, mode) as writefile:
         writer = csv.writer(writefile, delimiter = ",", quoting=csv.QUOTE_NONNUMERIC)
         header = ['DBCODE','ENTITY', 'PLOTID', 'YEAR_BEGIN', 'YEAR_END', 'SPECIES', 'DELTA_TPH_NHA','DELTA_BA_M2HA','DELTA_VOL_M3HA','DELTA_BIO_MGHA','DELTA_JENKBIO_MGHA', 'MEAN_ANNUAL_NPP_BIO', 'MEAN_ANNUAL_NPP_JENKBIO']
         
