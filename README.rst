@@ -15,11 +15,11 @@ TPS is a set of Python 3 modules for the aggregation of trees, plots, and stands
 Main Modules
 =============
 
-* tps_Tree <- individual trees, to be computed ID by ID, and perform checks on individuals, ID by ID
-* tps_Stand <- stands, plots on stands, trees on stands, for larger-scale computations
-* tps_NPP <- net primary productivity for plots and stands
-* tps_cli <- command line interface
-* tps_Sample <- tests - queries to 'ncna' that should always work
+* `tps_Tree` <- individual trees, to be computed ID by ID, and perform checks on individuals, ID by ID
+* `tps_Stand` <- stands, plots on stands, trees on stands, for larger-scale computations
+* `tps_NPP` <- net primary productivity for plots and stands
+* `tps_cli` <- command line interface
+* `tps_Sample` <- tests - queries to 'ncna' that should always work
 * SQL queries and configs in yaml files for interoperability!
 * lots of docs!
 
@@ -28,32 +28,37 @@ Installation
 ============
 
 Set up Python 3 on your computer, and then run the darn thing!
-Best to start with tps_Sample, which will run a series of test trees and stands on a known dataset (that it will access from the server to test your connection) and output the results. To run it do:
+Best to start with `tps_Sample`, which will run a series of test trees and stands on a known dataset (that it will access from the server to test your connection) and output the results. To run it do:
 
 .. code-block:: bash
 
     $ python3 tps_Sample.py
 
-Assuming this goes well, please read the docs! The docs are in index.html, currently in the `_build/` folder. You'll be running the remainder of your analyses out of the command line interface for now, but there are a lot of options.
+Assuming this goes well, please read the docs! The docs are in index.html, currently in the `_build/` folder. You'll be running the remainder of your analyses out of the command line interface (`tps_cli.py`) for now, but there are a lot of options. 
+
+If you have an issue with the code, please submit it using github and github only. Issues submitted via email or other methods will not be addressed. To get a fixed copy of the program, you'll need to install github and get your own clone of the repository, and keep it up to date with this master. Fox is not responsible for helping you maintain your local copy of the repository.
 
 -------------------
 Development version
 -------------------
 
-The **latest development version** can be installed directly from GitHub. Use this repository. Note that when Fox leaves, maintenance will be sporadic at best.
+The **latest development version** can be installed directly from GitHub. Use this repository. Note that when Fox leaves, maintenance will be sporadic at best. Issues and pull requests will be addressed when possible, with pull requests receiving far more attention (as it shows you made an attempt to fix your own problems first :) ).
 
--------------------------------
+===============================
 Documentation in the Literature
--------------------------------
+===============================
 
-For computation of height (where needed), the `Garman et al.(1995)<http://andrewsforest.oregonstate.edu/pubs/pdf/pub1445.pdf>_` methods were used, and height was computed as `Ht_m = 1.37 + (b0*(1-exp(b1*DBH_cm))**b2)`
+The biomass computations began with computations by Gody and Lutz. These were later passed on to Becky, Rob, and myself. There are two main sources, BIOPAK and dendrometer regressions. Dendrometer regressions are from volume, and use the TV009 or TP072 databases available from the FSDB. The TP072 database references the `BIOPAK <http://andrewsforest.oregonstate.edu/data/tools/software/biopak.cfm?topnav=149>`_ software. Metadata and data from TV009 is `here <http://andrewsforest.oregonstate.edu/data/abstract.cfm?dbcode=TV009>`_. 
 
+For computation of height (where needed), the `Garman <http://andrewsforest.oregonstate.edu/pubs/pdf/pub1445.pdf>`_  et al.(1995) methods were used, and height was computed as `Ht_m = 1.37 + (b0*(1-exp(b1*DBH_cm))**b2)`. Height computations are largely internal to the `biomass_basis.py` module.
+
+If you are at Oregon State, you can also access the T-drive under GROUPS > FSDB > TP001 > biomass programs to see the original documentation from Gody.
 
 ====================
 Command Line Options
 ====================
 
-The command line tool has a variety of options for your output pleasure. These have all been tested as of 11-06-2015 and work. 
+The command line tool has a variety of options for your output. These have all been tested as of 11-06-2015. The command line options are set to organize your access to the data by the type of analysis, the scale of the analysis, the aggregation of the analysis, and finally specific targets for the analysis. Because there are some combinations of these that simply make no sense (`bio tree composite ncna00100001`, for example, could not run because there is no stand over which to aggregate by species one single tree), these options are blocked programmatically. Options that are allowed are as follows:
 
 --------------------
 Details About 1 Tree
