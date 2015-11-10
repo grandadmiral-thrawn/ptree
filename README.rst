@@ -15,11 +15,11 @@ TPS is a set of Python 3 modules for the aggregation of trees, plots, and stands
 Main Modules
 =============
 
-* `tps_Tree` <- individual trees, to be computed ID by ID, and perform checks on individuals, ID by ID
-* `tps_Stand` <- stands, plots on stands, trees on stands, for larger-scale computations
-* `tps_NPP` <- net primary productivity for plots and stands
-* `tps_cli` <- command line interface
-* `tps_Sample` <- tests - queries to 'ncna' that should always work
+* ``tps_Tree`` <- individual trees, to be computed ID by ID, and perform checks on individuals, ID by ID
+* ``tps_Stand`` <- stands, plots on stands, trees on stands, for larger-scale computations
+* ``tps_NPP`` <- net primary productivity for plots and stands
+* ``tps_cli`` <- command line interface
+* ``tps_Sample` <- tests - queries to 'ncna' that should always work
 * SQL queries and configs in yaml files for interoperability!
 * lots of docs!
 
@@ -28,13 +28,13 @@ Installation
 ============
 
 Set up Python 3 on your computer, and then run the darn thing!
-Best to start with `tps_Sample`, which will run a series of test trees and stands on a known dataset (that it will access from the server to test your connection) and output the results. To run it do:
+Best to start with ``tps_Sample``, which will run a series of test trees and stands on a known dataset (that it will access from the server to test your connection) and output the results. To run it do:
 
 .. code-block:: bash
 
     $ python3 tps_Sample.py
 
-Assuming this goes well, please read the docs! The docs are in index.html, currently in the `_build/` folder. You'll be running the remainder of your analyses out of the command line interface (`tps_cli.py`) for now, but there are a lot of options. 
+Assuming this goes well, please read the docs! The docs are in index.html, currently in the ``_build/`` folder. You'll be running the remainder of your analyses out of the command line interface (`tps_cli.py`) for now, but there are a lot of options. 
 
 If you have an issue with the code, please submit it using github and github only. Issues submitted via email or other methods will not be addressed. To get a fixed copy of the program, you'll need to install github and get your own clone of the repository, and keep it up to date with this master. Fox is not responsible for helping you maintain your local copy of the repository.
 
@@ -50,27 +50,27 @@ Documentation in the Literature
 
 The biomass computations began with computations by Gody and Lutz. These were later passed on to Becky, Rob, and myself. There are two main sources, BIOPAK and dendrometer regressions. Dendrometer regressions are from volume, and use the TV009 or TP072 databases available from the FSDB. The TP072 database references the `BIOPAK <http://andrewsforest.oregonstate.edu/data/tools/software/biopak.cfm?topnav=149>`_ software. Metadata and data from TV009 is `here <http://andrewsforest.oregonstate.edu/data/abstract.cfm?dbcode=TV009>`_. 
 
-For computation of height (where needed), the `Garman <http://andrewsforest.oregonstate.edu/pubs/pdf/pub1445.pdf>`_  et al.(1995) methods were used, and height was computed as ```Ht_m = 1.37 + (b0*(1-exp(b1*DBH_cm))**b2)```. Height computations are largely internal to the `biomass_basis.py` module.
+For computation of height (where needed), the `Garman <http://andrewsforest.oregonstate.edu/pubs/pdf/pub1445.pdf>`_  et al.(1995) methods were used, and height was computed as ``Ht_m = 1.37 + (b0*(1-exp(b1*DBH_cm))**b2)``. Height computations are largely internal to the `biomass_basis.py` module.
 
-If you are at Oregon State, you can also access the T-drive under GROUPS > FSDB > TP001 > biomass programs to see the original documentation from Gody.
+If you are at Oregon State, you can also access the T-drive under ``GROUPS > FSDB > TP001 > biomass_programs`` to see the original documentation from Gody.
 
 ====================
 Command Line Options
 ====================
 
-The command line tool has a variety of options for your output. These have all been tested as of 11-06-2015. The command line options are set to organize your access to the data by the type of analysis, the scale of the analysis, the aggregation of the analysis, and finally specific targets for the analysis. Because there are some combinations of these that simply make no sense (```bio tree composite ncna00100001```, for example, could not run because there is no stand over which to aggregate by species one single tree), these options are blocked programmatically. Options that are allowed are as follows:
+The command line tool has a variety of options for your output. These have all been tested as of 11-06-2015. The command line options are set to organize your access to the data by the type of analysis, the scale of the analysis, the aggregation of the analysis, and finally specific targets for the analysis. Because there are some combinations of these that simply make no sense (``bio tree composite ncna00100001``, for example, could not run because there is no stand over which to aggregate by species one single tree), these options are blocked programmatically. Options that are allowed are as follows:
 
 --------------------
 Details About 1 Tree
 --------------------
 
-This command will get you details about 1 tree and either print them to the screen or to a file. Pretend the tree of your desire is `ncna0001000001`
+This command will get you details about 1 tree and either print them to the screen or to a file. Pretend the tree of your desire is ``ncna0001000001``
 
 .. code-block:: bash
 
     $ python3 tps_cli.py dtx ncna000100001
 
-The computer will ask if you would like to have a file, and if so to type ```Y```. If you type `Y`, the output will go to a file named (in this case for ```ncna0001000001```) ```ncna000100001_tags_and_checks.csv```. If you don't type ```Y``` (you can even just press enter), you will see on your screen something like:
+The computer will ask if you would like to have a file, and if so to type ``Y``. If you type ``Y``, the output will go to a file named (in this case for ``ncna0001000001``) ``ncna000100001_tags_and_checks.csv``. If you don't type ``Y`` (you can even just press enter), you will see on your screen something like:
 
 .. code-block:: bash
 
@@ -121,7 +121,7 @@ To compute the biomass at the stand scale for all of the stands, use this comman
 
     $ python3 tps_cli.py bio stand composite --all
 
-Your output will be in a file named ```all_stands_biomass_composite_output.csv```. It will be organized like `DBCODE`,`ENTITY`,`STANDID`,`SPECIES`,`YEAR`,`PORTION`,`TPH_NHA`,`BA_M2HA`,`VOL_M3HA`,`BIO_MGHA`,`JENKBIO_MGHA`.
+Your output will be in a file named ```all_stands_biomass_composite_output.csv```. It will be organized like ```DBCODE```,```ENTITY```,```STANDID```,```SPECIES```,```YEAR```,```PORTION```,```TPH_NHA```,```BA_M2HA```,```VOL_M3HA```,```BIO_MGHA```,```JENKBIO_MGHA```.
 
 ----------------------------------------------------------
 Biomass at the Stand Scale for a set of one or more stands
