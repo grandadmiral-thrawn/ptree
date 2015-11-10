@@ -4,7 +4,7 @@
 import math
 
 def maxref(dbh, species):
-    """ Check if given dbh in cm and given species is bigger than the maximum for that combination. The maximum was found from determining the top 1 percent of dbh's in cm for each species from all the historical data. This function operates behind the scenes on inputs from TP00102 (dbh's) and TP00101(species). It populates the eqns attribute of the Tree or Stand classes so that the right equation or set of equations will be called. 
+    """ Check if given dbh (in cm) and given species is bigger than the maximum for that combination. The maximum was found from determining the top 1 percent of dbh's in cm for each species from all the historical data. This function operates behind the scenes on inputs from TP00102 (dbh's) and TP00101(species). It populates the .eqns attribute of the Tree or Stand classes so that the right equation or set of equations will be called. 
 
     **INPUTS**
     
@@ -74,9 +74,14 @@ def maxref(dbh, species):
             return "normal"
 
 def as_lnln(woodden, dbh, b1, b2, b3, j1, j2, *args):
-    """ Generates biomass equations based on inputs of `b1`, `b2`, `b3`, and wood density for dbh, in cm. 
+    """ Generates biomass equations based on inputs of `b1`, `b2`, `b3`, and wood density for a given dbh (in cm). 
 
     Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm. 
+
+    This equation is taken from TV00908.
+
+    The math form of this equation is: biomass = b1 * wood density * ( b2 * dbh ** b3 )
+    The math form for Jenkins is jenkins' biomass = 0.001 * exp( j1 + j2 * ln(dbh))
 
     **INPUTS**
 
@@ -100,12 +105,16 @@ def as_lnln(woodden, dbh, b1, b2, b3, j1, j2, *args):
 
 
 def as_d2ht(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
-    """ Generates biomass equations based on inputs of `b1`, `b2`, `b3`, `h1`, `h2`, and `h3` and wood density for dbh, in cm.
+    """ Generates biomass equations based on inputs of `b1`, `b2`, `b3`, `h1`, `h2`, and `h3` and wood density for a given dbh (in cm).
 
     Internally, a conversion to meters on dbh is performed to match the equation documentation specified for 
-    `TV00908<ttp://andrewsforest.oregonstate.edu/lter/data/domains.cfm?domain=enum&dbcode=TV009&attid=1321&topnav=8>`_.
+    `TV00908<http://andrewsforest.oregonstate.edu/lter/data/domains.cfm?domain=enum&dbcode=TV009&attid=1321&topnav=8>`_.
 
     Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm.
+
+    The math form of this equation is: biomass = wood density * height * b1 * (0.01 * dbh)**2
+    The math form for Jenkins is jenkins' biomass = 0.001 * exp( j1 + j2 * ln(dbh))
+
 
     **INPUTS**
 
@@ -137,6 +146,9 @@ def as_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
 
     The BioPak method computes total aboveground biomass explicitly, rather than from volume. In most cases, the original output from the equations as specified in BioPak was in grams, and here it is converted into Megagrams.
 
+    The math form for this equation is: biomass = 1.0 * 10**(-6) * exp( b1 + b2 * ln(dbh))
+    The math form for Jenkins is jenkins' biomass = 0.001 * exp( j1 + j2 * ln(dbh))
+
     **INPUTS**
 
     :woodden: wood density, 
@@ -164,6 +176,9 @@ def as_chinq_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
 
     Unlike many other BioPak methods, the chinquapin functions usually need height. Height is calculated here. The height equations are also from BioPak.
 
+    The math form for this equation is: biomass = wood density * height**b1 * b2 * dbh**b3
+    The math form for Jenkins is jenkins' biomass = 0.001 * exp( j1 + j2 * ln(dbh))
+
     **INPUTS**
 
     :woodden: wood density, 
@@ -190,11 +205,14 @@ def as_chinq_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
 def mod_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     """ Generates biomass equations based on inputs of `b1`, `b2`, `b3`, `h1`, `h2`, `h3` and wood density for dbh, in cm.
 
-    THIS IS A VERY SPECIAL EQUATION JUST FOR ACMA
+    THIS IS A VERY SPECIAL EQUATION JUST FOR ACMA!!!  It is based on what is in 654 in BioPak, entity 2. It is what is used by both Lutz and Gody. 
 
     Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm. 
 
-    Unlike many other BioPak methods, the chinquapin functions usually need height. Height is calculated here. The height equations are also from BioPak.
+    ACMA ONLY!!!
+
+    The math form for this equation is: biomass = wood density * b1 * dbh**b2 * height**b3
+    The math form for Jenkins is jenkins' biomass = 0.001 * exp( j1 + j2 * ln(dbh))
 
     **INPUTS**
 
@@ -226,6 +244,8 @@ def as_oak_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
 
     Species in the Quercus (oak) family almost uniquely use this form in BioPak for doing the biomass computation.
 
+    The math form for Jenkins is jenkins' biomass = 0.001 * exp( j1 + j2 * ln(dbh))
+
     **INPUTS**
 
     :woodden: wood density, 
@@ -253,6 +273,8 @@ def as_oak_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
 def jenkins2014(dbh, j3, j4):
     """ Computes 2014 jenkins values for some species. If you add in new parameters, you might want this.
 
+    The math form for Jenkins is jenkins' biomass = 0.001 * exp( j1 + j2 * ln(dbh))
+
     **INPUTS**
     :dbh: cm diameter at breast height
     :j3: first Jenkins2014 parameter
@@ -274,6 +296,7 @@ def which_fx(function_string):
     :as_chinq_biopak: function call for the chinquapin biomass form
     :as_biopak: function call for the biopak form
     :as_d2ht: function call for the d2ht form
+    :mod_biopak: function call for the mod_biopak form
 
     **RETURNS**
 
@@ -284,6 +307,7 @@ def which_fx(function_string):
     'oak_biopak': as_oak_biopak,
     'chinq_biopak': as_chinq_biopak,
     'biopak': as_biopak,
-    'd2ht': as_d2ht}
+    'd2ht': as_d2ht,
+    'mod_biopak': mod_biopak,}
 
     return lookup[function_string]
