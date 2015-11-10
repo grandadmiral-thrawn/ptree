@@ -42,6 +42,13 @@ Development version
 
 The **latest development version** can be installed directly from GitHub. Use this repository. Note that when Fox leaves, maintenance will be sporadic at best.
 
+-------------------------------
+Documentation in the Literature
+-------------------------------
+
+For computation of height (where needed), the `Garman et al.(1995)<http://andrewsforest.oregonstate.edu/pubs/pdf/pub1445.pdf>_` methods were used, and height was computed as `Ht_m = 1.37 + (b0*(1-exp(b1*DBH_cm))**b2)`
+
+
 ====================
 Command Line Options
 ====================
@@ -311,9 +318,9 @@ If you have more than one plot, your output will in a file named `selected_plots
 
 If you just have one plot, your output will be in a file named `[name of whatever plot]_plot_npp_output.csv`. It will be organized like `DBCODE`,`ENTITY`, `PLOTID`, `YEAR_BEGIN`, `YEAR_END`, `SPECIES`, `DELTA_TPH_NHA`,`DELTA_BA_M2HA`,`DELTA_VOL_M3HA`,`DELTA_BIO_MGHA`,`DELTA_JENKBIO_MGHA`, `MEAN_ANNUAL_NPP_BIO`, `MEAN_ANNUAL_NPP_JENKBIO`.
 
--------------------------------------
+--------------------------------------
 NPP at the Stand Scale for All Studies
--------------------------------------
+--------------------------------------
 
 To compute the NPP at the plot scale for all of the plots on all of the studies, use this command. This is basically the same as what would happen if you were to just compute it for all stands.
 
