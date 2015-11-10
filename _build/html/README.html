@@ -53,20 +53,19 @@
 <p>TPS is a set of Python 3 modules for the aggregation of trees, plots, and stands from the USFS reference stands data maintained by the Corvallis Forest Science Lab.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#main-features" id="id3">Main Features</a></li>
-<li><a class="reference internal" href="#installation" id="id4">Installation</a></li>
-<li><a class="reference internal" href="#output-options" id="id5">Output Options</a></li>
+<li><a class="reference internal" href="#main-modules" id="id1">Main Modules</a></li>
+<li><a class="reference internal" href="#installation" id="id2">Installation</a></li>
+<li><a class="reference internal" href="#command-line-options" id="id3">Command Line Options</a></li>
 </ul>
 </div>
-<div class="section" id="main-features">
-<h2>Main Features<a class="headerlink" href="#main-features" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="main-modules">
+<h2>Main Modules<a class="headerlink" href="#main-modules" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>tps_Tree &lt;- individual trees</li>
-<li>tps_Plot &lt;- plots on stands</li>
-<li>tps_Stand &lt;- stands</li>
+<li>tps_Tree &lt;- individual trees, to be computed ID by ID, and perform checks on individuals, ID by ID</li>
+<li>tps_Stand &lt;- stands, plots on stands, trees on stands, for larger-scale computations</li>
 <li>tps_NPP &lt;- net primary productivity for plots and stands</li>
-<li>tps_CLI &lt;- command line interface</li>
-<li>tps_Sample &lt;- tests</li>
+<li>tps_cli &lt;- command line interface</li>
+<li>tps_Sample &lt;- tests - queries to &#8216;ncna&#8217; that should always work</li>
 <li>SQL queries and configs in yaml files for interoperability!</li>
 <li>lots of docs!</li>
 </ul>
@@ -74,75 +73,217 @@
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>Set up Python 3 on your computer, and then run the darn thing!
-Best to start with tps_Sample, which will run a series of test trees, plots, and stands on a known dataset (that it will access from the server to test your connection) and output the results. To run it do:</p>
+Best to start with tps_Sample, which will run a series of test trees and stands on a known dataset (that it will access from the server to test your connection) and output the results. To run it do:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_Sample.py
 </pre></div>
 </div>
-<p>Assuming this goes well, please read the docs! You&#8217;ll be running the remainder of your analyses out of the command line interface for now, but there are a lot of options.</p>
+<p>Assuming this goes well, please read the docs! The docs are in index.html, currently in the <cite>_build/</cite> folder. You&#8217;ll be running the remainder of your analyses out of the command line interface for now, but there are a lot of options.</p>
 <div class="section" id="development-version">
 <h3>Development version<a class="headerlink" href="#development-version" title="Permalink to this headline">¶</a></h3>
-<p>The <strong>latest development version</strong> can be installed directly from GitHub. Use this repository. Note that when Fox changes contracts, maintenance will be sporadic at best.</p>
+<p>The <strong>latest development version</strong> can be installed directly from GitHub. Use this repository. Note that when Fox leaves, maintenance will be sporadic at best.</p>
 </div>
 </div>
-<div class="section" id="output-options">
-<h2>Output Options<a class="headerlink" href="#output-options" title="Permalink to this headline">¶</a></h2>
-<p>By default, outputs for a computational analysis will be stored in <code class="docutils literal"><span class="pre">target</span></code> + <code class="docutils literal"><span class="pre">_basic.csv</span></code> and outputs for a check analysis will be stored in <code class="docutils literal"><span class="pre">target</span></code> + <code class="docutils literal"><span class="pre">_checks.csv</span></code>. <code class="docutils literal"><span class="pre">target</span></code> in these cases refers to the object you are analyzing.</p>
-<p>You can control the <code class="docutils literal"><span class="pre">target</span></code> to be a tree, stand, plot, or study.:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="16%" />
-<col width="84%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ncna000100005</span></code></td>
-<td>Only addresses the tree NCNA000100005.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">ncna</span></code></td>
-<td>Addresses all trees on stand NCNA or NCNA the stand as a whole.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">hsgy</span></code></td>
-<td>Addresses all stands in the HSGY study.</td>
-</tr>
-<tr class="row-even"><td><a href="#id1"><span class="problematic" id="id2">``</span></a>[ncna, ch11]`</td>
-<td>Addresses all trees on stand NCNA and on stand CH11 or the stands NCNA and CH11 as wholes.</td>
-</tr>
-</tbody>
-</table>
-<p>More about CLI.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="29%" />
-<col width="71%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Character</th>
-<th class="head">Stands for</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">t</span></code></td>
-<td>tree.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">s</span></code></td>
-<td>stand.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">w</span></code></td>
-<td>stand by tree.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">p</span></code></td>
-<td>study.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">q</span></code></td>
-<td>quality control.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">a</span></code></td>
-<td>all.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">n</span></code></td>
-<td>net primary productivity</td>
-</tr>
-</tbody>
-</table>
+<div class="section" id="command-line-options">
+<h2>Command Line Options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h2>
+<p>The command line tool has a variety of options for your output pleasure. These have all been tested as of 11-06-2015 and work.</p>
+<div class="section" id="details-about-1-tree">
+<h3>Details About 1 Tree<a class="headerlink" href="#details-about-1-tree" title="Permalink to this headline">¶</a></h3>
+<p>This command will get you details about 1 tree and either print them to the screen or to a file. Pretend the tree of your desire is <cite>ncna0001000001</cite></p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py dtx ncna000100001
+</pre></div>
+</div>
+<p>The computer will ask if you would like to have a file, and if so to type <cite>Y</cite>. If you type <cite>Y</cite>, the output will go to a file named (in this case for <cite>ncna0001000001</cite>) <cite>ncna000100001_tags_and_checks.csv</cite>. If you don&#8217;t type <cite>Y</cite> (you can even just press enter), you will see on your screen something like:</p>
+<div class="highlight-bash"><div class="highlight"><pre>Tree: ncna000100001
+Year: 1979
+Stand: NCNA
+Plot: ncna0001
+Study: HSGY
+DBH: 52.5
+Status: 1
+DBH Code: G
+Tag: 46
+Notes:
+-------------------
+Tree: ncna000100001
+Year: 1984
+Stand: NCNA
+Plot: ncna0001
+Study: HSGY
+DBH: 53.3
+Status: 1
+DBH Code: G
+Tag: 46
+Notes:
+-------------------
+Tree: ncna000100001
+Year: 1989
+Stand: NCNA
+Plot: ncna0001
+Study: HSGY
+DBH: 54.0
+Status: 1
+DBH Code: G
+Tag: 46
+Notes:
+-------------------
+</pre></div>
+</div>
+<p>But this will be for all the years of the tree, not just these first few.</p>
+</div>
+<div class="section" id="biomass-at-the-stand-scale-for-all-stands">
+<h3>Biomass at the Stand Scale for All Stands<a class="headerlink" href="#biomass-at-the-stand-scale-for-all-stands" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the stand scale for all of the stands, use this command.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio stand composite --all
+</pre></div>
+</div>
+<p>Your output will be in a file named <cite>all_stands_biomass_composite_output.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`,`STANDID`,`SPECIES`,`YEAR`,`PORTION`,`TPH_NHA`,`BA_M2HA`,`VOL_M3HA`,`BIO_MGHA`,`JENKBIO_MGHA`.</p>
+</div>
+<div class="section" id="biomass-at-the-stand-scale-for-a-set-of-one-or-more-stands">
+<h3>Biomass at the Stand Scale for a set of one or more stands<a class="headerlink" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-stands" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the stand scale for one or more stands, just add those stands to the end of the line <cite>tps_cli.py bio stand composite</cite>. You can add as many as you want! You don&#8217;t need quotes, but you can put them. Don&#8217;t put commas. Separate them with one space. Here&#8217;s how you could ask for <cite>ncna</cite>, <cite>rs01</cite>, <cite>srnf</cite>, and <cite>wr01</cite>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio stand composite ncna rs01 srnf ws01
+</pre></div>
+</div>
+<p>If you have more than one stand, your output will in a file named <cite>selected_stands_biomass_composite_output.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`,`STANDID`,`SPECIES`,`YEAR`,`PORTION`,`TPH_NHA`,`BA_M2HA`,`VOL_M3HA`,`BIO_MGHA`,`JENKBIO_MGHA`.</p>
+<p>If you just have one stand, your output will be in a file named <cite>[name of whatever stand]_stand_composite_output.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`,`STANDID`,`SPECIES`,`YEAR`,`PORTION`,`TPH_NHA`,`BA_M2HA`,`VOL_M3HA`,`BIO_MGHA`,`JENKBIO_MGHA`.</p>
+</div>
+<div class="section" id="biomass-at-the-plot-scale-for-all-plots">
+<h3>Biomass at the Plot Scale for All Plots<a class="headerlink" href="#biomass-at-the-plot-scale-for-all-plots" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the plot scale for all of the plots on all of the stands, use this command.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio plot composite --all
+</pre></div>
+</div>
+<p>Your output will be in a file named <cite>all_plots_biomass_composite_output.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`,`PLOTID`,`SPECIES`,`YEAR`,`PORTION`,`TPH_NHA`,`BA_M2HA`,`VOL_M3HA`,`BIO_MGHA`,`JENKBIO_MGHA`.</p>
+</div>
+<div class="section" id="biomass-at-the-plot-scale-for-a-set-of-one-or-more-plots">
+<h3>Biomass at the Plot Scale for a set of one or more plots<a class="headerlink" href="#biomass-at-the-plot-scale-for-a-set-of-one-or-more-plots" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the plot scale for one or more plots, just add those plots to the end of the line <cite>tps_cli.py bio plot composite</cite>. You can add as many as you want! You don&#8217;t need quotes, but you can put them. Don&#8217;t put commas. Separate them with one space. You don&#8217;t have to put them all from the same stand, either, or be organized about it. Here&#8217;s how you could ask for <cite>ncna0001</cite>, <cite>rs010001</cite>, <cite>srnf0005</cite>, and <cite>ncna0004</cite>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio plot composite ncna0001 rs010001 srnf0005 ncna0004
+</pre></div>
+</div>
+<p>If you have more than one plot, your output will in a file named <cite>selected_plots_biomass_composite_output.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`,`PLOTID`,`SPECIES`,`YEAR`,`PORTION`,`TPH_NHA`,`BA_M2HA`,`VOL_M3HA`,`BIO_MGHA`,`JENKBIO_MGHA`.</p>
+<p>If you just have one plot, your output will be in a file named <cite>[name of whatever plot]_plot_composite_output.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`,`PLOTID`,`SPECIES`,`YEAR`,`PORTION`,`TPH_NHA`,`BA_M2HA`,`VOL_M3HA`,`BIO_MGHA`,`JENKBIO_MGHA`.</p>
+</div>
+<div class="section" id="biomass-at-the-stand-scale-for-all-studies">
+<h3>Biomass at the Stand Scale for All Studies<a class="headerlink" href="#biomass-at-the-stand-scale-for-all-studies" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the stand scale for all of the stands on all of the studies, use this command. Yes, this is exactly the same as the simpler <cite>tps_cli.py bio stand composite &#8211;all</cite>, but if you are thinking in study mode, it might be helpful.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio study composite --all
+</pre></div>
+</div>
+<p>Your output will be in a file named <cite>all_studies_biomass_composite_output.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`,`PLOTID`,`SPECIES`,`YEAR`,`PORTION`,`TPH_NHA`,`BA_M2HA`,`VOL_M3HA`,`BIO_MGHA`,`JENKBIO_MGHA`.</p>
+</div>
+<div class="section" id="biomass-at-the-stand-scale-for-a-set-of-one-or-more-studies">
+<h3>Biomass at the Stand Scale for a set of one or more studies<a class="headerlink" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-studies" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the study scale for one or more studies, just add those studies to the end of the line <cite>tps_cli.py bio study composite</cite>. You can add as many as you want! You don&#8217;t need quotes, but you can put them. Don&#8217;t put commas. Separate them with one space. You don&#8217;t have to put them all from the same stand, either, or be organized about it. Here&#8217;s how you could ask for <cite>hsgy</cite> and <cite>alco</cite></p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio study composite hsgy alco
+</pre></div>
+</div>
+<p>If you have more than one study, your output will in a file named <cite>selected_studies_biomass_composite_output.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`,`STUDYID`,`SPECIES`,`YEAR`,`PORTION`,`TPH_NHA`,`BA_M2HA`,`VOL_M3HA`,`BIO_MGHA`,`JENKBIO_MGHA`.</p>
+<p>If you just have one study, your output will be in a file named <cite>[name of whatever study]_studies_composite_output.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`,`STUDYID`,`SPECIES`,`YEAR`,`PORTION`,`TPH_NHA`,`BA_M2HA`,`VOL_M3HA`,`BIO_MGHA`,`JENKBIO_MGHA`.</p>
+</div>
+<div class="section" id="biomass-at-the-plot-scale-for-individual-trees-for-a-set-of-one-or-more-plots">
+<h3>Biomass at the Plot Scale for Individual Trees for a set of one or more plots<a class="headerlink" href="#biomass-at-the-plot-scale-for-individual-trees-for-a-set-of-one-or-more-plots" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the individual scale for one or more plots, just add those plots to the end of the line <cite>tps_cli.py bio plot composite</cite>. You can add as many as you want! You don&#8217;t need quotes, but you can put them. Don&#8217;t put commas. Separate them with one space. You don&#8217;t have to put them all from the same stand, either, or be organized about it. Here&#8217;s how you could ask for <cite>ncna0001</cite>, <cite>rs010001</cite>, <cite>srnf0005</cite>, and <cite>ncna0004</cite>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio plot tree ncna0001 rs010001 srnf0005 ncna0004
+</pre></div>
+</div>
+<p>Your output will be in a file named <cite>selected_plots_indvtree_output.csv</cite>. It will be organized like <cite>DBCODE</cite>, <cite>ENTITY</cite>, <cite>TREEID</cite>, <cite>COMPONENT</cite>, <cite>YEAR</cite>, <cite>BA_M2</cite>, <cite>VOL_M3</cite>, <cite>BIO_MG</cite>, <cite>JENKBIO_MG</cite>.</p>
+<p>If you just have one plot, your output will be in a file named <cite>[name of whatever plot]_plot_indvtree_output.csv</cite>. It will be organized like <cite>DBCODE</cite>, <cite>ENTITY</cite>, <cite>TREEID</cite>, <cite>COMPONENT</cite>, <cite>YEAR</cite>, <cite>BA_M2</cite>, <cite>VOL_M3</cite>, <cite>BIO_MG</cite>, <cite>JENKBIO_MG</cite>.</p>
+</div>
+<div class="section" id="biomass-at-the-stand-scale-for-individual-trees-for-a-set-of-one-or-more-stands">
+<h3>Biomass at the Stand Scale for Individual Trees for a set of one or more stands<a class="headerlink" href="#biomass-at-the-stand-scale-for-individual-trees-for-a-set-of-one-or-more-stands" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the individual tree scale for one or more stands, just add those stands to the end of the line <cite>tps_cli.py bio stand tree</cite>. You can add as many as you want! You don&#8217;t need quotes, but you can put them. Don&#8217;t put commas. Separate them with one space. Here&#8217;s how you could ask for <cite>ncna</cite>, <cite>rs01</cite>, <cite>srnf</cite>, and <cite>wr01</cite>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio stand tree ncna rs01 srnf wr01
+</pre></div>
+</div>
+<p>Your output will be in a file named <cite>selected_stands_indvtree_output.csv</cite>. It will be organized like <cite>DBCODE</cite>, <cite>ENTITY</cite>, <cite>TREEID</cite>, <cite>COMPONENT</cite>, <cite>YEAR</cite>, <cite>BA_M2</cite>, <cite>VOL_M3</cite>, <cite>BIO_MG</cite>, <cite>JENKBIO_MG</cite>.</p>
+<p>If you just have one stand, your output will be in a file named <cite>[name of whatever stand]_stand_indvtree_output.csv</cite>. It will be organized like <cite>DBCODE</cite>, <cite>ENTITY</cite>, <cite>TREEID</cite>, <cite>COMPONENT</cite>, <cite>YEAR</cite>, <cite>BA_M2</cite>, <cite>VOL_M3</cite>, <cite>BIO_MG</cite>, <cite>JENKBIO_MG</cite>.</p>
+</div>
+<div class="section" id="biomass-at-the-plot-scale-for-individual-trees-on-all-plots">
+<h3>Biomass at the Plot Scale for Individual Trees on All Plots<a class="headerlink" href="#biomass-at-the-plot-scale-for-individual-trees-on-all-plots" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the individual tree scale for all of the plots on all of the stands, use this command.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio plot tree --all
+</pre></div>
+</div>
+<p>Your output will be in a file named <cite>all_plots_indvtree_output.csv</cite>. It will be organized like <cite>DBCODE</cite>, <cite>ENTITY</cite>, <cite>TREEID</cite>, <cite>COMPONENT</cite>, <cite>YEAR</cite>, <cite>BA_M2</cite>, <cite>VOL_M3</cite>, <cite>BIO_MG</cite>, <cite>JENKBIO_MG</cite>.</p>
+</div>
+<div class="section" id="biomass-at-the-stand-scale-for-individual-trees-on-all-stands">
+<h3>Biomass at the Stand Scale for Individual Trees on All Stands<a class="headerlink" href="#biomass-at-the-stand-scale-for-individual-trees-on-all-stands" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the individual tree scale for all of the stands, use this command.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio stand tree --all
+</pre></div>
+</div>
+<p>Your output will be in a file named <cite>all_stands_indvtree_output.csv</cite>. It will be organized like <cite>DBCODE</cite>, <cite>ENTITY</cite>, <cite>TREEID</cite>, <cite>COMPONENT</cite>, <cite>YEAR</cite>, <cite>BA_M2</cite>, <cite>VOL_M3</cite>, <cite>BIO_MG</cite>, <cite>JENKBIO_MG</cite>.</p>
+</div>
+<div class="section" id="biomass-at-the-tree-scale-for-less-than-3-trees">
+<h3>Biomass at the Tree Scale for Less Than 3 Trees<a class="headerlink" href="#biomass-at-the-tree-scale-for-less-than-3-trees" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the individual tree scale for one or two trees, you can use the tree scale query. For example, to get <cite>ncna000100001</cite> and <cite>ta01000100001</cite></p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio tree tree ncna000100001 ta010001000001
+</pre></div>
+</div>
+<p>Your output will be in a file named <cite>selected_trees_indvtree_output.csv</cite>. It will be organized like <cite>DBCODE</cite>, <cite>ENTITY</cite>, <cite>TREEID</cite>, <cite>COMPONENT</cite>, <cite>YEAR</cite>, <cite>BA_M2</cite>, <cite>VOL_M3</cite>, <cite>BIO_MG</cite>, <cite>JENKBIO_MG</cite>.</p>
+<p>If you just have one tree, your output will be in a file named <cite>[name of whatever tree]_tree_indvtree_output.csv</cite>. It will be organized like <cite>DBCODE</cite>, <cite>ENTITY</cite>, <cite>TREEID</cite>, <cite>COMPONENT</cite>, <cite>YEAR</cite>, <cite>BA_M2</cite>, <cite>VOL_M3</cite>, <cite>BIO_MG</cite>, <cite>JENKBIO_MG</cite>.</p>
+</div>
+<div class="section" id="status-checks-at-the-tree-scale-for-less-than-3-trees">
+<h3>Status Checks at the Tree Scale for Less Than 3 Trees<a class="headerlink" href="#status-checks-at-the-tree-scale-for-less-than-3-trees" title="Permalink to this headline">¶</a></h3>
+<p>To check the status of the the biomass at the individual tree scale for one or two trees, you can use the tree scale query. This query will tell you whether or not your trees encountered a variety of non ideal conditions by generating a matrix of null or true values. The docs contain more descriptiosn of what these headers mean. But to work with the program, for example, to get <cite>ncna000100001</cite> and <cite>ta01000100001</cite></p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio tree checks ncna000100001 ta010001000001
+</pre></div>
+</div>
+<p>Your output will be in a file named <cite>selected_trees_indvtree_checks.csv</cite>. It will be organized like <cite>TREEID</cite>, <cite>SPECIES</cite>, <cite>INTERVAL</cite>,`SHRINK_X_FLAGGED`,`GROWTH_X_FLAGGED`,`DOUBLE_DEATH_FLAG`,`LAZARUS_FLAG`,`HOUDINI_FLAG`,`DEGRADE_FLAG`.</p>
+<p>If you just have one tree, your output will be in a file named <cite>[name of whatever tree]_tree_indvtree_checks.csv</cite>. It will be organized like <cite>TREEID</cite>, <cite>SPECIES</cite>, <cite>INTERVAL</cite>,`SHRINK_X_FLAGGED`,`GROWTH_X_FLAGGED`,`DOUBLE_DEATH_FLAG`,`LAZARUS_FLAG`,`HOUDINI_FLAG`,`DEGRADE_FLAG``.</p>
+</div>
+<div class="section" id="npp-at-the-stand-scale-for-all-stands">
+<h3>NPP at the Stand Scale for All Stands<a class="headerlink" href="#npp-at-the-stand-scale-for-all-stands" title="Permalink to this headline">¶</a></h3>
+<p>To compute the NPP at the stand scale for all of the stands, use this command.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py npp stand composite --all
+</pre></div>
+</div>
+<p>Your output will be in a file named <cite>all_stands_composite_npp.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`, <cite>STANDID</cite>, <cite>YEAR_BEGIN</cite>, <cite>YEAR_END</cite>, <cite>SPECIES</cite>, <cite>DELTA_TPH_NHA</cite>,`DELTA_BA_M2HA`,`DELTA_VOL_M3HA`,`DELTA_BIO_MGHA`,`DELTA_JENKBIO_MGHA`, <cite>MEAN_ANNUAL_NPP_BIO</cite>, <cite>MEAN_ANNUAL_NPP_JENKBIO</cite>.</p>
+</div>
+<div class="section" id="npp-at-the-stand-scale-for-a-set-of-one-or-more-stands">
+<h3>NPP at the Stand Scale for a set of one or more stands<a class="headerlink" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-stands" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the stand scale for one or more stands, just add those stands to the end of the line <cite>tps_cli.py npp stand composite</cite>. You can add as many as you want! You don&#8217;t need quotes, but you can put them. Don&#8217;t put commas. Separate them with one space. Here&#8217;s how you could ask for <cite>ncna</cite>, <cite>rs01</cite>, <cite>srnf</cite>, and <cite>wr01</cite>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py npp stand composite ncna rs01 srnf ws01
+</pre></div>
+</div>
+<p>If you have more than one stand, your output will in a file named <cite>selected_stands_composite_npp.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`, <cite>STANDID</cite>, <cite>YEAR_BEGIN</cite>, <cite>YEAR_END</cite>, <cite>SPECIES</cite>, <cite>DELTA_TPH_NHA</cite>,`DELTA_BA_M2HA`,`DELTA_VOL_M3HA`,`DELTA_BIO_MGHA`,`DELTA_JENKBIO_MGHA`, <cite>MEAN_ANNUAL_NPP_BIO</cite>, <cite>MEAN_ANNUAL_NPP_JENKBIO</cite>.</p>
+<p>If you just have one stand, your output will be in a file named <cite>[name of whatever stand]_stand_composite_npp.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`, <cite>STANDID</cite>, <cite>YEAR_BEGIN</cite>, <cite>YEAR_END</cite>, <cite>SPECIES</cite>, <cite>DELTA_TPH_NHA</cite>,`DELTA_BA_M2HA`,`DELTA_VOL_M3HA`,`DELTA_BIO_MGHA`,`DELTA_JENKBIO_MGHA`, <cite>MEAN_ANNUAL_NPP_BIO</cite>, <cite>MEAN_ANNUAL_NPP_JENKBIO</cite>.</p>
+</div>
+<div class="section" id="npp-at-the-plot-scale-for-all-plots">
+<h3>NPP at the Plot Scale for All Plots<a class="headerlink" href="#npp-at-the-plot-scale-for-all-plots" title="Permalink to this headline">¶</a></h3>
+<p>To compute the biomass at the plot scale for all of the plots on all of the stands, use this command.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py npp plot composite --all
+</pre></div>
+</div>
+<p>Your output will be in a file named <cite>all_plots_composite_npp.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`, <cite>PLOTID</cite>, <cite>YEAR_BEGIN</cite>, <cite>YEAR_END</cite>, <cite>SPECIES</cite>, <cite>DELTA_TPH_NHA</cite>,`DELTA_BA_M2HA`,`DELTA_VOL_M3HA`,`DELTA_BIO_MGHA`,`DELTA_JENKBIO_MGHA`, <cite>MEAN_ANNUAL_NPP_BIO</cite>, <cite>MEAN_ANNUAL_NPP_JENKBIO</cite>.</p>
+</div>
+<div class="section" id="npp-at-the-plot-scale-for-a-set-of-one-or-more-plots">
+<h3>NPP at the Plot Scale for a set of one or more plots<a class="headerlink" href="#npp-at-the-plot-scale-for-a-set-of-one-or-more-plots" title="Permalink to this headline">¶</a></h3>
+<p>To compute the NPP at the plot scale for one or more plots, just add those plots to the end of the line <cite>tps_cli.py npp plot composite</cite>. You can add as many as you want! You don&#8217;t need quotes, but you can put them. Don&#8217;t put commas. Separate them with one space. You don&#8217;t have to put them all from the same stand, either, or be organized about it. Here&#8217;s how you could ask for <cite>ncna0001</cite>, <cite>rs010001</cite>, <cite>srnf0005</cite>, and <cite>ncna0004</cite>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py npp plot composite ncna0001 rs010001 srnf0005 ncna0004
+</pre></div>
+</div>
+<p>If you have more than one plot, your output will in a file named <cite>selected_plots_composite_npp.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`, <cite>PLOTID</cite>, <cite>YEAR_BEGIN</cite>, <cite>YEAR_END</cite>, <cite>SPECIES</cite>, <cite>DELTA_TPH_NHA</cite>,`DELTA_BA_M2HA`,`DELTA_VOL_M3HA`,`DELTA_BIO_MGHA`,`DELTA_JENKBIO_MGHA`, <cite>MEAN_ANNUAL_NPP_BIO</cite>, <cite>MEAN_ANNUAL_NPP_JENKBIO</cite>.</p>
+<p>If you just have one plot, your output will be in a file named <cite>[name of whatever plot]_plot_npp_output.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`, <cite>PLOTID</cite>, <cite>YEAR_BEGIN</cite>, <cite>YEAR_END</cite>, <cite>SPECIES</cite>, <cite>DELTA_TPH_NHA</cite>,`DELTA_BA_M2HA`,`DELTA_VOL_M3HA`,`DELTA_BIO_MGHA`,`DELTA_JENKBIO_MGHA`, <cite>MEAN_ANNUAL_NPP_BIO</cite>, <cite>MEAN_ANNUAL_NPP_JENKBIO</cite>.</p>
+</div>
+<div class="section" id="npp-at-the-stand-scale-for-all-studies">
+<h3>NPP at the Stand Scale for All Studies<a class="headerlink" href="#npp-at-the-stand-scale-for-all-studies" title="Permalink to this headline">¶</a></h3>
+<p>To compute the NPP at the plot scale for all of the plots on all of the studies, use this command. This is basically the same as what would happen if you were to just compute it for all stands.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py npp study composite --all
+</pre></div>
+</div>
+<p>Your output will be in a file named <cite>all_plots_composite_npp.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`, <cite>STANDID</cite>, <cite>YEAR_BEGIN</cite>, <cite>YEAR_END</cite>, <cite>SPECIES</cite>, <cite>DELTA_TPH_NHA</cite>,`DELTA_BA_M2HA`,`DELTA_VOL_M3HA`,`DELTA_BIO_MGHA`,`DELTA_JENKBIO_MGHA`, <cite>MEAN_ANNUAL_NPP_BIO</cite>, <cite>MEAN_ANNUAL_NPP_JENKBIO</cite>.</p>
+</div>
+<div class="section" id="npp-at-the-stand-scale-for-a-set-of-one-or-more-studies">
+<h3>NPP at the Stand Scale for a set of one or more studies<a class="headerlink" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-studies" title="Permalink to this headline">¶</a></h3>
+<p>To compute the NPP at the stand scale for one or more studies, just add those studies to the end of the line <cite>tps_cli.py npp study composite</cite>. You can add as many as you want! You don&#8217;t need quotes, but you can put them. Don&#8217;t put commas. Separate them with one space. There are not so many studies out there, and be careful that you make the names accurate. Again, this is just a luxury function for looking at studies instead of stands or plots.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py npp study composite alco hsgy
+</pre></div>
+</div>
+<p>If you have more than one plot, your output will in a file named <cite>selected_studies_composite_npp.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`, <cite>STANDID</cite>, <cite>YEAR_BEGIN</cite>, <cite>YEAR_END</cite>, <cite>SPECIES</cite>, <cite>DELTA_TPH_NHA</cite>,`DELTA_BA_M2HA`,`DELTA_VOL_M3HA`,`DELTA_BIO_MGHA`,`DELTA_JENKBIO_MGHA`, <cite>MEAN_ANNUAL_NPP_BIO</cite>, <cite>MEAN_ANNUAL_NPP_JENKBIO</cite>.</p>
+<p>If you just have one plot, your output will be in a file named <cite>[name of whatever study]_npp_output.csv</cite>. It will be organized like <cite>DBCODE</cite>,`ENTITY`, <cite>STANDID</cite>, <cite>YEAR_BEGIN</cite>, <cite>YEAR_END</cite>, <cite>SPECIES</cite>, <cite>DELTA_TPH_NHA</cite>,`DELTA_BA_M2HA`,`DELTA_VOL_M3HA`,`DELTA_BIO_MGHA`,`DELTA_JENKBIO_MGHA`, <cite>MEAN_ANNUAL_NPP_BIO</cite>, <cite>MEAN_ANNUAL_NPP_JENKBIO</cite>.</p>
+</div>
 </div>
 </div>
 
@@ -155,12 +296,33 @@ Best to start with tps_Sample, which will run a series of test trees, plots, and
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">TPS: Tree, Plot, Stand - Biomass Aggregation</a><ul>
-<li><a class="reference internal" href="#main-features">Main Features</a></li>
+<li><a class="reference internal" href="#main-modules">Main Modules</a></li>
 <li><a class="reference internal" href="#installation">Installation</a><ul>
 <li><a class="reference internal" href="#development-version">Development version</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#output-options">Output Options</a></li>
+<li><a class="reference internal" href="#command-line-options">Command Line Options</a><ul>
+<li><a class="reference internal" href="#details-about-1-tree">Details About 1 Tree</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-stands">Biomass at the Stand Scale for All Stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-stands">Biomass at the Stand Scale for a set of one or more stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-all-plots">Biomass at the Plot Scale for All Plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-a-set-of-one-or-more-plots">Biomass at the Plot Scale for a set of one or more plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-studies">Biomass at the Stand Scale for All Studies</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-studies">Biomass at the Stand Scale for a set of one or more studies</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-for-a-set-of-one-or-more-plots">Biomass at the Plot Scale for Individual Trees for a set of one or more plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-for-a-set-of-one-or-more-stands">Biomass at the Stand Scale for Individual Trees for a set of one or more stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-on-all-plots">Biomass at the Plot Scale for Individual Trees on All Plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-on-all-stands">Biomass at the Stand Scale for Individual Trees on All Stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-tree-scale-for-less-than-3-trees">Biomass at the Tree Scale for Less Than 3 Trees</a></li>
+<li><a class="reference internal" href="#status-checks-at-the-tree-scale-for-less-than-3-trees">Status Checks at the Tree Scale for Less Than 3 Trees</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-stands">NPP at the Stand Scale for All Stands</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-stands">NPP at the Stand Scale for a set of one or more stands</a></li>
+<li><a class="reference internal" href="#npp-at-the-plot-scale-for-all-plots">NPP at the Plot Scale for All Plots</a></li>
+<li><a class="reference internal" href="#npp-at-the-plot-scale-for-a-set-of-one-or-more-plots">NPP at the Plot Scale for a set of one or more plots</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-studies">NPP at the Stand Scale for All Studies</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-studies">NPP at the Stand Scale for a set of one or more studies</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

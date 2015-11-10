@@ -102,6 +102,9 @@ def as_lnln(woodden, dbh, b1, b2, b3, j1, j2, *args):
 def as_d2ht(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     """ Generates biomass equations based on inputs of `b1`, `b2`, `b3`, `h1`, `h2`, and `h3` and wood density for dbh, in cm.
 
+    Internally, a conversion to meters on dbh is performed to match the equation documentation specified for 
+    `TV00908<ttp://andrewsforest.oregonstate.edu/lter/data/domains.cfm?domain=enum&dbcode=TV009&attid=1321&topnav=8>`_.
+
     Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm.
 
     **INPUTS**
@@ -177,6 +180,38 @@ def as_chinq_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     try:
         height = 1.37 + h1*(1-math.exp(h2*dbh))**h3
         biomass =  round(woodden*height**b1*b2*(dbh)**b3,7)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
+        volume = round(biomass/woodden,7)
+        return (biomass, volume, jbio, woodden)
+    except ValueError:
+        
+        return (0., 0., 0., woodden)
+
+def mod_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
+    """ Generates biomass equations based on inputs of `b1`, `b2`, `b3`, `h1`, `h2`, `h3` and wood density for dbh, in cm.
+
+    THIS IS A VERY SPECIAL EQUATION JUST FOR ACMA
+
+    Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm. 
+
+    Unlike many other BioPak methods, the chinquapin functions usually need height. Height is calculated here. The height equations are also from BioPak.
+
+    **INPUTS**
+
+    :woodden: wood density, 
+    :dbh: cm diameter at breast height
+    :b1: first biomass parameter
+    :b2: second biomass parameter
+    :b3: third biomass parameter
+    :j1: first Jenkins parameter
+    :j2: second Jenkins parameter
+    :h1: first height parameter
+    :h2: second height parameter
+    :h3: third height parameter
+    """
+    try:
+        height = 1.37 + h1*(1-math.exp(h2*dbh))**h3
+        biomass = round(woodden*(b1*dbh**b2*height**b3),7)
         jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
         volume = round(biomass/woodden,7)
         return (biomass, volume, jbio, woodden)

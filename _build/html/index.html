@@ -472,6 +472,8 @@
 <dt id="biomass_basis.as_d2ht">
 <code class="descclassname">biomass_basis.</code><code class="descname">as_d2ht</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_d2ht" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, <cite>h1</cite>, <cite>h2</cite>, and <cite>h3</cite> and wood density for dbh, in cm.</p>
+<p>Internally, a conversion to meters on dbh is performed to match the equation documentation specified for 
+<a href="#id1"><span class="problematic" id="id2">`TV00908&lt;ttp://andrewsforest.oregonstate.edu/lter/data/domains.cfm?domain=enum&amp;dbcode=TV009&amp;attid=1321&amp;topnav=8&gt;`_</span></a>.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -596,6 +598,42 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="s">&quot;normal&quot;</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.mod_biopak">
+<code class="descclassname">biomass_basis.</code><code class="descname">mod_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.mod_biopak" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, <cite>h1</cite>, <cite>h2</cite>, <cite>h3</cite> and wood density for dbh, in cm.</p>
+<p>THIS IS A VERY SPECIAL EQUATION JUST FOR ACMA</p>
+<p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
+<p>Unlike many other BioPak methods, the chinquapin functions usually need height. Height is calculated here. The height equations are also from BioPak.</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Woodden:</th><td class="field-body">wood density,</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">cm diameter at breast height</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B1:</th><td class="field-body">first biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">B2:</th><td class="field-body">second biomass parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B3:</th><td class="field-body">third biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">J1:</th><td class="field-body">first Jenkins parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">J2:</th><td class="field-body">second Jenkins parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">H1:</th><td class="field-body">first height parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">H2:</th><td class="field-body">second height parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">H3:</th><td class="field-body">third height parameter</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1130,7 +1168,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the index in the list of valid years to get the year of replacement from. It needs to precede the missing year</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">Replacement_year:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the year whose data we use to replace the missing eyar</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the year whose data we use to replace the missing year</td>
 </tr>
 </tbody>
 </table>
@@ -1138,13 +1176,13 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 
 <dl class="method">
 <dt id="tps_Stand.Plot.write_individual_trees">
-<code class="descname">write_individual_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_individual_trees" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_individual_trees</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_individual_trees" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes a csv file, containing the tree measurements for the individual trees on the stand.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Plot.write_plot_composite">
-<code class="descname">write_plot_composite</code><span class="sig-paren">(</span><em>Biomasses</em>, <em>Biomasses_Agg</em>, <em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_plot_composite" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_plot_composite</code><span class="sig-paren">(</span><em>Biomasses</em>, <em>Biomasses_Agg</em>, <em>XFACTOR</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_plot_composite" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), Basal Area (m <sup>2</sup>) by species with a row of &#8220;all&#8221; containing the composite TPH, Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), and Basal Area (m <sup>2</sup>)</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1161,11 +1199,12 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </table>
 <p><strong>OUTPUTS</strong></p>
 <p>Writes a file named <cite>standid + stand_composite_output.csv</cite></p>
+<p>If an additional argument is specified, this is the generic output file to write to for the <cite>&#8211;all</cite> command line method</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Plot.write_stand_composite">
-<code class="descname">write_stand_composite</code><span class="sig-paren">(</span><em>Biomasses</em>, <em>Biomasses_Agg</em>, <em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_stand_composite" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_stand_composite</code><span class="sig-paren">(</span><em>Biomasses</em>, <em>Biomasses_Agg</em>, <em>XFACTOR</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_stand_composite" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), Basal Area (m <sup>2</sup>) by species with a row of &#8220;all&#8221; containing the composite TPH, Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), and Basal Area (m <sup>2</sup>)</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1186,7 +1225,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 
 <dl class="method">
 <dt id="tps_Stand.Plot.write_stand_rob">
-<code class="descname">write_stand_rob</code><span class="sig-paren">(</span><em>RobBiomass</em>, <em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_stand_rob" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_stand_rob</code><span class="sig-paren">(</span><em>RobBiomass</em>, <em>XFACTOR</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_stand_rob" title="Permalink to this definition">¶</a></dt>
 <dd><p>quick little method that ignores all the detail plot (trees &lt; 15.)</p>
 </dd></dl>
 
@@ -1373,7 +1412,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the index in the list of valid years to get the year of replacement from. It needs to precede the missing year</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">Replacement_year:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the year whose data we use to replace the missing eyar</td>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the year whose data we use to replace the missing year</td>
 </tr>
 </tbody>
 </table>
@@ -1381,13 +1420,13 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.write_individual_trees">
-<code class="descname">write_individual_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_individual_trees" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_individual_trees</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_individual_trees" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes a csv file, containing the tree measurements for the individual trees on the stand.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.write_stand_composite">
-<code class="descname">write_stand_composite</code><span class="sig-paren">(</span><em>Biomasses</em>, <em>Biomasses_Agg</em>, <em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_composite" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_stand_composite</code><span class="sig-paren">(</span><em>Biomasses</em>, <em>Biomasses_Agg</em>, <em>XFACTOR</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_composite" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates an output file which combines the Trees Per Hectare (TPH), Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), Basal Area (m <sup>2</sup>) by species with a row of &#8220;all&#8221; containing the composite TPH, Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217; Biomass ( Mg ), and Basal Area (m <sup>2</sup>)</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1408,7 +1447,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.write_stand_rob">
-<code class="descname">write_stand_rob</code><span class="sig-paren">(</span><em>RobBiomass</em>, <em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_rob" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_stand_rob</code><span class="sig-paren">(</span><em>RobBiomass</em>, <em>XFACTOR</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_rob" title="Permalink to this definition">¶</a></dt>
 <dd><p>quick little method that ignores all the detail plot (trees &lt; 15.)</p>
 </dd></dl>
 
@@ -1442,21 +1481,25 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dl class="function">
 <dt id="tps_NPP.plot_wrap_compute_NPP">
 <code class="descclassname">tps_NPP.</code><code class="descname">plot_wrap_compute_NPP</code><span class="sig-paren">(</span><em>Bios_plot</em>, <em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.plot_wrap_compute_NPP" title="Permalink to this definition">¶</a></dt>
-<dd><p>To compute NPP by plot we need to wrap around the stand method, so that the years for the plot are specific.</p>
+<dd><p>To compute NPP by Plot, this function wraps around the Stand method, so that the years for the plot are specific.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tps_NPP.write_NPP_composite_plot">
-<code class="descclassname">tps_NPP.</code><code class="descname">write_NPP_composite_plot</code><span class="sig-paren">(</span><em>Plot</em>, <em>BM_plot</em>, <em>BMA_plot</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.write_NPP_composite_plot" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tps_NPP.</code><code class="descname">write_NPP_composite_plot</code><span class="sig-paren">(</span><em>Plot</em>, <em>BM_plot</em>, <em>BMA_plot</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.write_NPP_composite_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the Biomass for each species and for the stand as a whole together.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tps_NPP.write_NPP_composite_stand">
-<code class="descclassname">tps_NPP.</code><code class="descname">write_NPP_composite_stand</code><span class="sig-paren">(</span><em>Stand</em>, <em>BM</em>, <em>BMA</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.write_NPP_composite_stand" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tps_NPP.</code><code class="descname">write_NPP_composite_stand</code><span class="sig-paren">(</span><em>Stand</em>, <em>BM</em>, <em>BMA</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.write_NPP_composite_stand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the Biomass for each species and for the stand as a whole together.</p>
 </dd></dl>
 
+</div>
+<div class="section" id="cli">
+<h2>CLI:<a class="headerlink" href="#cli" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">tps_cli.py</span></code> is the command line interface. Please see <code class="docutils literal"><span class="pre">readme.md</span></code> for how to use this interface.</p>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -1483,6 +1526,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <li><a class="reference internal" href="#individual-trees">Individual Trees:</a></li>
 <li><a class="reference internal" href="#stands">Stands:</a></li>
 <li><a class="reference internal" href="#npp">NPP:</a></li>
+<li><a class="reference internal" href="#cli">CLI:</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>

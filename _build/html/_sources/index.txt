@@ -119,12 +119,10 @@ NPP:
    :inherited-members:
    :show-inheritance:
 
+CLI:
+----
 
-.. automodule:: tps_cli
-   :members:
-   :undoc-members:
-   :inherited-members:
-   :show-inheritance:
+``tps_cli.py`` is the command line interface. Please see ``readme.md`` for how to use this interface. 
 
 Indices and tables
 ==================

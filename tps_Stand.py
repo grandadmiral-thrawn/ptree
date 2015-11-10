@@ -1077,10 +1077,10 @@ class Stand(object):
                             dead_trees= {k: {'bio': self.eqns[each_species]['normal'](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4), 'status': v[1]} for k,v in self.od[each_year][each_species][each_plot]['dead'].items() if v[0] != None and v[0] >= 5.0}
 
                         for each_tree in live_trees.keys():
-                            writer.writerow(['TP001', '11', each_tree.upper(), my_component.upper(), each_year, live_trees[each_tree]['ba'], live_trees[each_tree]['bio'][0], live_trees[each_tree]['bio'][1], live_trees[each_tree]['bio'][2]])
+                            writer.writerow(['TP001', '11', each_tree.upper(), my_component.upper(), each_year, live_trees[each_tree]['ba'], live_trees[each_tree]['bio'][1], live_trees[each_tree]['bio'][0], live_trees[each_tree]['bio'][2]])
 
                         for each_tree in dead_trees.keys():
-                            writer.writerow(['TP001', '11', each_tree.upper(), my_component.upper(), each_year, dead_trees[each_tree]['ba'], dead_trees[each_tree]['bio'][0], dead_trees[each_tree]['bio'][1], dead_trees[each_tree]['bio'][2]])
+                            writer.writerow(['TP001', '11', each_tree.upper(), my_component.upper(), each_year, dead_trees[each_tree]['ba'], dead_trees[each_tree]['bio'][1], dead_trees[each_tree]['bio'][0], dead_trees[each_tree]['bio'][2]])
 
 
 class Plot(Stand):
@@ -1399,6 +1399,8 @@ if __name__ == "__main__":
     
     ### A shorter set of test stands ###
     #test_stands = ["CH06"]
+
+    test_stands = ['rs01']
     
     for each_stand in test_stands:
 
@@ -1406,6 +1408,7 @@ if __name__ == "__main__":
         
         A = Stand(cur, XFACTOR, queries, each_stand)
 
+        import pdb; pdb.set_trace()
         BM, BTR, ROB = A.compute_biomasses(XFACTOR)
 
         A.write_stand_rob(ROB, XFACTOR)
