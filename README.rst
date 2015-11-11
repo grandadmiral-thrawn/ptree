@@ -121,21 +121,21 @@ To compute the biomass at the stand scale for all of the stands, use this comman
 
     $ python3 tps_cli.py bio stand composite --all
 
-Your output will be in a file named ```all_stands_biomass_composite_output.csv```. It will be organized like ```DBCODE```,```ENTITY```,```STANDID```,```SPECIES```,```YEAR```,```PORTION```,```TPH_NHA```,```BA_M2HA```,```VOL_M3HA```,```BIO_MGHA```,```JENKBIO_MGHA```.
+Your output will be in a file named ```all_stands_biomass_composite_output.csv```. It will be organized like ``DBCODE, ENTITY, STANDID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 
 ----------------------------------------------------------
 Biomass at the Stand Scale for a set of one or more stands
 ----------------------------------------------------------
 
-To compute the biomass at the stand scale for one or more stands, just add those stands to the end of the line `tps_cli.py bio stand composite`. You can add as many as you want! You don't need quotes, but you can put them. Don't put commas. Separate them with one space. Here's how you could ask for `ncna`, `rs01`, `srnf`, and `wr01`.
+To compute the biomass at the stand scale for one or more stands, just add those stands to the end of the line ``tps_cli.py bio stand composite``. You can add as many as you want! You don't need quotes, but you can put them. Don't put commas. Separate them with one space. Here's how you could ask for ``ncna``, ``rs01``, ``srnf``, and ``wr01``.
 
 .. code-block:: bash
 
     $ python3 tps_cli.py bio stand composite ncna rs01 srnf ws01
 
-If you have more than one stand, your output will in a file named `selected_stands_biomass_composite_output.csv`. It will be organized like `DBCODE`,`ENTITY`,`STANDID`,`SPECIES`,`YEAR`,`PORTION`,`TPH_NHA`,`BA_M2HA`,`VOL_M3HA`,`BIO_MGHA`,`JENKBIO_MGHA`.   
+If you have more than one stand, your output will in a file named ``selected_stands_biomass_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.   
 
-If you just have one stand, your output will be in a file named `[name of whatever stand]_stand_composite_output.csv`. It will be organized like `DBCODE`,`ENTITY`,`STANDID`,`SPECIES`,`YEAR`,`PORTION`,`TPH_NHA`,`BA_M2HA`,`VOL_M3HA`,`BIO_MGHA`,`JENKBIO_MGHA`.    
+If you just have one stand, your output will be in a file named ``[name of whatever stand]_stand_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.    
 
 ---------------------------------------
 Biomass at the Plot Scale for All Plots
