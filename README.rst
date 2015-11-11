@@ -268,7 +268,7 @@ To check the status of the the biomass at the individual tree scale for one or t
 
 Your output will be in a file named ``selected_trees_indvtree_checks.csv``. It will be organized like `TREEID, SPECIES, INTERVAL, SHRINK_X_FLAGGED, GROWTH_X_FLAGGED, DOUBLE_DEATH_FLAG, LAZARUS_FLAG, HOUDINI_FLAG, DEGRADE_FLAG``.
 
-If you just have one tree, your output will be in a file named ``[name of whatever tree]_tree_indvtree_checks.csv``. It will be organized like `TREEID, SPECIES, INTERVAL, SHRINK_X_FLAGGED, GROWTH_X_FLAGGED, DOUBLE_DEATH_FLAG, LAZARUS_FLAG, HOUDINI_FLAG, DEGRADE_FLAG``.
+If you just have one tree, your output will be in a file named ``[name of whatever tree]_tree_indvtree_checks.csv``. It will be organized like ``TREEID, SPECIES, INTERVAL, SHRINK_X_FLAGGED, GROWTH_X_FLAGGED, DOUBLE_DEATH_FLAG, LAZARUS_FLAG, HOUDINI_FLAG, DEGRADE_FLAG``.
 
 -------------------------------------
 NPP at the Stand Scale for All Stands
@@ -347,7 +347,7 @@ To compute the NPP at the stand scale for one or more studies, just add those st
 
 If you have more than one plot, your output will in a file named ``selected_studies_composite_npp.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
 
-If you just have one plot, your output will be in a file named ``[name of whatever study]_npp_output.csv``. It will be organized like `DBCODE, ENTITY, STANDID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
+If you just have one plot, your output will be in a file named ``[name of whatever study]_npp_output.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
 
 
 
