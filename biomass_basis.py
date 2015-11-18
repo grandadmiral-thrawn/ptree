@@ -6,16 +6,19 @@ import math
 def maxref(dbh, species):
     """ Check if given dbh (in cm) and given species is bigger than the maximum for that combination. The maximum was found from determining the top 1 percent of dbh's in cm for each species from all the historical data. This function operates behind the scenes on inputs from TP00102 (dbh's) and TP00101(species). It populates the .eqns attribute of the Tree or Stand classes so that the right equation or set of equations will be called. 
 
+    .. Example:
+
+    >>> maxref(20.0, 'ABAM')
+    >>> "normal"
+
     **INPUTS**
     
     :dbh: the tree's dbh, in cm
     :species: the tree's species, a four character code. If the database provides a longer code, it will be converted to a lowercase four letter code.
 
-    .. Example:
+    **RETURNS**
 
-    >>> maxref(20.0, 'ABAM')
-    >>> "normal"
-    
+    Either `"big"` or `"normal"` to trigger appropriate equation selection from the Stand or Tree's `.eqns` attribute.
     """
     if dbh == None or dbh == "None":
         return False
@@ -93,6 +96,10 @@ def as_lnln(woodden, dbh, b1, b2, b3, j1, j2, *args):
     :j1: first Jenkins parameter
     :j2: second Jenkins parameter
     :args: the remainder of arguments passed to the function, which are not called in this case
+
+    **RETURNS**
+
+    A tuple like this : `(biomass, volume, jenkins biomass, wood density)` or zeros, if any of these cannot be computed
     """
     try:
         biomass = round(b1*woodden*(b2*dbh**b3),7)

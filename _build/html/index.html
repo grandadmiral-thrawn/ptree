@@ -545,6 +545,8 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong></p>
+<p>A tuple like this : <cite>(biomass, volume, jenkins biomass, wood density)</cite> or zeros, if any of these cannot be computed</p>
 </dd></dl>
 
 <dl class="function">
@@ -598,6 +600,10 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 <dt id="biomass_basis.maxref">
 <code class="descclassname">biomass_basis.</code><code class="descname">maxref</code><span class="sig-paren">(</span><em>dbh</em>, <em>species</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.maxref" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if given dbh (in cm) and given species is bigger than the maximum for that combination. The maximum was found from determining the top 1 percent of dbh&#8217;s in cm for each species from all the historical data. This function operates behind the scenes on inputs from TP00102 (dbh&#8217;s) and TP00101(species). It populates the .eqns attribute of the Tree or Stand classes so that the right equation or set of equations will be called.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">maxref</span><span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="s">&#39;ABAM&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&quot;normal&quot;</span>
+</pre></div>
+</div>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -609,10 +615,8 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">maxref</span><span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="s">&#39;ABAM&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="s">&quot;normal&quot;</span>
-</pre></div>
-</div>
+<p><strong>RETURNS</strong></p>
+<p>Either <cite>&#8220;big&#8221;</cite> or <cite>&#8220;normal&#8221;</cite> to trigger appropriate equation selection from the Stand or Tree&#8217;s <cite>.eqns</cite> attribute.</p>
 </dd></dl>
 
 <dl class="function">

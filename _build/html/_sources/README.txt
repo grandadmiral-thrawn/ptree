@@ -52,7 +52,86 @@ The biomass computations began with computations by Gody and Lutz. These were la
 
 For computation of height (where needed), the `Garman <http://andrewsforest.oregonstate.edu/pubs/pdf/pub1445.pdf>`_  et al.(1995) methods were used, and height was computed as ``Ht_m = 1.37 + (b0*(1-exp(b1*DBH_cm))**b2)``. Height computations are largely internal to the `biomass_basis.py` module.
 
-If you are at Oregon State, you can also access the T-drive under ``GROUPS > FSDB > TP001 > biomass_programs`` to see the original documentation from Gody.
+If you are at Oregon State, you can also access the equations in the shared ``T-drive`` under ``GROUPS > FSDB > TP001 > biomass_programs`` to see the original documentation from Gody.
+
+----------------
+Equation Listing
+----------------
+
+Six different "forms" of biomass equation are used depending on source of data and tree species. The following shows the syntax for the math for every species of tree. When height is needed, the subsequent table shows the height calculation. Components are ``BAT`` (total aboveground biomass, Mg ), ``VSW`` (volume of the stemwood,  m\ :sup:`3` ), ``HT`` (height, m), ``VAE`` (volume aboveground entire tree, m\ :sup:`3`) and ``dbh`` (diameter at breast height, cm). When volume is the product, a wood density (``woodden``) value in g / m\ :sup:`3` (see reference) is used to convert to biomass.
+
+=========  ===========  =============================================================================
+Species    Component    Biomass
+=========  ===========  =============================================================================
+``QUKE``   ``BAT``      ``math.exp(-4.49787 + 0.7225820*math.log(0.01*dbh) + 1.72264*math.log(HT)``
+``ACMA``   ``VAE``      ``woodden*0.00007*dbh*2.2246200*HT**0.57561``
+``CHNO``   ``VSW``      ``1.01600*woodden*(0.0001868*dbh**2.40240)``
+``CHNO``   ``VSW``      ``1.02090*woodden*(0.0001076*dbh**2.56160)``
+``ABAM``   ``VSW``      ``1.04720*woodden*(0.0001129*dbh**2.58670)``
+``ABCO``   ``VSW``      ``1.03060*woodden*(0.0000932*dbh**2.62060)``
+``ABCO``   ``VSW``      ``1.02560*woodden*(0.0000473*dbh**2.77270)``
+``ABGR``   ``VSW``      ``1.02560*woodden*(0.0000473*dbh**2.77270)``
+``ABLA2``  ``VSW``      ``1.01540*woodden*(0.0001896*dbh**2.38090)``           
+``ABMA``   ``VSW``      ``1.01440*woodden*(0.0000527*dbh**2.74780)``           
+``ABPR``   ``VSW``      ``1.01710*woodden*(0.0001227*dbh**2.58120)``
+``PSME``   ``VSW``      ``1.03090*woodden*(0.0002146*dbh**2.43670)``
+``PSME``   ``VSW``      ``1.02960*woodden*(0.0002286*dbh**2.42470)``
+``PICO``   ``VSW``      ``1.02140*woodden*(0.0002840*dbh**2.33630)``
+``PIEN``   ``VSW``      ``1.01400*woodden*(0.0001160*dbh**2.57180)``
+``PIJE``   ``VSW``      ``1.01560*woodden*(0.0000158*dbh**2.95420)``
+``PILA``   ``VSW``      ``1.02110*woodden*(0.0000557*dbh**2.70890)``           
+``PILA``   ``VSW``      ``1.02110*woodden*(0.0000557*dbh**2.70890)``           
+``PISI``   ``VSW``      ``1.02220*woodden*(0.0003460*dbh**2.33200)``           
+``PISI``   ``VSW``      ``1.02220*woodden*(0.0003460*dbh**2.33200)``           
+``TABR``   ``VSW``      ``1.05960*woodden*(0.0001189*dbh**2.59890)``           
+``THPL``   ``VSW``      ``1.01600*woodden*(0.0001860*dbh**2.40240)``           
+``TSHE``   ``VSW``      ``1.05960*woodden*(0.0001189*dbh**2.59890)``           
+``TSME``   ``VSW``      ``1.01920*woodden*(0.0000929*dbh**2.59150)``
+``THPL``   ``VSW``      ``woodden*0.23080*(HT*(0.01*dbh)**2)`` 
+``PIMO``   ``VSW``      ``woodden*0.36080*(HT*(0.01*dbh)**2)``           
+``PIPO``   ``VSW``      ``woodden*0.36080*(HT*(0.01*dbh)**2)``           
+``LIDE2``  ``VSW``      ``woodden*0.33250*(HT*(0.01*dbh)**2)``           
+``ABPR``   ``VSW``      ``woodden*0.27340*(HT*(0.01*dbh)**2)``          
+``ABMA``   ``VSW``      ``woodden*0.31020*(HT*(0.01*dbh)**2)``           
+``CADE3``  ``VSW``      ``woodden*0.33250*(HT*(0.01*dbh)**2)``
+``CONU``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``       
+``ALIN``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
+``ALRU``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
+``ALSI``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
+``POTR``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
+``POTR2``  ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
+``PREM``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
+``PRUNU``  ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
+``ARME``   ``BAT``      ``1.*10**(-6)*math.exp(1.01532+0.0000380*math.log(dbh))``         
+``ACGL``   ``BAT``      ``1.*10**(-6)*math.exp(3.63400+2.7520000*math.log(dbh))``        
+``SASC``   ``BAT``      ``1.*10**(-6)*math.exp(3.45950+2.3891300*math.log(dbh))``        
+``SEGI``   ``BSW``      ``1.*10**(-6)*math.exp(-11.01740+2.5907000*math.log(dbh))``        
+``SEGI``   ``BSW``      ``1.*10**(-6)*math.exp(-11.01740+2.5907000*math.log(dbh))``   
+``CACH``   ``VSW``      ``woodden*HT**0.77467*0.0000569*(dbh)**2.07202``
+=========  ===========  =============================================================================
+
+The tables below show the height equations used, by species, when necessary.
+
+
+=========  ===========  =============================================================================
+Species    Component    Height
+=========  ===========  =============================================================================
+``QUKE``   ``HT``       ``1.37 + 24.81869*(1-math.exp(-0.026937*dbh))**0.915991``
+``ACMA``   ``HT``       ``1.37 + 30.41311*(1-math.exp(-0.034245*dbh))**0.682100``
+``THPL``   ``HT``       ``1.37 + 56.91574*(1-math.exp(-0.012625*dbh))**0.935899``
+``PIMO``   ``HT``       ``1.37 + 44.60542*(1-math.exp(-0.024401*dbh))**1.219469``
+``PIPO``   ``HT``       ``1.37 + 44.60542*(1-math.exp(-0.024401*dbh))**1.219469``
+``LIDE2``  ``HT``       ``1.37 + 39.82180*(1-math.exp(-0.027393*dbh))**1.403222``
+``ABPR``   ``HT``       ``1.37 + 78.60353*(1-math.exp(-0.013330*dbh))**1.185140``
+``ABMA``   ``HT``       ``1.37 + 9.05185*(1-math.exp(-0.016177*dbh))**1.152987``
+``CACH``   ``HT``       ``1.37 + 40.66479*(1-math.exp(-0.017775*dbh))**0.873626``
+=========  ===========  =============================================================================
+
+-------------------------------
+Programmatic Documentation Link
+-------------------------------
+
+Documentation for the `TPS` programs is located `here <http://htmlpreview.github.io/?https://github.com/dataRonin/ptree/blob/dev/_build/html/index.html>`_. Documentation is autogenerated by `sphinx autodoc <http://sphinx-doc.org/ext/autodoc.html>`_. 
 
 ====================
 Command Line Options

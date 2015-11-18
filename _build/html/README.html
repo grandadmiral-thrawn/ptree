@@ -53,32 +53,36 @@
 <p>TPS is a set of Python 3 modules for the aggregation of trees, plots, and stands from the USFS reference stands data maintained by the Corvallis Forest Science Lab.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#main-modules" id="id5">Main Modules</a></li>
-<li><a class="reference internal" href="#installation" id="id6">Installation</a><ul>
-<li><a class="reference internal" href="#development-version" id="id7">Development version</a></li>
+<li><a class="reference internal" href="#main-modules" id="id6">Main Modules</a></li>
+<li><a class="reference internal" href="#installation" id="id7">Installation</a><ul>
+<li><a class="reference internal" href="#development-version" id="id8">Development version</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#documentation-in-the-literature" id="id8">Documentation in the Literature</a></li>
-<li><a class="reference internal" href="#command-line-options" id="id9">Command Line Options</a><ul>
-<li><a class="reference internal" href="#details-about-1-tree" id="id10">Details About 1 Tree</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-stands" id="id11">Biomass at the Stand Scale for All Stands</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-stands" id="id12">Biomass at the Stand Scale for a set of one or more stands</a></li>
-<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-all-plots" id="id13">Biomass at the Plot Scale for All Plots</a></li>
-<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-a-set-of-one-or-more-plots" id="id14">Biomass at the Plot Scale for a set of one or more plots</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-studies" id="id15">Biomass at the Stand Scale for All Studies</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-studies" id="id16">Biomass at the Stand Scale for a set of one or more studies</a></li>
-<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-for-a-set-of-one-or-more-plots" id="id17">Biomass at the Plot Scale for Individual Trees for a set of one or more plots</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-for-a-set-of-one-or-more-stands" id="id18">Biomass at the Stand Scale for Individual Trees for a set of one or more stands</a></li>
-<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-on-all-plots" id="id19">Biomass at the Plot Scale for Individual Trees on All Plots</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-on-all-stands" id="id20">Biomass at the Stand Scale for Individual Trees on All Stands</a></li>
-<li><a class="reference internal" href="#biomass-at-the-tree-scale-for-less-than-3-trees" id="id21">Biomass at the Tree Scale for Less Than 3 Trees</a></li>
-<li><a class="reference internal" href="#status-checks-at-the-tree-scale-for-less-than-3-trees" id="id22">Status Checks at the Tree Scale for Less Than 3 Trees</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-stands" id="id23">NPP at the Stand Scale for All Stands</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-stands" id="id24">NPP at the Stand Scale for a set of one or more stands</a></li>
-<li><a class="reference internal" href="#npp-at-the-plot-scale-for-all-plots" id="id25">NPP at the Plot Scale for All Plots</a></li>
-<li><a class="reference internal" href="#npp-at-the-plot-scale-for-a-set-of-one-or-more-plots" id="id26">NPP at the Plot Scale for a set of one or more plots</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-studies" id="id27">NPP at the Stand Scale for All Studies</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-studies" id="id28">NPP at the Stand Scale for a set of one or more studies</a></li>
+<li><a class="reference internal" href="#documentation-in-the-literature" id="id9">Documentation in the Literature</a><ul>
+<li><a class="reference internal" href="#equation-listing" id="id10">Equation Listing</a></li>
+<li><a class="reference internal" href="#programmatic-documentation-link" id="id11">Programmatic Documentation Link</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#command-line-options" id="id12">Command Line Options</a><ul>
+<li><a class="reference internal" href="#details-about-1-tree" id="id13">Details About 1 Tree</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-stands" id="id14">Biomass at the Stand Scale for All Stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-stands" id="id15">Biomass at the Stand Scale for a set of one or more stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-all-plots" id="id16">Biomass at the Plot Scale for All Plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-a-set-of-one-or-more-plots" id="id17">Biomass at the Plot Scale for a set of one or more plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-studies" id="id18">Biomass at the Stand Scale for All Studies</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-studies" id="id19">Biomass at the Stand Scale for a set of one or more studies</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-for-a-set-of-one-or-more-plots" id="id20">Biomass at the Plot Scale for Individual Trees for a set of one or more plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-for-a-set-of-one-or-more-stands" id="id21">Biomass at the Stand Scale for Individual Trees for a set of one or more stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-on-all-plots" id="id22">Biomass at the Plot Scale for Individual Trees on All Plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-on-all-stands" id="id23">Biomass at the Stand Scale for Individual Trees on All Stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-tree-scale-for-less-than-3-trees" id="id24">Biomass at the Tree Scale for Less Than 3 Trees</a></li>
+<li><a class="reference internal" href="#status-checks-at-the-tree-scale-for-less-than-3-trees" id="id25">Status Checks at the Tree Scale for Less Than 3 Trees</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-stands" id="id26">NPP at the Stand Scale for All Stands</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-stands" id="id27">NPP at the Stand Scale for a set of one or more stands</a></li>
+<li><a class="reference internal" href="#npp-at-the-plot-scale-for-all-plots" id="id28">NPP at the Plot Scale for All Plots</a></li>
+<li><a class="reference internal" href="#npp-at-the-plot-scale-for-a-set-of-one-or-more-plots" id="id29">NPP at the Plot Scale for a set of one or more plots</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-studies" id="id30">NPP at the Stand Scale for All Studies</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-studies" id="id31">NPP at the Stand Scale for a set of one or more studies</a></li>
 </ul>
 </li>
 </ul>
@@ -113,7 +117,262 @@ Best to start with <code class="docutils literal"><span class="pre">tps_Sample</
 <h2>Documentation in the Literature<a class="headerlink" href="#documentation-in-the-literature" title="Permalink to this headline">¶</a></h2>
 <p>The biomass computations began with computations by Gody and Lutz. These were later passed on to Becky, Rob, and myself. There are two main sources, BIOPAK and dendrometer regressions. Dendrometer regressions are from volume, and use the TV009 or TP072 databases available from the FSDB. The TP072 database references the <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/tools/software/biopak.cfm?topnav=149">BIOPAK</a> software. Metadata and data from TV009 is <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/abstract.cfm?dbcode=TV009">here</a>.</p>
 <p>For computation of height (where needed), the <a class="reference external" href="http://andrewsforest.oregonstate.edu/pubs/pdf/pub1445.pdf">Garman</a>  et al.(1995) methods were used, and height was computed as <code class="docutils literal"><span class="pre">Ht_m</span> <span class="pre">=</span> <span class="pre">1.37</span> <span class="pre">+</span> <span class="pre">(b0*(1-exp(b1*DBH_cm))**b2)</span></code>. Height computations are largely internal to the <cite>biomass_basis.py</cite> module.</p>
-<p>If you are at Oregon State, you can also access the T-drive under <code class="docutils literal"><span class="pre">GROUPS</span> <span class="pre">&gt;</span> <span class="pre">FSDB</span> <span class="pre">&gt;</span> <span class="pre">TP001</span> <span class="pre">&gt;</span> <span class="pre">biomass_programs</span></code> to see the original documentation from Gody.</p>
+<p>If you are at Oregon State, you can also access the equations in the shared <code class="docutils literal"><span class="pre">T-drive</span></code> under <code class="docutils literal"><span class="pre">GROUPS</span> <span class="pre">&gt;</span> <span class="pre">FSDB</span> <span class="pre">&gt;</span> <span class="pre">TP001</span> <span class="pre">&gt;</span> <span class="pre">biomass_programs</span></code> to see the original documentation from Gody.</p>
+<div class="section" id="equation-listing">
+<h3>Equation Listing<a class="headerlink" href="#equation-listing" title="Permalink to this headline">¶</a></h3>
+<p>Six different &#8220;forms&#8221; of biomass equation are used depending on source of data and tree species. The following shows the syntax for the math for every species of tree. When height is needed, the subsequent table shows the height calculation. Components are <code class="docutils literal"><span class="pre">BAT</span></code> (total aboveground biomass, Mg ), <code class="docutils literal"><span class="pre">VSW</span></code> (volume of the stemwood,  m<sup>3</sup> ), <code class="docutils literal"><span class="pre">HT</span></code> (height, m), <code class="docutils literal"><span class="pre">VAE</span></code> (volume aboveground entire tree, m<sup>3</sup>) and <code class="docutils literal"><span class="pre">dbh</span></code> (diameter at breast height, cm). When volume is the product, a wood density (<code class="docutils literal"><span class="pre">woodden</span></code>) value in g / m<sup>3</sup> (see reference) is used to convert to biomass.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="11%" />
+<col width="79%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Species</th>
+<th class="head">Component</th>
+<th class="head">Biomass</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">QUKE</span></code></td>
+<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
+<td><code class="docutils literal"><span class="pre">math.exp(-4.49787</span> <span class="pre">+</span> <span class="pre">0.7225820*math.log(0.01*dbh)</span> <span class="pre">+</span> <span class="pre">1.72264*math.log(HT)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ACMA</span></code></td>
+<td><code class="docutils literal"><span class="pre">VAE</span></code></td>
+<td><code class="docutils literal"><span class="pre">woodden*0.00007*dbh*2.2246200*HT**0.57561</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">CHNO</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.01600*woodden*(0.0001868*dbh**2.40240)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">CHNO</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.02090*woodden*(0.0001076*dbh**2.56160)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ABAM</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.04720*woodden*(0.0001129*dbh**2.58670)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ABCO</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.03060*woodden*(0.0000932*dbh**2.62060)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ABCO</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.02560*woodden*(0.0000473*dbh**2.77270)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ABGR</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.02560*woodden*(0.0000473*dbh**2.77270)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ABLA2</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.01540*woodden*(0.0001896*dbh**2.38090)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ABMA</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.01440*woodden*(0.0000527*dbh**2.74780)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ABPR</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.01710*woodden*(0.0001227*dbh**2.58120)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PSME</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.03090*woodden*(0.0002146*dbh**2.43670)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">PSME</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.02960*woodden*(0.0002286*dbh**2.42470)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PICO</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.02140*woodden*(0.0002840*dbh**2.33630)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">PIEN</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.01400*woodden*(0.0001160*dbh**2.57180)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PIJE</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.01560*woodden*(0.0000158*dbh**2.95420)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">PILA</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.02110*woodden*(0.0000557*dbh**2.70890)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PILA</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.02110*woodden*(0.0000557*dbh**2.70890)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">PISI</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.02220*woodden*(0.0003460*dbh**2.33200)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PISI</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.02220*woodden*(0.0003460*dbh**2.33200)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">TABR</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.05960*woodden*(0.0001189*dbh**2.59890)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">THPL</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.01600*woodden*(0.0001860*dbh**2.40240)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">TSHE</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.05960*woodden*(0.0001189*dbh**2.59890)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">TSME</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.01920*woodden*(0.0000929*dbh**2.59150)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">THPL</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">woodden*0.23080*(HT*(0.01*dbh)**2)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PIMO</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">woodden*0.36080*(HT*(0.01*dbh)**2)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">PIPO</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">woodden*0.36080*(HT*(0.01*dbh)**2)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">LIDE2</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">woodden*0.33250*(HT*(0.01*dbh)**2)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ABPR</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">woodden*0.27340*(HT*(0.01*dbh)**2)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ABMA</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">woodden*0.31020*(HT*(0.01*dbh)**2)</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">CADE3</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">woodden*0.33250*(HT*(0.01*dbh)**2)</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">CONU</span></code></td>
+<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ALIN</span></code></td>
+<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ALRU</span></code></td>
+<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ALSI</span></code></td>
+<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">POTR</span></code></td>
+<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">POTR2</span></code></td>
+<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PREM</span></code></td>
+<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">PRUNU</span></code></td>
+<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ARME</span></code></td>
+<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(1.01532+0.0000380*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ACGL</span></code></td>
+<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(3.63400+2.7520000*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">SASC</span></code></td>
+<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(3.45950+2.3891300*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">SEGI</span></code></td>
+<td><code class="docutils literal"><span class="pre">BSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(-11.01740+2.5907000*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">SEGI</span></code></td>
+<td><code class="docutils literal"><span class="pre">BSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(-11.01740+2.5907000*math.log(dbh))</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">CACH</span></code></td>
+<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
+<td><code class="docutils literal"><span class="pre">woodden*HT**0.77467*0.0000569*(dbh)**2.07202</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The tables below show the height equations used, by species, when necessary.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="11%" />
+<col width="79%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Species</th>
+<th class="head">Component</th>
+<th class="head">Height</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">QUKE</span></code></td>
+<td><code class="docutils literal"><span class="pre">HT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.37</span> <span class="pre">+</span> <span class="pre">24.81869*(1-math.exp(-0.026937*dbh))**0.915991</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ACMA</span></code></td>
+<td><code class="docutils literal"><span class="pre">HT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.37</span> <span class="pre">+</span> <span class="pre">30.41311*(1-math.exp(-0.034245*dbh))**0.682100</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">THPL</span></code></td>
+<td><code class="docutils literal"><span class="pre">HT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.37</span> <span class="pre">+</span> <span class="pre">56.91574*(1-math.exp(-0.012625*dbh))**0.935899</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PIMO</span></code></td>
+<td><code class="docutils literal"><span class="pre">HT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.37</span> <span class="pre">+</span> <span class="pre">44.60542*(1-math.exp(-0.024401*dbh))**1.219469</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">PIPO</span></code></td>
+<td><code class="docutils literal"><span class="pre">HT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.37</span> <span class="pre">+</span> <span class="pre">44.60542*(1-math.exp(-0.024401*dbh))**1.219469</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">LIDE2</span></code></td>
+<td><code class="docutils literal"><span class="pre">HT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.37</span> <span class="pre">+</span> <span class="pre">39.82180*(1-math.exp(-0.027393*dbh))**1.403222</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ABPR</span></code></td>
+<td><code class="docutils literal"><span class="pre">HT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.37</span> <span class="pre">+</span> <span class="pre">78.60353*(1-math.exp(-0.013330*dbh))**1.185140</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ABMA</span></code></td>
+<td><code class="docutils literal"><span class="pre">HT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.37</span> <span class="pre">+</span> <span class="pre">9.05185*(1-math.exp(-0.016177*dbh))**1.152987</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">CACH</span></code></td>
+<td><code class="docutils literal"><span class="pre">HT</span></code></td>
+<td><code class="docutils literal"><span class="pre">1.37</span> <span class="pre">+</span> <span class="pre">40.66479*(1-math.exp(-0.017775*dbh))**0.873626</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="programmatic-documentation-link">
+<h3>Programmatic Documentation Link<a class="headerlink" href="#programmatic-documentation-link" title="Permalink to this headline">¶</a></h3>
+<p>Documentation for the <cite>TPS</cite> programs is located <a class="reference external" href="http://htmlpreview.github.io/?https://github.com/dataRonin/ptree/blob/dev/_build/html/index.html">here</a>. Documentation is autogenerated by <a class="reference external" href="http://sphinx-doc.org/ext/autodoc.html">sphinx autodoc</a>.</p>
+</div>
 </div>
 <div class="section" id="command-line-options">
 <h2>Command Line Options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h2>
@@ -254,7 +513,7 @@ Notes:
 </pre></div>
 </div>
 <p>Your output will be in a file named <code class="docutils literal"><span class="pre">selected_trees_indvtree_output.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">TREEID,</span> <span class="pre">COMPONENT,</span> <span class="pre">YEAR,</span> <span class="pre">BA_M2,</span> <span class="pre">VOL_M3,</span> <span class="pre">BIO_MG,</span> <span class="pre">JENKBIO_MG</span></code>.</p>
-<p>If you just have one tree, your output will be in a file named <code class="docutils literal"><span class="pre">[name</span> <span class="pre">of</span> <span class="pre">whatever</span> <span class="pre">tree]_tree_indvtree_output.csv</span></code>. It will be organized like <a href="#id3"><span class="problematic" id="id4">``</span></a>DBCODE, ENTITY, TREEID, COMPONENT, YEAR, BA_M2, VOL_M3, BIO_MG, JENKBIO_MG`.</p>
+<p>If you just have one tree, your output will be in a file named <code class="docutils literal"><span class="pre">[name</span> <span class="pre">of</span> <span class="pre">whatever</span> <span class="pre">tree]_tree_indvtree_output.csv</span></code>. It will be organized like <a href="#id4"><span class="problematic" id="id5">``</span></a>DBCODE, ENTITY, TREEID, COMPONENT, YEAR, BA_M2, VOL_M3, BIO_MG, JENKBIO_MG`.</p>
 </div>
 <div class="section" id="status-checks-at-the-tree-scale-for-less-than-3-trees">
 <h3>Status Checks at the Tree Scale for Less Than 3 Trees<a class="headerlink" href="#status-checks-at-the-tree-scale-for-less-than-3-trees" title="Permalink to this headline">¶</a></h3>
@@ -333,7 +592,11 @@ Notes:
 <li><a class="reference internal" href="#development-version">Development version</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#documentation-in-the-literature">Documentation in the Literature</a></li>
+<li><a class="reference internal" href="#documentation-in-the-literature">Documentation in the Literature</a><ul>
+<li><a class="reference internal" href="#equation-listing">Equation Listing</a></li>
+<li><a class="reference internal" href="#programmatic-documentation-link">Programmatic Documentation Link</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#command-line-options">Command Line Options</a><ul>
 <li><a class="reference internal" href="#details-about-1-tree">Details About 1 Tree</a></li>
 <li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-stands">Biomass at the Stand Scale for All Stands</a></li>
