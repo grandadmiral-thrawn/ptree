@@ -74,8 +74,6 @@ class Stand(object):
         **RETURNS**
 
         :Capture.num_plots: the number of plots for that stand and year. Serves no purpose in computation and is only used to generated the required outputs. 
-
-        .. warning: Currently calls from the sqlite3 database for the references of stands, plots, and years. Will need to be updated to call to FSDB.
         """
 
         np = {}
@@ -104,6 +102,8 @@ class Stand(object):
     def select_eqns(self):
         """ Gets only the equations you need based on the species on that plot by querying the database for individual species that will be on this stand and makes an equation table.
 
+        This is designed to limit the calls to the database and the amount of conditionals in the program. All trees on the stand are 'grouped' by species and then each group is mapped by the appropriate equation. Only the equations needed are used.
+
         **INTERNAL VARIABLES**
 
         :list_species: a list of the species on that stand in any year, used to query the database for distinct species
@@ -113,7 +113,7 @@ class Stand(object):
 
         **RETURNS**
 
-        Populates Stand.eqns with a reference of 'species' : 'function', where the function is a pointer to the appropriate equation form populated by parameters extracted from TP00110
+        Populates Stand.eqns with a reference of 'species' : 'function', where the function is a pointer to the appropriate equation form populated by parameters extracted from TP00110. 
         """
         list_species = []
         
@@ -208,6 +208,12 @@ class Stand(object):
     
     def check_additions_and_mort(self, XFACTOR):
         """ Check if the stand may contain "additions". If so, replace the year with the subsequent year as long as it is not also additions or mortality. If additions or mortality is the final years in the data, we will not do those years. 
+
+        For example, if addition happens in 1981 and last good remeasurement was in 1978, trees get 1978 if alive.
+
+        Also, check if the stand contains "mortalities". If so, replace the year with the previous year as long as it is not also additions or mortality. If this is the final year in the data, do not do this year.
+
+        For example, if mortality happens in 2004 and last remeasurement was 2010, trees roll to 2010 if dead. DBH is carried over from previous measurment.
 
         **INTERNAL VARIABLES**
 
@@ -312,7 +318,6 @@ class Stand(object):
         .. Note: ingrowth is included in "live" (live statuses are all but "6" and "9"), but ingrowth is exclusive when status is "2"
 
         **INTERNAL VARIABLES**
-
 
         :self.query: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, fsdbdata.dbo.tp00102.year, fsdbdata.dbo.tp00102.dbh_code, fsdbdata.dbo.tp00101.PSP_STUDYID FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00102 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid WHERE fsdbdata.dbo.tp00101.standid like '{standid}' ORDER BY fsdbdata.dbo.tp00102.treeid ASC"
 
@@ -525,7 +530,7 @@ class Stand(object):
                         self.od[year][species][plotid]['dead'].update({tid: (dbh, status, dbh_code)})
 
     def update_all_missing_trees(self):
-        """ Get the missing trees from self.missing and try to match each to a tree in the main dictionary that is alive in the preceding year from self.decent_years, and then return a copy of that tree to the year it is missing, so we can compute its biomass.
+        """ Get the missing trees from self.missing and try to match each to a tree in the main dictionary that is alive in the preceding year from self.decent_years, and then return a copy of that tree to the year it is missing, so we can compute its biomass. Trees were assigned here when pulled in from live. Because all trees are there now, we can roll the dbh from the appropriate last good measurement into this new year. The assumption is that all trees not known dead are considered alive.
 
         **INTERNAL VARIABLES**
 
@@ -579,10 +584,10 @@ class Stand(object):
 
                         
     def compute_biomasses(self, XFACTOR):
-        """ Compute the biomass, volume, jenkins. Use for stands with alternate minimums, areas, or detail plots 
+        """ Compute the number of trees per Hectare (TPHA), Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Volume ( m\ :sup:`3` ), and Basal Area ( m\ :sup:`2` ); can be used for stands with weird minimums, detail plots, or areas that are not 625 m. If a match to one of the unusual attributes of XFACTOR is not found, it is assumed the minimum is 15.0, the plot is not detail, and the area is 625. Most plots match on at least one category, though.
 
-        First use the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.
-            Load in the appropriate parameters for this computation. Separate "small" trees from "large" ones so that small ones can get the expansion factor. If they aren't on a detail plot, this number will just be "1".
+        This function uses the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.
+            Load in the appropriate parameters for this computation. Separate "small" trees from "large" ones so that small ones can get the expansion factor. If they aren't on a detail plot, this number will just be "1".)
 
 
         :XFACTOR: a Capture object containing the detail plots, minimum dbhs, etc.
@@ -891,9 +896,9 @@ class Stand(object):
         return Biomasses, BadTreeRef, Rob_Biomasses
 
     def aggregate_biomasses(self, Biomasses):
-        """ for each year in biomasses, add up all the trees from all the species, and output the stand summary over all the species as a nearly identical data structure. 
+        """ For each year in biomasses, add up all the trees from all the species, and output the stand summary over all the species as a nearly identical data structure. 
 
-        For every one of the attributes in Biomasses for Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins'' Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. In the write out, we'll multiply it out to the HA level
+        For every one of the attributes in Biomasses for Trees Per Hectare (TPHA), Biomass ( Mg ), Basal Area (m\ :sup:`2`),  Volume (m\ :sup:`3`), Jenkins'' Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. When writing occurs, the aggregate is expanded to the hectare.
 
         """
         Biomasses_Agg = {}
@@ -1034,9 +1039,9 @@ class Stand(object):
                 writer.writerow(new_row6)
 
     def write_individual_trees(self, *args):
-        """ Writes a csv file, containing the tree measurements for the individual trees on the stand.
+        """ Writes a csv file, containing the tree measurements for the individual trees on the stand. File contains only the measurement attributes from the composite file; it does not contain "trees per hectare" because only one tree.
 
-        .. note: this method is faster than using `tps_Tree`
+        .. note: this method is faster than using `tps_Tree`. However, `tps_Tree` provides more detailed information. 
         """
 
         if args and args != []:
@@ -1077,10 +1082,10 @@ class Stand(object):
                             dead_trees= {k: {'bio': self.eqns[each_species]['normal'](v[0]), 'ba': round(0.00007854*float(v[0])*float(v[0]),4), 'status': v[1]} for k,v in self.od[each_year][each_species][each_plot]['dead'].items() if v[0] != None and v[0] >= 5.0}
 
                         for each_tree in live_trees.keys():
-                            writer.writerow(['TP001', '11', each_tree.upper(), my_component.upper(), each_year, live_trees[each_tree]['ba'], live_trees[each_tree]['bio'][1], live_trees[each_tree]['bio'][0], live_trees[each_tree]['bio'][2]])
+                            writer.writerow(['TP001', '11', each_tree.upper(), my_component.upper(), each_year, live_trees[each_tree]['ba'], round(live_trees[each_tree]['bio'][1],4), live_trees[each_tree]['bio'][0], live_trees[each_tree]['bio'][2]])
 
                         for each_tree in dead_trees.keys():
-                            writer.writerow(['TP001', '11', each_tree.upper(), my_component.upper(), each_year, dead_trees[each_tree]['ba'], dead_trees[each_tree]['bio'][1], dead_trees[each_tree]['bio'][0], dead_trees[each_tree]['bio'][2]])
+                            writer.writerow(['TP001', '11', each_tree.upper(), my_component.upper(), each_year, dead_trees[each_tree]['ba'], round(dead_trees[each_tree]['bio'][1],4), dead_trees[each_tree]['bio'][0], dead_trees[each_tree]['bio'][2]])
 
 
 class Plot(Stand):
@@ -1088,7 +1093,10 @@ class Plot(Stand):
 
     Plots contain a Stand from which they are extracted, and a plot list enumerating what plots are to be analyzed. Otherwise, all of the methods and outputs are virtually identical to that in Stand, but scaled down.
 
-    :self.plotlist: is a list of plots for analysis. i.e. you could specify 3 plots of 40, 1 plot of 40, or no plots of 40 (in which case all would be assessed). You must always pass in an empty string for plotlist if you don't specify plots.
+    :self.plotlist: is a list of plots for analysis. i.e. you could specify 3 plots of 40 total plots (like [ncna0001, ncna0002, ncna0003], 1 plot of 40 (like ncna0001), or no plots of 40 (**in this case, ALL the plots get computed**). 
+
+    .. Warning: 
+    You must always pass in an empty string for plotlist if you don't specify plots.
 
     .. code-block:: python
 

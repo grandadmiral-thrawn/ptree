@@ -108,7 +108,7 @@ def as_d2ht(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     """ Generates biomass equations based on inputs of `b1`, `b2`, `b3`, `h1`, `h2`, and `h3` and wood density for a given dbh (in cm).
 
     Internally, a conversion to meters on dbh is performed to match the equation documentation specified for 
-    `TV00908<http://andrewsforest.oregonstate.edu/lter/data/domains.cfm?domain=enum&dbcode=TV009&attid=1321&topnav=8>`_.
+    `TV00908 <http://andrewsforest.oregonstate.edu/lter/data/domains.cfm?domain=enum&dbcode=TV009&attid=1321&topnav=8>`_.
 
     Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm.
 

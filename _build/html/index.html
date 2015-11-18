@@ -51,7 +51,7 @@
   <div class="section" id="welcome-to-the-tps-documentation">
 <h1>Welcome to the TPS documentation!<a class="headerlink" href="#welcome-to-the-tps-documentation" title="Permalink to this headline">¶</a></h1>
 <p>TPS (Tree, Plot, Stand) is a simple set of Python3 scripts for processing the &#8220;PSP Study&#8221; forest inventory data (contained in entity TP001) into necessary outputs. These output are number of trees per Hectare (TPHA), Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Volume ( m<sup>3</sup> ), and Basal Area ( m<sup>2</sup> ) tree, plot, and stand level summaries. It is also set up to compute the delta Trees Per Hectare (TPH), delta Biomass ( Mg/Ha ), delta Jenkins Biomass ( Mg/Ha ), delta Basal Area ( m<sup>2</sup> ), delta Volume ( m<sup>3</sup> ) between re-measurement intervals and to solve for aboveground Net Primary Productivity ( NPP, Mg/Ha/yr ) using the &#8220;change in biomass plus mortality and plus ingrowth&#8221; technique pioneered by <a class="reference external" href="http://and.lternet.edu/lter/pubs/pdf/pub2824.pdf">Acker</a>. Outputs are labelled as &#8220;composite&#8221; and contain both species-specific (labelled according to the <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=taxa%20%20%20%20&amp;dbcode=Tp001&amp;attid=7268&amp;topnav=8">taxa</a>) and aggregate metrics for each remeasurement or the interval between them. When trees are measured as &#8220;additions&#8221; to an existing remeasurement, they are included in the prior remeasurement or establishment year; when they are labelled as &#8220;mortalities&#8221; they are included in the subsequent remeasurement or establishment year. Thus, recent &#8220;mortalities&#8221; data, such as on WS02, may not be included in any outputs other than individual tree, as it does not yet have a subsequent year of remeasurement to be passed to.</p>
-<p>Documentation for TP001 is found <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/abstract.cfm?dbcode=Tp001">here</a>.</p>
+<p>Documentation for TP001 is found <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/abstract.cfm?dbcode=Tp001">here</a>. The README.rst file for the program&#8217;s <a class="reference external" href="https://github.com/dataRonin/ptree">GitHub</a> repository details installation and sources. It also contains instructions for pull requests and issues.</p>
 <p>Outputs from TPS go to:</p>
 <ul class="simple">
 <li>TP00106 - Stand Composite Biomass - By species and whole stand biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m<sup>2</sup>/Ha ), Volume ( m<sup>3</sup>/Ha ), and trees per hectare for stands by species and in aggregate.</li>
@@ -60,7 +60,7 @@
 <li>TP00109 - Plot Composite NPP - By species and whole plot aboveground NPP ( NPP, Mg/Ha/yr ) and the change (delta) in Biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m<sup>2</sup>/Ha ), Volume ( m<sup>3</sup>/Ha ) between remeasurement intervals.</li>
 <li>TP00113 - Individual Tree Biomass - Each individual Tree (by treeid) biomass ( Mg/Ha ), Jenkins Biomass ( Mg/Ha ), Basal Area ( m<sup>2</sup>/Ha ), Volume ( m<sup>3</sup>/Ha ). The &#8220;component&#8221; calculated (volume of stem wood, total aboveground biomass, etc.) directly for each tree by the given equation is also included.</li>
 </ul>
-<p>TPS contains 3 core modules: <code class="docutils literal"><span class="pre">tps_Tree</span></code> (for individual trees), <code class="docutils literal"><span class="pre">tps_Stand</span></code> (for stands and plots), and <code class="docutils literal"><span class="pre">tps_NPP</span></code> (for differences between stands over time). <code class="docutils literal"><span class="pre">tps_CLI</span></code> is a command line interface for using the appropriate module.  Within each <code class="docutils literal"><span class="pre">tps</span></code> program, reliance on a core data structure is consistent. This structure is basically:</p>
+<p>TPS contains 3 core modules: <code class="docutils literal"><span class="pre">tps_Tree</span></code> (for individual trees), <code class="docutils literal"><span class="pre">tps_Stand</span></code> (for stands and plots), and <code class="docutils literal"><span class="pre">tps_NPP</span></code> (for differences between stands over time). <code class="docutils literal"><span class="pre">tps_cli</span></code> is a command line interface for using the appropriate module.  Within each <code class="docutils literal"><span class="pre">tps</span></code> program, reliance on a core data structure is consistent. This structure is basically:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">STAND</span> <span class="n">ID</span> <span class="p">:</span>
   <span class="p">{</span><span class="n">YEARS</span> <span class="p">:</span>
     <span class="p">{</span><span class="n">SPECIES</span> <span class="p">:</span>
@@ -71,10 +71,14 @@
   <span class="p">}</span>
 </pre></div>
 </div>
-<p>This structure helps to organize the inputs in such a way that they can be easily iterated across to summarize new outputs. Beyond this description, this documentation has been auto-generated from these modules using the Sphinx Autodoc package. Documentation is also included for two modules for parameterizing the computations, <code class="docutils literal"><span class="pre">biomass_basis</span></code> and <code class="docutils literal"><span class="pre">poptree_basis</span></code>. <code class="docutils literal"><span class="pre">biomass_basis</span></code> contains the rules for parsing the biomass computation equations (found in table TP00111) and generating functions that take DBH and produce the outputs needed; <code class="docutils literal"><span class="pre">poptree_basis</span></code> contains the database connectors and a parameter object, <code class="docutils literal"><span class="pre">Capture</span></code>, which contains the information about the stands, plots, and study protocols (detail plot or not, mortality survey or not, etc.) that is needed in the tps modules. When executing a script to process a number of trees or stands, the <code class="docutils literal"><span class="pre">Capture</span></code> object needs to only be created once, greatly reducing the amount of database queries that might otherwise occur.</p>
+<p>This structure helps to organize the inputs in such a way that they can be easily iterated across to summarize new outputs. Beyond this description, this documentation has been auto-generated from these modules using the Sphinx Autodoc package. Documentation is also included for two modules for parameterizing the computations, <code class="docutils literal"><span class="pre">biomass_basis</span></code> and <code class="docutils literal"><span class="pre">poptree_basis</span></code>. <code class="docutils literal"><span class="pre">biomass_basis</span></code> contains the rules for parsing the biomass computation equations (found in table TP00110) and generating functions that take DBH and produce the outputs needed; <code class="docutils literal"><span class="pre">poptree_basis</span></code> contains the database connectors and a parameter object, <code class="docutils literal"><span class="pre">Capture</span></code>, which contains the information about the stands, plots, and study protocols (detail plot or not, mortality survey or not, etc.) that is needed in the tps modules. When executing a script to process a number of trees or stands, the <code class="docutils literal"><span class="pre">Capture</span></code> object needs to only be created once, greatly reducing the amount of database queries that might otherwise occur.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">All treeid&#8217;s, plots, and stands are specified programmatically in lower-case and as strings. Outputs place them in uppercase. In debugging, checking the case to lower-case will be useful.</p>
+<p class="last">For the equation form of each of the processing equations, see the <code class="docutils literal"><span class="pre">biomass_basis</span></code> section below.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All treeid&#8217;s, plots, and stands are specified programmatically in lowercase and as strings. Output to a file place them in uppercase. In debugging, checking the case to lowercase will be useful. The proper way to do this in Python is to append <code class="docutils literal"><span class="pre">.lower()</span></code> to the end of any string you suspect might be coming in as an uppercase.</p>
 </div>
 </div>
 <div class="section" id="contents">
@@ -94,7 +98,7 @@
 <span class="n">query_file</span><span class="p">:</span> <span class="n">qf_2</span><span class="o">.</span><span class="n">yaml</span>
 </pre></div>
 </div>
-<p>It is imperative that the <cite>keys</cite> on the left-side of the configuration file match the keys in the <cite>pymssql</cite> driver so that the connection will work.</p>
+<p>It is imperative that the <cite>keys</cite> on the left-side of the configuration file match the keys in the <cite>pymssql</cite> driver so that the connection will work. I.e. you must call the server as <cite>server</cite> and the password as <cite>password</cite>, not as <cite>s</cite> and <cite>pw</cite> or some other nonsense.</p>
 <p>SQL queries are in <code class="docutils literal"><span class="pre">qf_2.yaml</span></code>. This file is included with this program, and should also be located in the base directory with <code class="docutils literal"><span class="pre">poptree_basis</span></code>. You can re-configure or add queries there so that the changes propogate throughout the modules. This is done by creating an object called <code class="docutils literal"><span class="pre">YamlConn()</span></code> with <code class="docutils literal"><span class="pre">poptree_basis</span></code> which is responsible for managing your connections and queries. If you want to try out a query, you can use <code class="docutils literal"><span class="pre">YamlConn()</span></code> to generate a cursor to the database, like so:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">_</span><span class="p">,</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">YamlConn</span><span class="p">()</span><span class="o">.</span><span class="n">sql_connect</span><span class="p">()</span>
 <span class="n">sql</span><span class="o">=</span> <span class="s">&quot;select top 1 * from fsdbdata.dbo.tp00101&quot;</span>
@@ -102,7 +106,7 @@
 <span class="k">print</span><span class="p">([</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sql</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>In the command line interface, <code class="docutils literal"><span class="pre">tps_CLI</span></code>, commands can be issued to gather a specific tree, stand, set of trees, etc. See documentation below.</p>
+<p>In the command line interface, <code class="docutils literal"><span class="pre">tps_cli</span></code>, commands can be issued to gather a specific tree, stand, set of trees, etc. See documentation in the README.rst file on`GitHub &lt;<a class="reference external" href="https://github.com/dataRonin/ptree">https://github.com/dataRonin/ptree</a>&gt;`_.</p>
 <span class="target" id="module-poptree_basis"></span><dl class="class">
 <dt id="poptree_basis.Capture">
 <em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">Capture</code><span class="sig-paren">(</span><em>cursor</em>, <em>queries</em><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture" title="Permalink to this definition">¶</a></dt>
@@ -401,13 +405,15 @@
 </div>
 <div class="section" id="biomass-equations">
 <h2>Biomass Equations:<a class="headerlink" href="#biomass-equations" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">biomass_basis.py</span></code> uses the information in TP00111 to compute the Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Basal Area ( m<sup>2</sup> ), Volume ( m<sup>3</sup> ). Wood density is assigned by <code class="docutils literal"><span class="pre">biomass_basis</span></code> but no computation is involved apart from using it to switch between volume and biomass when needed. Proxy forms and components computed are also pulled from the database at this time.</p>
+<p><code class="docutils literal"><span class="pre">biomass_basis.py</span></code> uses the information in TP00110 to compute the Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Basal Area ( m<sup>2</sup> ), Volume ( m<sup>3</sup> ). Jenkins&#8217; biomass is from Jenkins&#8217; 2003 <a class="reference external" href="http://www.fs.fed.us/ne/durham/4104/papers/Heathbiomass_eqns.pdf">paper</a>. (Wood density is assigned by <code class="docutils literal"><span class="pre">biomass_basis</span></code> but no computation is involved apart from using it to switch between volume and biomass when needed. Proxy forms and components computed are also pulled from the database in this module.</p>
 <span class="target" id="module-biomass_basis"></span><dl class="function">
 <dt id="biomass_basis.as_biopak">
 <code class="descclassname">biomass_basis.</code><code class="descname">as_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_biopak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite> and wood density for dbh, in cm.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
 <p>The BioPak method computes total aboveground biomass explicitly, rather than from volume. In most cases, the original output from the equations as specified in BioPak was in grams, and here it is converted into Megagrams.</p>
+<p>The math form for this equation is: biomass = 1.0 * 10**(-6) * exp( b1 + b2 * ln(dbh))
+The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(dbh))</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -439,6 +445,8 @@
 <dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, <cite>h1</cite>, <cite>h2</cite>, <cite>h3</cite> and wood density for dbh, in cm.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
 <p>Unlike many other BioPak methods, the chinquapin functions usually need height. Height is calculated here. The height equations are also from BioPak.</p>
+<p>The math form for this equation is: biomass = wood density * height**b1 * b2 * dbh**b3
+The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(dbh))</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -471,10 +479,12 @@
 <dl class="function">
 <dt id="biomass_basis.as_d2ht">
 <code class="descclassname">biomass_basis.</code><code class="descname">as_d2ht</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_d2ht" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, <cite>h1</cite>, <cite>h2</cite>, and <cite>h3</cite> and wood density for dbh, in cm.</p>
+<dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, <cite>h1</cite>, <cite>h2</cite>, and <cite>h3</cite> and wood density for a given dbh (in cm).</p>
 <p>Internally, a conversion to meters on dbh is performed to match the equation documentation specified for 
-<a href="#id1"><span class="problematic" id="id2">`TV00908&lt;ttp://andrewsforest.oregonstate.edu/lter/data/domains.cfm?domain=enum&amp;dbcode=TV009&amp;attid=1321&amp;topnav=8&gt;`_</span></a>.</p>
+<a class="reference external" href="http://andrewsforest.oregonstate.edu/lter/data/domains.cfm?domain=enum&amp;dbcode=TV009&amp;attid=1321&amp;topnav=8">TV00908</a>.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
+<p>The math form of this equation is: biomass = wood density * height * b1 * (0.01 * dbh)**2
+The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(dbh))</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -507,8 +517,11 @@
 <dl class="function">
 <dt id="biomass_basis.as_lnln">
 <code class="descclassname">biomass_basis.</code><code class="descname">as_lnln</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.as_lnln" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, and wood density for dbh, in cm.</p>
+<dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, and wood density for a given dbh (in cm).</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
+<p>This equation is taken from TV00908.</p>
+<p>The math form of this equation is: biomass = b1 * wood density * ( b2 * dbh ** b3 )
+The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(dbh))</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -540,6 +553,7 @@
 <dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, <cite>h1</cite>, <cite>h2</cite>, <cite>h3</cite>  and wood density for dbh, in cm.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
 <p>Species in the Quercus (oak) family almost uniquely use this form in BioPak for doing the biomass computation.</p>
+<p>The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(dbh))</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -573,6 +587,7 @@
 <dt id="biomass_basis.jenkins2014">
 <code class="descclassname">biomass_basis.</code><code class="descname">jenkins2014</code><span class="sig-paren">(</span><em>dbh</em>, <em>j3</em>, <em>j4</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.jenkins2014" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes 2014 jenkins values for some species. If you add in new parameters, you might want this.</p>
+<p>The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(dbh))</p>
 <p><strong>INPUTS</strong>
 :dbh: cm diameter at breast height
 :j3: first Jenkins2014 parameter
@@ -582,7 +597,7 @@
 <dl class="function">
 <dt id="biomass_basis.maxref">
 <code class="descclassname">biomass_basis.</code><code class="descname">maxref</code><span class="sig-paren">(</span><em>dbh</em>, <em>species</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.maxref" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if given dbh in cm and given species is bigger than the maximum for that combination. The maximum was found from determining the top 1 percent of dbh&#8217;s in cm for each species from all the historical data. This function operates behind the scenes on inputs from TP00102 (dbh&#8217;s) and TP00101(species). It populates the eqns attribute of the Tree or Stand classes so that the right equation or set of equations will be called.</p>
+<dd><p>Check if given dbh (in cm) and given species is bigger than the maximum for that combination. The maximum was found from determining the top 1 percent of dbh&#8217;s in cm for each species from all the historical data. This function operates behind the scenes on inputs from TP00102 (dbh&#8217;s) and TP00101(species). It populates the .eqns attribute of the Tree or Stand classes so that the right equation or set of equations will be called.</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -604,9 +619,11 @@
 <dt id="biomass_basis.mod_biopak">
 <code class="descclassname">biomass_basis.</code><code class="descname">mod_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>h1</em>, <em>h2</em>, <em>h3</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.mod_biopak" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, <cite>h1</cite>, <cite>h2</cite>, <cite>h3</cite> and wood density for dbh, in cm.</p>
-<p>THIS IS A VERY SPECIAL EQUATION JUST FOR ACMA</p>
+<p>THIS IS A VERY SPECIAL EQUATION JUST FOR ACMA!!!  It is based on what is in 654 in BioPak, entity 2. It is what is used by both Lutz and Gody.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
-<p>Unlike many other BioPak methods, the chinquapin functions usually need height. Height is calculated here. The height equations are also from BioPak.</p>
+<p>ACMA ONLY!!!</p>
+<p>The math form for this equation is: biomass = wood density * b1 * dbh**b2 * height**b3
+The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(dbh))</p>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -657,6 +674,8 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">As_d2ht:</th><td class="field-body">function call for the d2ht form</td>
 </tr>
+<tr class="field-even field"><th class="field-name">Mod_biopak:</th><td class="field-body">function call for the mod_biopak form</td>
+</tr>
 </tbody>
 </table>
 <p><strong>RETURNS</strong></p>
@@ -666,7 +685,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </div>
 <div class="section" id="individual-trees">
 <h2>Individual Trees:<a class="headerlink" href="#individual-trees" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">tps_Tree.py</span></code> contains classes and functions for computing the attributes of individual trees. Each individual tree as defined in TP00101 is an instance of a class of <code class="docutils literal"><span class="pre">Tree</span></code>. For example, <code class="docutils literal"><span class="pre">NCNA000300005</span></code> is one Tree, even if it alive for 5 remeasurements. All the remeasurements taken on one individual tree are encapsulated into a single instance of Tree for that individual, and can be accessed using the property of <code class="docutils literal"><span class="pre">Tree.state</span></code>. If desired, checks on the state of a tree are generated. These are accessed through the QC portion of the interface.</p>
+<p><code class="docutils literal"><span class="pre">tps_Tree.py</span></code> contains classes and functions for computing the attributes of individual trees. Each individual tree as defined in TP00101 is an instance of a class of <code class="docutils literal"><span class="pre">Tree</span></code>. For example, <code class="docutils literal"><span class="pre">NCNA000300005</span></code> is one Tree, even if it alive for 5 remeasurements. All the remeasurements taken on one individual tree are encapsulated into a single instance of Tree for that individual, and can be accessed using the property of <code class="docutils literal"><span class="pre">Tree.state</span></code>. If desired, checks on the state of a tree are generated. These are accessed through the QC portion of the interface. The equations used on the tree are foind in <code class="docutils literal"><span class="pre">Tree.eqns</span></code>. They are in <code class="docutils literal"><span class="pre">lambda</span></code> form; to access them, you&#8217;ll need to specify a dbh.</p>
 <span class="target" id="module-tps_Tree"></span><dl class="class">
 <dt id="tps_Tree.Tree">
 <em class="property">class </em><code class="descclassname">tps_Tree.</code><code class="descname">Tree</code><span class="sig-paren">(</span><em>cur</em>, <em>queries</em>, <em>tid</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree" title="Permalink to this definition">¶</a></dt>
@@ -964,7 +983,11 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </div>
 <div class="section" id="stands">
 <h2>Stands:<a class="headerlink" href="#stands" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">tps_Stand.py</span></code> contains classes and functions for computing the static attributes on the stand and plot scale. Each stand is defined as all the plots during a given re-measurement year. Both plot and stand attributes are computed on a per-hectare basis. Some stands contain <code class="docutils literal"><span class="pre">detail</span> <span class="pre">plots</span></code> with small trees representative of the stand as a whole. Plots sometimes have additional <code class="docutils literal"><span class="pre">meaning</span></code> we want to know beyond that of the stand. In all cases, we compute plot <code class="docutils literal"><span class="pre">on</span> <span class="pre">the</span> <span class="pre">way</span></code> to getting stand, so it&#8217;s easy for us to include it in the output as well. Stands can also be used for computing the individual trees they contain.</p>
+<p><code class="docutils literal"><span class="pre">tps_Stand.py</span></code> contains classes and functions for computing the static attributes on the stand and plot scale. Each stand is defined as all the plots during a given re-measurement year. Both plot and stand attributes are computed on a per-hectare basis. Some stands contain <code class="docutils literal"><span class="pre">detail</span> <span class="pre">plots</span></code> with small trees representative of the stand as a whole. Plots sometimes have additional <code class="docutils literal"><span class="pre">meaning</span></code> we want to know beyond that of the stand. In all cases, we compute plot <code class="docutils literal"><span class="pre">on</span> <span class="pre">the</span> <span class="pre">way</span></code> to getting stand, so it&#8217;s easy for us to include it in the output as well. Additions on stands are rolled to the prior remeasurement. Mortalities on stands are rolled to the next remeasurement. DBH&#8217;s from the last known good DBH are assigned to <cite>mort-ed</cite> or missing trees. Stands can also be used for computing the individual trees they contain. When a set of individual trees are computed at the stand scale, the individuals on additions plots are rolled back in time to the previous remeasurement and those on mortality plots are rolled forward in time to the next remeasurement. Any mortality measurements that happen after the final re-measurement will not be included.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Sometimes on missing trees, the time that has passed since last known good measurement and now can be in excess of 20 years. Since a tree is not considered dead until it is morted, these trees may affect your output unexpectedly.</p>
+</div>
 <span class="target" id="module-tps_Stand"></span><dl class="class">
 <dt id="tps_Stand.Plot">
 <em class="property">class </em><code class="descclassname">tps_Stand.</code><code class="descname">Plot</code><span class="sig-paren">(</span><em>Stand</em>, <em>XFACTOR</em>, <em>plotlist</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot" title="Permalink to this definition">¶</a></dt>
@@ -975,10 +998,11 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Self.plotlist:</th><td class="field-body">is a list of plots for analysis. i.e. you could specify 3 plots of 40, 1 plot of 40, or no plots of 40 (in which case all would be assessed). You must always pass in an empty string for plotlist if you don&#8217;t specify plots.</td>
+<tr class="field-odd field"><th class="field-name">Self.plotlist:</th><td class="field-body">is a list of plots for analysis. i.e. you could specify 3 plots of 40 total plots (like [ncna0001, ncna0002, ncna0003], 1 plot of 40 (like ncna0001), or no plots of 40 (<strong>in this case, ALL the plots get computed</strong>).</td>
 </tr>
 </tbody>
 </table>
+<p>You must always pass in an empty string for plotlist if you don&#8217;t specify plots.</p>
 <div class="highlight-python"><div class="highlight"><pre>
 </pre></div>
 </div>
@@ -989,8 +1013,8 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dl class="method">
 <dt id="tps_Stand.Plot.aggregate_biomasses">
 <code class="descname">aggregate_biomasses</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.aggregate_biomasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>for each year in biomasses, add up all the trees from all the species, and output the stand summary over all the species as a nearly identical data structure.</p>
-<p>For every one of the attributes in Biomasses for Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. In the write out, we&#8217;ll multiply it out to the HA level</p>
+<dd><p>For each year in biomasses, add up all the trees from all the species, and output the stand summary over all the species as a nearly identical data structure.</p>
+<p>For every one of the attributes in Biomasses for Trees Per Hectare (TPHA), Biomass ( Mg ), Basal Area (m<sup>2</sup>),  Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. When writing occurs, the aggregate is expanded to the hectare.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1004,6 +1028,9 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dt id="tps_Stand.Plot.check_additions_and_mort">
 <code class="descname">check_additions_and_mort</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.check_additions_and_mort" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the stand may contain &#8220;additions&#8221;. If so, replace the year with the subsequent year as long as it is not also additions or mortality. If additions or mortality is the final years in the data, we will not do those years.</p>
+<p>For example, if addition happens in 1981 and last good remeasurement was in 1978, trees get 1978 if alive.</p>
+<p>Also, check if the stand contains &#8220;mortalities&#8221;. If so, replace the year with the previous year as long as it is not also additions or mortality. If this is the final year in the data, do not do this year.</p>
+<p>For example, if mortality happens in 2004 and last remeasurement was 2010, trees roll to 2010 if dead. DBH is carried over from previous measurment.</p>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1020,10 +1047,10 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dl class="method">
 <dt id="tps_Stand.Plot.compute_biomasses">
 <code class="descname">compute_biomasses</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.compute_biomasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the biomass, volume, jenkins. Use for stands with alternate minimums, areas, or detail plots</p>
+<dd><p>Compute the number of trees per Hectare (TPHA), Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Volume ( m<sup>3</sup> ), and Basal Area ( m<sup>2</sup> ); can be used for stands with weird minimums, detail plots, or areas that are not 625 m. If a match to one of the unusual attributes of XFACTOR is not found, it is assumed the minimum is 15.0, the plot is not detail, and the area is 625. Most plots match on at least one category, though.</p>
 <dl class="docutils">
-<dt>First use the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.</dt>
-<dd>Load in the appropriate parameters for this computation. Separate &#8220;small&#8221; trees from &#8220;large&#8221; ones so that small ones can get the expansion factor. If they aren&#8217;t on a detail plot, this number will just be &#8220;1&#8221;.</dd>
+<dt>This function uses the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.</dt>
+<dd>Load in the appropriate parameters for this computation. Separate &#8220;small&#8221; trees from &#8220;large&#8221; ones so that small ones can get the expansion factor. If they aren&#8217;t on a detail plot, this number will just be &#8220;1&#8221;.)</dd>
 </dl>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1134,6 +1161,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dt id="tps_Stand.Plot.select_eqns">
 <code class="descname">select_eqns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.select_eqns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets only the equations you need based on the species on that plot by querying the database for individual species that will be on this stand and makes an equation table.</p>
+<p>This is designed to limit the calls to the database and the amount of conditionals in the program. All trees on the stand are &#8216;grouped&#8217; by species and then each group is mapped by the appropriate equation. Only the equations needed are used.</p>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1152,13 +1180,13 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tbody>
 </table>
 <p><strong>RETURNS</strong></p>
-<p>Populates Stand.eqns with a reference of &#8216;species&#8217; : &#8216;function&#8217;, where the function is a pointer to the appropriate equation form populated by parameters extracted from TP00110</p>
+<p>Populates Stand.eqns with a reference of &#8216;species&#8217; : &#8216;function&#8217;, where the function is a pointer to the appropriate equation form populated by parameters extracted from TP00110.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Plot.update_all_missing_trees">
 <code class="descname">update_all_missing_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.update_all_missing_trees" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the missing trees from self.missing and try to match each to a tree in the main dictionary that is alive in the preceding year from self.decent_years, and then return a copy of that tree to the year it is missing, so we can compute its biomass.</p>
+<dd><p>Get the missing trees from self.missing and try to match each to a tree in the main dictionary that is alive in the preceding year from self.decent_years, and then return a copy of that tree to the year it is missing, so we can compute its biomass. Trees were assigned here when pulled in from live. Because all trees are there now, we can roll the dbh from the appropriate last good measurement into this new year. The assumption is that all trees not known dead are considered alive.</p>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1177,7 +1205,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dl class="method">
 <dt id="tps_Stand.Plot.write_individual_trees">
 <code class="descname">write_individual_trees</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_individual_trees" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes a csv file, containing the tree measurements for the individual trees on the stand.</p>
+<dd><p>Writes a csv file, containing the tree measurements for the individual trees on the stand. File contains only the measurement attributes from the composite file; it does not contain &#8220;trees per hectare&#8221; because only one tree.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1255,14 +1283,17 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dl class="method">
 <dt id="tps_Stand.Stand.aggregate_biomasses">
 <code class="descname">aggregate_biomasses</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.aggregate_biomasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>for each year in biomasses, add up all the trees from all the species, and output the stand summary over all the species as a nearly identical data structure.</p>
-<p>For every one of the attributes in Biomasses for Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. In the write out, we&#8217;ll multiply it out to the HA level</p>
+<dd><p>For each year in biomasses, add up all the trees from all the species, and output the stand summary over all the species as a nearly identical data structure.</p>
+<p>For every one of the attributes in Biomasses for Trees Per Hectare (TPHA), Biomass ( Mg ), Basal Area (m<sup>2</sup>),  Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. When writing occurs, the aggregate is expanded to the hectare.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.check_additions_and_mort">
 <code class="descname">check_additions_and_mort</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.check_additions_and_mort" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the stand may contain &#8220;additions&#8221;. If so, replace the year with the subsequent year as long as it is not also additions or mortality. If additions or mortality is the final years in the data, we will not do those years.</p>
+<p>For example, if addition happens in 1981 and last good remeasurement was in 1978, trees get 1978 if alive.</p>
+<p>Also, check if the stand contains &#8220;mortalities&#8221;. If so, replace the year with the previous year as long as it is not also additions or mortality. If this is the final year in the data, do not do this year.</p>
+<p>For example, if mortality happens in 2004 and last remeasurement was 2010, trees roll to 2010 if dead. DBH is carried over from previous measurment.</p>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1279,10 +1310,10 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dl class="method">
 <dt id="tps_Stand.Stand.compute_biomasses">
 <code class="descname">compute_biomasses</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.compute_biomasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the biomass, volume, jenkins. Use for stands with alternate minimums, areas, or detail plots</p>
+<dd><p>Compute the number of trees per Hectare (TPHA), Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Volume ( m<sup>3</sup> ), and Basal Area ( m<sup>2</sup> ); can be used for stands with weird minimums, detail plots, or areas that are not 625 m. If a match to one of the unusual attributes of XFACTOR is not found, it is assumed the minimum is 15.0, the plot is not detail, and the area is 625. Most plots match on at least one category, though.</p>
 <dl class="docutils">
-<dt>First use the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.</dt>
-<dd>Load in the appropriate parameters for this computation. Separate &#8220;small&#8221; trees from &#8220;large&#8221; ones so that small ones can get the expansion factor. If they aren&#8217;t on a detail plot, this number will just be &#8220;1&#8221;.</dd>
+<dt>This function uses the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.</dt>
+<dd>Load in the appropriate parameters for this computation. Separate &#8220;small&#8221; trees from &#8220;large&#8221; ones so that small ones can get the expansion factor. If they aren&#8217;t on a detail plot, this number will just be &#8220;1&#8221;.)</dd>
 </dl>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1378,6 +1409,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dt id="tps_Stand.Stand.select_eqns">
 <code class="descname">select_eqns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.select_eqns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets only the equations you need based on the species on that plot by querying the database for individual species that will be on this stand and makes an equation table.</p>
+<p>This is designed to limit the calls to the database and the amount of conditionals in the program. All trees on the stand are &#8216;grouped&#8217; by species and then each group is mapped by the appropriate equation. Only the equations needed are used.</p>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1396,13 +1428,13 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tbody>
 </table>
 <p><strong>RETURNS</strong></p>
-<p>Populates Stand.eqns with a reference of &#8216;species&#8217; : &#8216;function&#8217;, where the function is a pointer to the appropriate equation form populated by parameters extracted from TP00110</p>
+<p>Populates Stand.eqns with a reference of &#8216;species&#8217; : &#8216;function&#8217;, where the function is a pointer to the appropriate equation form populated by parameters extracted from TP00110.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.update_all_missing_trees">
 <code class="descname">update_all_missing_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.update_all_missing_trees" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the missing trees from self.missing and try to match each to a tree in the main dictionary that is alive in the preceding year from self.decent_years, and then return a copy of that tree to the year it is missing, so we can compute its biomass.</p>
+<dd><p>Get the missing trees from self.missing and try to match each to a tree in the main dictionary that is alive in the preceding year from self.decent_years, and then return a copy of that tree to the year it is missing, so we can compute its biomass. Trees were assigned here when pulled in from live. Because all trees are there now, we can roll the dbh from the appropriate last good measurement into this new year. The assumption is that all trees not known dead are considered alive.</p>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1421,7 +1453,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dl class="method">
 <dt id="tps_Stand.Stand.write_individual_trees">
 <code class="descname">write_individual_trees</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_individual_trees" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes a csv file, containing the tree measurements for the individual trees on the stand.</p>
+<dd><p>Writes a csv file, containing the tree measurements for the individual trees on the stand. File contains only the measurement attributes from the composite file; it does not contain &#8220;trees per hectare&#8221; because only one tree.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1456,7 +1488,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </div>
 <div class="section" id="npp">
 <h2>NPP:<a class="headerlink" href="#npp" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">tps_NPP.py</span></code> contains classes and functions for computing the dynamic attributes on the stand and plot scale. Each stand is defined as all the plots during a given re-measurement year. Deltas are defined as the difference between remeasurement years, where mortalities are moved &#8220;up&#8221; to subsequent remeasurements and additions are moved &#8220;down&#8221; to early remeasurements. Both plot and stand attributes are computed on a per-hectare basis. NPP is computed on an annual basis. The rest of the details regarding the static stand and plot attributes apply to the dynamic attributes as well. There is no such thing as NPP on individual trees.</p>
+<p><code class="docutils literal"><span class="pre">tps_NPP.py</span></code> contains classes and functions for computing the dynamic attributes on the stand and plot scale. Each stand is defined as all the plots during a given re-measurement year. Deltas are defined as the difference between remeasurement years, where mortalities are moved &#8220;up&#8221; to subsequent remeasurements and additions are moved &#8220;down&#8221; to early remeasurements. Both plot and stand attributes are computed on a per-hectare basis. NPP is computed on an annual basis. The rest of the details regarding the static stand and plot attributes apply to the dynamic attributes as well. There is no such thing as NPP on individual trees. Trying to run that from the command line interface will result in error.</p>
 <span class="target" id="module-tps_NPP"></span><dl class="function">
 <dt id="tps_NPP.compute_NPP">
 <code class="descclassname">tps_NPP.</code><code class="descname">compute_NPP</code><span class="sig-paren">(</span><em>Stand</em>, <em>Bios</em>, <em>type</em>, <em>breakdown_type</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.compute_NPP" title="Permalink to this definition">¶</a></dt>
@@ -1499,7 +1531,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </div>
 <div class="section" id="cli">
 <h2>CLI:<a class="headerlink" href="#cli" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">tps_cli.py</span></code> is the command line interface. Please see <code class="docutils literal"><span class="pre">readme.md</span></code> for how to use this interface.</p>
+<p><code class="docutils literal"><span class="pre">tps_cli.py</span></code> is the command line interface. Please see <code class="docutils literal"><span class="pre">README.md</span></code> for how to use this interface.</p>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
