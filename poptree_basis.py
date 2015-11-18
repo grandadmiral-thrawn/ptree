@@ -19,6 +19,10 @@ class YamlConn(object):
     >>> A.config = <class 'dict'>
     >>> A.queries= <class 'dict'>
     >>> <pymssql.connection, pymssql.cursor> = A.sql_connect()
+
+    **RETURNS**
+
+    A instance of the YamlConn connection object, used to keep you plugged into the database.
     """
     def __init__( self ):
         self.configfilename = os.path.join( HERE, "config_2.yaml" )
@@ -77,9 +81,14 @@ class Capture(object):
     >>> A.additions['pila']
     >>> {1983: ['pila0010', 'pila0011', 'pila0012', 'pila0013', 'pila0014', 'pila0015', 'pila0016', 'pila0017', 'pila0018']}
 
-    **METHODS**
+    **RETURNS**
+
+    This is a description of all the properties of a Capture class. Throughout the program, this class is often named XFACTOR.
 
     :A: in this example, an instance of the Capture class.
+
+    The following attribute of the Capture class will be shown with all the nested structure written out. Other attributes, we just show the full nested structure written out as keys following the main object.
+
     :A.detail_reference.keys(): the standids that contain detail plots for at least 1 plot in 1 remeasurement.
     :A.detail_reference.[standid]: the years that the standid contains at least 1 detail plot
     :A.detail_reference.[standid][year]: the plotids on that standid and year when at least 1 plot is a detail plot
@@ -87,16 +96,22 @@ class Capture(object):
     :A.detail_reference.[standid][year][plotno]['area']: the area m\ :sup:`2` of the detail plot (not expanded)
     :A.detail_reference.[standid][year][plotno]['min']: the minimum dbh on that detail plot
 
-    :A.umins_reference.[standid]: standids whose minimum dbhs in at least 1 year are not 15.0 cm
-    :A.umins_reference.[standid][year]: the plotids on that standid and year when at least 1 plot has a minimum dbh that is not 15.0 cm
     :A.umins_reference[standid][year][plotno]: the minimum dbh for that standid, plotid, and year, which is not 15.0 cm
 
-    :A.uplots_areas[standid]: standids for stands whose areas in at least 1 year are not 625 m\ :sup:`2`
-    :A.uplots_areas[standid][year]: the plotids on that standid and year when at least 1 plot has an area not 625 m\ :sup:`2`
     :A.uplots_areas[standid][year][plotno]: the area for the standid, year, and plotid that is not 625 m\ :sup:`2`
 
     :A.expansion[standid][year][plotid]: the expansion factor for the standid, year, and plotid which will not be 1.0
 
+    :A.mortalities[standid][year][plotid]: mortality plots by stand id and year. Years in this are the actual years of the mortality measurements.
+
+    :A.additions[standid][year][plotid]: addition plots by stand id and year. Years in this are the actual years of the addition measurements.
+
+    :A.total_areas[standid][year]: the area of the whole stand for a given year by summing the plots.
+
+    .. note:
+
+    A slot exists for computing the number of plots, although we currently do not use this output.
+    
     """
     def __init__(self, cursor, queries):
         self.detail_reference = {}

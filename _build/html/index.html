@@ -147,54 +147,60 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="mi">1983</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;pila0010&#39;</span><span class="p">,</span> <span class="s">&#39;pila0011&#39;</span><span class="p">,</span> <span class="s">&#39;pila0012&#39;</span><span class="p">,</span> <span class="s">&#39;pila0013&#39;</span><span class="p">,</span> <span class="s">&#39;pila0014&#39;</span><span class="p">,</span> <span class="s">&#39;pila0015&#39;</span><span class="p">,</span> <span class="s">&#39;pila0016&#39;</span><span class="p">,</span> <span class="s">&#39;pila0017&#39;</span><span class="p">,</span> <span class="s">&#39;pila0018&#39;</span><span class="p">]}</span>
 </pre></div>
 </div>
-<p><strong>METHODS</strong></p>
+<p><strong>RETURNS</strong></p>
+<p>This is a description of all the properties of a Capture class. Throughout the program, this class is often named XFACTOR.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">A:</th><td class="field-body">in this example, an instance of the Capture class.</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">A.detail_reference.keys():</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the standids that contain detail plots for at least 1 plot in 1 remeasurement.</td>
+</tbody>
+</table>
+<p>The following attribute of the Capture class will be shown with all the nested structure written out. Other attributes, we just show the full nested structure written out as keys following the main object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.keys():</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the standids that contain detail plots for at least 1 plot in 1 remeasurement.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.[standid]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the years that the standid contains at least 1 detail plot</td>
+<tr class="field-even field"><th class="field-name" colspan="2">A.detail_reference.[standid]:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the years that the standid contains at least 1 detail plot</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">A.detail_reference.[standid][year]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the plotids on that standid and year when at least 1 plot is a detail plot</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.[standid][year]:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the plotids on that standid and year when at least 1 plot is a detail plot</td>
 </tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;detail&#8217;]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Boolean True or False if a detail plot on that stand and plot and year</td>
+<tr class="field-even field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;detail&#8217;]:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">Boolean True or False if a detail plot on that stand and plot and year</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;area&#8217;]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the area m<sup>2</sup> of the detail plot (not expanded)</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;area&#8217;]:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the area m<sup>2</sup> of the detail plot (not expanded)</td>
 </tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;min&#8217;]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the minimum dbh on that detail plot</td>
+<tr class="field-even field"><th class="field-name" colspan="2">A.detail_reference.[standid][year][plotno][&#8216;min&#8217;]:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the minimum dbh on that detail plot</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">A.umins_reference.[standid]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">standids whose minimum dbhs in at least 1 year are not 15.0 cm</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">A.umins_reference[standid][year][plotno]:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the minimum dbh for that standid, plotid, and year, which is not 15.0 cm</td>
 </tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">A.umins_reference.[standid][year]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the plotids on that standid and year when at least 1 plot has a minimum dbh that is not 15.0 cm</td>
+<tr class="field-even field"><th class="field-name" colspan="2">A.uplots_areas[standid][year][plotno]:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the area for the standid, year, and plotid that is not 625 m<sup>2</sup></td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">A.umins_reference[standid][year][plotno]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the minimum dbh for that standid, plotid, and year, which is not 15.0 cm</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">A.expansion[standid][year][plotid]:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the expansion factor for the standid, year, and plotid which will not be 1.0</td>
 </tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">A.uplots_areas[standid]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">standids for stands whose areas in at least 1 year are not 625 m<sup>2</sup></td>
+<tr class="field-even field"><th class="field-name" colspan="2">A.mortalities[standid][year][plotid]:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">mortality plots by stand id and year. Years in this are the actual years of the mortality measurements.</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">A.uplots_areas[standid][year]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the plotids on that standid and year when at least 1 plot has an area not 625 m<sup>2</sup></td>
+<tr class="field-odd field"><th class="field-name" colspan="2">A.additions[standid][year][plotid]:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">addition plots by stand id and year. Years in this are the actual years of the addition measurements.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">A.uplots_areas[standid][year][plotno]:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the area for the standid, year, and plotid that is not 625 m<sup>2</sup></td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">A.expansion[standid][year][plotid]:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the expansion factor for the standid, year, and plotid which will not be 1.0</td>
+<tr class="field-even field"><th class="field-name" colspan="2">A.total_areas[standid][year]:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the area of the whole stand for a given year by summing the plots.</td>
 </tr>
 </tbody>
 </table>
+<p>A slot exists for computing the number of plots, although we currently do not use this output.</p>
 <dl class="method">
 <dt id="poptree_basis.Capture.condense_detail_reference">
 <code class="descname">condense_detail_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.condense_detail_reference" title="Permalink to this definition">¶</a></dt>
@@ -393,6 +399,8 @@
 &gt;&gt;&gt; &lt;pymssql.connection, pymssql.cursor&gt; = A.sql_connect()
 </pre></div>
 </div>
+<p><strong>RETURNS</strong></p>
+<p>A instance of the YamlConn connection object, used to keep you plugged into the database.</p>
 <dl class="method">
 <dt id="poptree_basis.YamlConn.sql_connect">
 <code class="descname">sql_connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.YamlConn.sql_connect" title="Permalink to this definition">¶</a></dt>
@@ -437,6 +445,8 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong></p>
+<p>A tuple like this : <cite>(biomass, volume, jenkins biomass, wood density)</cite> or zeros, if any of these cannot be computed.</p>
 </dd></dl>
 
 <dl class="function">
@@ -474,6 +484,8 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong></p>
+<p>A tuple like this : <cite>(biomass, volume, jenkins biomass, wood density)</cite> or zeros, if any of these cannot be computed.</p>
 </dd></dl>
 
 <dl class="function">
@@ -512,6 +524,8 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong></p>
+<p>A tuple like this : <cite>(biomass, volume, jenkins biomass, wood density)</cite> or zeros, if any of these cannot be computed</p>
 </dd></dl>
 
 <dl class="function">
@@ -546,7 +560,7 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 </tbody>
 </table>
 <p><strong>RETURNS</strong></p>
-<p>A tuple like this : <cite>(biomass, volume, jenkins biomass, wood density)</cite> or zeros, if any of these cannot be computed</p>
+<p>A tuple like this : <cite>(biomass, volume, jenkins biomass, wood density)</cite> or zeros, if any of these cannot be computed.</p>
 </dd></dl>
 
 <dl class="function">
@@ -583,6 +597,8 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong></p>
+<p>A tuple like this : <cite>(biomass, volume, jenkins biomass, wood density)</cite> or zeros, if any of these cannot be computed.</p>
 </dd></dl>
 
 <dl class="function">
@@ -594,6 +610,8 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 :dbh: cm diameter at breast height
 :j3: first Jenkins2014 parameter
 :j4: second Jenkins2014 parameter</p>
+<p><strong>RETURNS</strong></p>
+<p>A tuple like this : <cite>(biomass, volume, jenkins biomass, wood density)</cite> or zeros, if any of these cannot be computed.</p>
 </dd></dl>
 
 <dl class="function">
@@ -625,7 +643,6 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 <dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite>, <cite>h1</cite>, <cite>h2</cite>, <cite>h3</cite> and wood density for dbh, in cm.</p>
 <p>THIS IS A VERY SPECIAL EQUATION JUST FOR ACMA!!!  It is based on what is in 654 in BioPak, entity 2. It is what is used by both Lutz and Gody.</p>
 <p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
-<p>ACMA ONLY!!!</p>
 <p>The math form for this equation is: biomass = wood density * b1 * dbh**b2 * height**b3
 The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(dbh))</p>
 <p><strong>INPUTS</strong></p>
@@ -655,6 +672,43 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong></p>
+<p>A tuple like this : <cite>(biomass, volume, jenkins biomass, wood density)</cite> or zeros, if any of these cannot be computed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="biomass_basis.segi_biopak">
+<code class="descclassname">biomass_basis.</code><code class="descname">segi_biopak</code><span class="sig-paren">(</span><em>woodden</em>, <em>dbh</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>j1</em>, <em>j2</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.segi_biopak" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates biomass equations based on inputs of <cite>b1</cite>, <cite>b2</cite>, <cite>b3</cite> and wood density for dbh, in cm.</p>
+<p>Generates Jenkin&#8217;s biomass equations based on inputs of <cite>j1</cite> and <cite>j2</cite> for dbh, also in cm.</p>
+<p>The BioPak method computes total aboveground biomass explicitly, rather than from volume. In most cases, the original output from the equations as specified in BioPak was in grams, and here it is converted into Megagrams.</p>
+<p>The math form for this equation is: biomass = 1.0 * 10**(-6) * exp( b1 + b2 * ln(dbh))
+The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(dbh))</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Woodden:</th><td class="field-body">wood density,</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">cm diameter at breast height</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B1:</th><td class="field-body">first biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">B2:</th><td class="field-body">second biomass parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">B3:</th><td class="field-body">third biomass parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">J1:</th><td class="field-body">first Jenkins parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">J2:</th><td class="field-body">second Jenkins parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Args:</th><td class="field-body">the remainder of arguments passed to the function, which are not called in this case</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RETURNS</strong></p>
+<p>A tuple like this : <cite>(biomass, volume, jenkins biomass, wood density)</cite> or zeros, if any of these cannot be computed.</p>
 </dd></dl>
 
 <dl class="function">
@@ -712,6 +766,8 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">woodden</span> <span class="o">=</span> <span class="mf">0.44</span>
 </pre></div>
 </div>
+<p><strong>INPUTS</strong></p>
+<p><strong>RETURNS</strong></p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last"><cite>Tree.state</cite> contains <cite>[year, dbh, status, dbh_code]</cite>. Although status is an integer, it is recorded as a string here because it is descriptive. <cite>1</cite> is OK, <cite>2</cite> is Ingrowth, <cite>3</cite> is merged or fused, <cite>6</cite> is Dead, and <cite>9</cite> is Missing. See : <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&amp;dbcode=Tp001&amp;attid=7291&amp;topnav=8/">Tree Status Codes</a> . DBH Codes are also all displayed as strings, although some are integers. See : <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&amp;dbcode=Tp001&amp;attid=7287&amp;topnav=8/">Tree DBH Codes</a>.</p>
@@ -1035,6 +1091,15 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <p>For example, if addition happens in 1981 and last good remeasurement was in 1978, trees get 1978 if alive.</p>
 <p>Also, check if the stand contains &#8220;mortalities&#8221;. If so, replace the year with the previous year as long as it is not also additions or mortality. If this is the final year in the data, do not do this year.</p>
 <p>For example, if mortality happens in 2004 and last remeasurement was 2010, trees roll to 2010 if dead. DBH is carried over from previous measurment.</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">passed inherently, uses its additions and mortalities attributes to determine the shifting of the years to fit the data.</td>
+</tr>
+</tbody>
+</table>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1298,6 +1363,15 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <p>For example, if addition happens in 1981 and last good remeasurement was in 1978, trees get 1978 if alive.</p>
 <p>Also, check if the stand contains &#8220;mortalities&#8221;. If so, replace the year with the previous year as long as it is not also additions or mortality. If this is the final year in the data, do not do this year.</p>
 <p>For example, if mortality happens in 2004 and last remeasurement was 2010, trees roll to 2010 if dead. DBH is carried over from previous measurment.</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">passed inherently, uses its additions and mortalities attributes to determine the shifting of the years to fit the data.</td>
+</tr>
+</tbody>
+</table>
 <p><strong>INTERNAL VARIABLES</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

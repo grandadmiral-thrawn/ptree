@@ -6,7 +6,7 @@ import math
 def maxref(dbh, species):
     """ Check if given dbh (in cm) and given species is bigger than the maximum for that combination. The maximum was found from determining the top 1 percent of dbh's in cm for each species from all the historical data. This function operates behind the scenes on inputs from TP00102 (dbh's) and TP00101(species). It populates the .eqns attribute of the Tree or Stand classes so that the right equation or set of equations will be called. 
 
-    .. Example:
+    .. Example::
 
     >>> maxref(20.0, 'ABAM')
     >>> "normal"
@@ -19,6 +19,7 @@ def maxref(dbh, species):
     **RETURNS**
 
     Either `"big"` or `"normal"` to trigger appropriate equation selection from the Stand or Tree's `.eqns` attribute.
+
     """
     if dbh == None or dbh == "None":
         return False
@@ -99,7 +100,8 @@ def as_lnln(woodden, dbh, b1, b2, b3, j1, j2, *args):
 
     **RETURNS**
 
-    A tuple like this : `(biomass, volume, jenkins biomass, wood density)` or zeros, if any of these cannot be computed
+    A tuple like this : `(biomass, volume, jenkins biomass, wood density)` or zeros, if any of these cannot be computed.
+
     """
     try:
         biomass = round(b1*woodden*(b2*dbh**b3),7)
@@ -135,6 +137,11 @@ def as_d2ht(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     :h1: first height parameter
     :h2: second height parameter
     :h3: third height parameter
+
+    **RETURNS**
+
+    A tuple like this : `(biomass, volume, jenkins biomass, wood density)` or zeros, if any of these cannot be computed
+
     """
     try:
         height = 1.37+ h1*(1-math.exp(h2*dbh))**h3
@@ -166,9 +173,49 @@ def as_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
     :j1: first Jenkins parameter
     :j2: second Jenkins parameter
     :args: the remainder of arguments passed to the function, which are not called in this case
+
+    **RETURNS**
+
+    A tuple like this : `(biomass, volume, jenkins biomass, wood density)` or zeros, if any of these cannot be computed.
+
     """
     try:
         biomass = round(1.*10**(-6)*math.exp(b1 + b2 * math.log(dbh)),7)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
+        volume = round(biomass/woodden,7)
+        return (biomass, volume, jbio, woodden)
+    except ValueError:
+        
+        return (0., 0., 0., woodden)
+
+def segi_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
+    """ Generates biomass equations based on inputs of `b1`, `b2`, `b3` and wood density for dbh, in cm.
+
+    Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm. 
+
+    The BioPak method computes total aboveground biomass explicitly, rather than from volume. In most cases, the original output from the equations as specified in BioPak was in grams, and here it is converted into Megagrams.
+
+    The math form for this equation is: biomass = 1.0 * 10**(-6) * exp( b1 + b2 * ln(dbh))
+    The math form for Jenkins is jenkins' biomass = 0.001 * exp( j1 + j2 * ln(dbh))
+
+    **INPUTS**
+
+    :woodden: wood density, 
+    :dbh: cm diameter at breast height
+    :b1: first biomass parameter
+    :b2: second biomass parameter
+    :b3: third biomass parameter
+    :j1: first Jenkins parameter
+    :j2: second Jenkins parameter
+    :args: the remainder of arguments passed to the function, which are not called in this case
+
+    **RETURNS**
+
+    A tuple like this : `(biomass, volume, jenkins biomass, wood density)` or zeros, if any of these cannot be computed.
+
+    """
+    try:
+        biomass = round(math.exp(b1 + b2 * math.log(dbh)),7)
         jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
         volume = round(biomass/woodden,7)
         return (biomass, volume, jbio, woodden)
@@ -198,6 +245,11 @@ def as_chinq_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     :h1: first height parameter
     :h2: second height parameter
     :h3: third height parameter
+
+    **RETURNS**
+
+    A tuple like this : `(biomass, volume, jenkins biomass, wood density)` or zeros, if any of these cannot be computed.
+
     """
     try:
         height = 1.37 + h1*(1-math.exp(h2*dbh))**h3
@@ -216,8 +268,6 @@ def mod_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
 
     Generates Jenkin's biomass equations based on inputs of `j1` and `j2` for dbh, also in cm. 
 
-    ACMA ONLY!!!
-
     The math form for this equation is: biomass = wood density * b1 * dbh**b2 * height**b3
     The math form for Jenkins is jenkins' biomass = 0.001 * exp( j1 + j2 * ln(dbh))
 
@@ -233,6 +283,11 @@ def mod_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     :h1: first height parameter
     :h2: second height parameter
     :h3: third height parameter
+
+    **RETURNS**
+
+    A tuple like this : `(biomass, volume, jenkins biomass, wood density)` or zeros, if any of these cannot be computed.
+
     """
     try:
         height = 1.37 + h1*(1-math.exp(h2*dbh))**h3
@@ -265,6 +320,11 @@ def as_oak_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     :h1: first height parameter
     :h2: second height parameter
     :h3: third height parameter
+
+    **RETURNS**
+
+    A tuple like this : `(biomass, volume, jenkins biomass, wood density)` or zeros, if any of these cannot be computed.
+
     """
     try:
         height = 1.37+h1*(1-math.exp(h2*dbh))**h3
@@ -286,6 +346,11 @@ def jenkins2014(dbh, j3, j4):
     :dbh: cm diameter at breast height
     :j3: first Jenkins2014 parameter
     :j4: second Jenkins2014 parameter
+
+    **RETURNS**
+
+    A tuple like this : `(biomass, volume, jenkins biomass, wood density)` or zeros, if any of these cannot be computed.
+
     """
 
     jbio2 = round(0.001*math.exp(j3 + j4*math.log(round(dbh,2))),7)
@@ -315,6 +380,7 @@ def which_fx(function_string):
     'chinq_biopak': as_chinq_biopak,
     'biopak': as_biopak,
     'd2ht': as_d2ht,
-    'mod_biopak': mod_biopak,}
+    'mod_biopak': mod_biopak,
+    'segi_biopak': segi_biopak}
 
     return lookup[function_string]

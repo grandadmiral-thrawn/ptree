@@ -195,9 +195,11 @@ class Stand(object):
                 except:
                     j2 = None
 
+                if each_species != "segi":
+                    this_eqn = lambda x : biomass_basis.which_fx(form)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
+                elif each_species == "segi":
+                    this_eqn = lambda x : biomass_basis.which_fx('segi_biopak')(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
 
-                this_eqn = lambda x : biomass_basis.which_fx(form)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
-                
                 if each_species not in self.eqns:
                     self.eqns.update({each_species:{str(row[1]).rstrip().lower():this_eqn}})
                 
@@ -214,6 +216,10 @@ class Stand(object):
         Also, check if the stand contains "mortalities". If so, replace the year with the previous year as long as it is not also additions or mortality. If this is the final year in the data, do not do this year.
 
         For example, if mortality happens in 2004 and last remeasurement was 2010, trees roll to 2010 if dead. DBH is carried over from previous measurment.
+
+        **INPUTS**
+
+        :XFACTOR: passed inherently, uses its additions and mortalities attributes to determine the shifting of the years to fit the data.
 
         **INTERNAL VARIABLES**
 

@@ -31,6 +31,10 @@ class Tree(object):
     >>> A.eqns = {'normal' : lambda x :<function 039459x342>}
     >>> A.woodden = 0.44
 
+    **INPUTS**
+
+    **RETURNS**
+
     .. note:: `Tree.state` contains `[year, dbh, status, dbh_code]`. Although status is an integer, it is recorded as a string here because it is descriptive. `1` is OK, `2` is Ingrowth, `3` is merged or fused, `6` is Dead, and `9` is Missing. See : `Tree Status Codes <http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&dbcode=Tp001&attid=7291&topnav=8/>`_ . DBH Codes are also all displayed as strings, although some are integers. See : `Tree DBH Codes <http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&dbcode=Tp001&attid=7287&topnav=8/>`_.
 
     .. warning:: `Tree.cur` must be created in an external variable, or this will be very slow, because the program will want to go to the database many times if you run more than one tree.
