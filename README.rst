@@ -19,7 +19,7 @@ Main Modules
 * ``tps_Stand`` <- stands, plots on stands, trees on stands, for larger-scale computations
 * ``tps_NPP`` <- net primary productivity for plots and stands
 * ``tps_cli`` <- command line interface
-* ``tps_Sample` <- tests - queries to 'ncna' that should always work
+* ``tps_Sample`` <- tests - queries to 'ncna' that should always work
 * SQL queries and configs in yaml files for interoperability!
 * lots of docs!
 
@@ -344,7 +344,7 @@ To check the status of the the biomass at the individual tree scale for one or t
 
     $ python3 tps_cli.py bio tree checks ncna000100001 ta010001000001
 
-Your output will be in a file named ``selected_trees_indvtree_checks.csv``. It will be organized like `TREEID, SPECIES, INTERVAL, SHRINK_X_FLAGGED, GROWTH_X_FLAGGED, DOUBLE_DEATH_FLAG, LAZARUS_FLAG, HOUDINI_FLAG, DEGRADE_FLAG``.
+Your output will be in a file named ``selected_trees_indvtree_checks.csv``. It will be organized like ``TREEID, SPECIES, INTERVAL, SHRINK_X_FLAGGED, GROWTH_X_FLAGGED, DOUBLE_DEATH_FLAG, LAZARUS_FLAG, HOUDINI_FLAG, DEGRADE_FLAG``.
 
 If you just have one tree, your output will be in a file named ``[name of whatever tree]_tree_indvtree_checks.csv``. It will be organized like ``TREEID, SPECIES, INTERVAL, SHRINK_X_FLAGGED, GROWTH_X_FLAGGED, DOUBLE_DEATH_FLAG, LAZARUS_FLAG, HOUDINI_FLAG, DEGRADE_FLAG``.
 

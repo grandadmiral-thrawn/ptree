@@ -53,36 +53,36 @@
 <p>TPS is a set of Python 3 modules for the aggregation of trees, plots, and stands from the USFS reference stands data maintained by the Corvallis Forest Science Lab.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#main-modules" id="id6">Main Modules</a></li>
-<li><a class="reference internal" href="#installation" id="id7">Installation</a><ul>
-<li><a class="reference internal" href="#development-version" id="id8">Development version</a></li>
+<li><a class="reference internal" href="#main-modules" id="id4">Main Modules</a></li>
+<li><a class="reference internal" href="#installation" id="id5">Installation</a><ul>
+<li><a class="reference internal" href="#development-version" id="id6">Development version</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#documentation-in-the-literature" id="id9">Documentation in the Literature</a><ul>
-<li><a class="reference internal" href="#equation-listing" id="id10">Equation Listing</a></li>
-<li><a class="reference internal" href="#programmatic-documentation-link" id="id11">Programmatic Documentation Link</a></li>
+<li><a class="reference internal" href="#documentation-in-the-literature" id="id7">Documentation in the Literature</a><ul>
+<li><a class="reference internal" href="#equation-listing" id="id8">Equation Listing</a></li>
+<li><a class="reference internal" href="#programmatic-documentation-link" id="id9">Programmatic Documentation Link</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#command-line-options" id="id12">Command Line Options</a><ul>
-<li><a class="reference internal" href="#details-about-1-tree" id="id13">Details About 1 Tree</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-stands" id="id14">Biomass at the Stand Scale for All Stands</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-stands" id="id15">Biomass at the Stand Scale for a set of one or more stands</a></li>
-<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-all-plots" id="id16">Biomass at the Plot Scale for All Plots</a></li>
-<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-a-set-of-one-or-more-plots" id="id17">Biomass at the Plot Scale for a set of one or more plots</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-studies" id="id18">Biomass at the Stand Scale for All Studies</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-studies" id="id19">Biomass at the Stand Scale for a set of one or more studies</a></li>
-<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-for-a-set-of-one-or-more-plots" id="id20">Biomass at the Plot Scale for Individual Trees for a set of one or more plots</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-for-a-set-of-one-or-more-stands" id="id21">Biomass at the Stand Scale for Individual Trees for a set of one or more stands</a></li>
-<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-on-all-plots" id="id22">Biomass at the Plot Scale for Individual Trees on All Plots</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-on-all-stands" id="id23">Biomass at the Stand Scale for Individual Trees on All Stands</a></li>
-<li><a class="reference internal" href="#biomass-at-the-tree-scale-for-less-than-3-trees" id="id24">Biomass at the Tree Scale for Less Than 3 Trees</a></li>
-<li><a class="reference internal" href="#status-checks-at-the-tree-scale-for-less-than-3-trees" id="id25">Status Checks at the Tree Scale for Less Than 3 Trees</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-stands" id="id26">NPP at the Stand Scale for All Stands</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-stands" id="id27">NPP at the Stand Scale for a set of one or more stands</a></li>
-<li><a class="reference internal" href="#npp-at-the-plot-scale-for-all-plots" id="id28">NPP at the Plot Scale for All Plots</a></li>
-<li><a class="reference internal" href="#npp-at-the-plot-scale-for-a-set-of-one-or-more-plots" id="id29">NPP at the Plot Scale for a set of one or more plots</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-studies" id="id30">NPP at the Stand Scale for All Studies</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-studies" id="id31">NPP at the Stand Scale for a set of one or more studies</a></li>
+<li><a class="reference internal" href="#command-line-options" id="id10">Command Line Options</a><ul>
+<li><a class="reference internal" href="#details-about-1-tree" id="id11">Details About 1 Tree</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-stands" id="id12">Biomass at the Stand Scale for All Stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-stands" id="id13">Biomass at the Stand Scale for a set of one or more stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-all-plots" id="id14">Biomass at the Plot Scale for All Plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-a-set-of-one-or-more-plots" id="id15">Biomass at the Plot Scale for a set of one or more plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-studies" id="id16">Biomass at the Stand Scale for All Studies</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-studies" id="id17">Biomass at the Stand Scale for a set of one or more studies</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-for-a-set-of-one-or-more-plots" id="id18">Biomass at the Plot Scale for Individual Trees for a set of one or more plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-for-a-set-of-one-or-more-stands" id="id19">Biomass at the Stand Scale for Individual Trees for a set of one or more stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-on-all-plots" id="id20">Biomass at the Plot Scale for Individual Trees on All Plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-on-all-stands" id="id21">Biomass at the Stand Scale for Individual Trees on All Stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-tree-scale-for-less-than-3-trees" id="id22">Biomass at the Tree Scale for Less Than 3 Trees</a></li>
+<li><a class="reference internal" href="#status-checks-at-the-tree-scale-for-less-than-3-trees" id="id23">Status Checks at the Tree Scale for Less Than 3 Trees</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-stands" id="id24">NPP at the Stand Scale for All Stands</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-stands" id="id25">NPP at the Stand Scale for a set of one or more stands</a></li>
+<li><a class="reference internal" href="#npp-at-the-plot-scale-for-all-plots" id="id26">NPP at the Plot Scale for All Plots</a></li>
+<li><a class="reference internal" href="#npp-at-the-plot-scale-for-a-set-of-one-or-more-plots" id="id27">NPP at the Plot Scale for a set of one or more plots</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-studies" id="id28">NPP at the Stand Scale for All Studies</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-studies" id="id29">NPP at the Stand Scale for a set of one or more studies</a></li>
 </ul>
 </li>
 </ul>
@@ -94,7 +94,7 @@
 <li><code class="docutils literal"><span class="pre">tps_Stand</span></code> &lt;- stands, plots on stands, trees on stands, for larger-scale computations</li>
 <li><code class="docutils literal"><span class="pre">tps_NPP</span></code> &lt;- net primary productivity for plots and stands</li>
 <li><code class="docutils literal"><span class="pre">tps_cli</span></code> &lt;- command line interface</li>
-<li><a href="#id1"><span class="problematic" id="id2">``</span></a>tps_Sample` &lt;- tests - queries to &#8216;ncna&#8217; that should always work</li>
+<li><code class="docutils literal"><span class="pre">tps_Sample</span></code> &lt;- tests - queries to &#8216;ncna&#8217; that should always work</li>
 <li>SQL queries and configs in yaml files for interoperability!</li>
 <li>lots of docs!</li>
 </ul>
@@ -509,7 +509,7 @@ Notes:
 </pre></div>
 </div>
 <p>Your output will be in a file named <code class="docutils literal"><span class="pre">selected_trees_indvtree_output.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">TREEID,</span> <span class="pre">COMPONENT,</span> <span class="pre">YEAR,</span> <span class="pre">BA_M2,</span> <span class="pre">VOL_M3,</span> <span class="pre">BIO_MG,</span> <span class="pre">JENKBIO_MG</span></code>.</p>
-<p>If you just have one tree, your output will be in a file named <code class="docutils literal"><span class="pre">[name</span> <span class="pre">of</span> <span class="pre">whatever</span> <span class="pre">tree]_tree_indvtree_output.csv</span></code>. It will be organized like <a href="#id4"><span class="problematic" id="id5">``</span></a>DBCODE, ENTITY, TREEID, COMPONENT, YEAR, BA_M2, VOL_M3, BIO_MG, JENKBIO_MG`.</p>
+<p>If you just have one tree, your output will be in a file named <code class="docutils literal"><span class="pre">[name</span> <span class="pre">of</span> <span class="pre">whatever</span> <span class="pre">tree]_tree_indvtree_output.csv</span></code>. It will be organized like <a href="#id2"><span class="problematic" id="id3">``</span></a>DBCODE, ENTITY, TREEID, COMPONENT, YEAR, BA_M2, VOL_M3, BIO_MG, JENKBIO_MG`.</p>
 </div>
 <div class="section" id="status-checks-at-the-tree-scale-for-less-than-3-trees">
 <h3>Status Checks at the Tree Scale for Less Than 3 Trees<a class="headerlink" href="#status-checks-at-the-tree-scale-for-less-than-3-trees" title="Permalink to this headline">¶</a></h3>
@@ -517,7 +517,7 @@ Notes:
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio tree checks ncna000100001 ta010001000001
 </pre></div>
 </div>
-<p>Your output will be in a file named <code class="docutils literal"><span class="pre">selected_trees_indvtree_checks.csv</span></code>. It will be organized like <cite>TREEID, SPECIES, INTERVAL, SHRINK_X_FLAGGED, GROWTH_X_FLAGGED, DOUBLE_DEATH_FLAG, LAZARUS_FLAG, HOUDINI_FLAG, DEGRADE_FLAG`</cite>.</p>
+<p>Your output will be in a file named <code class="docutils literal"><span class="pre">selected_trees_indvtree_checks.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">TREEID,</span> <span class="pre">SPECIES,</span> <span class="pre">INTERVAL,</span> <span class="pre">SHRINK_X_FLAGGED,</span> <span class="pre">GROWTH_X_FLAGGED,</span> <span class="pre">DOUBLE_DEATH_FLAG,</span> <span class="pre">LAZARUS_FLAG,</span> <span class="pre">HOUDINI_FLAG,</span> <span class="pre">DEGRADE_FLAG</span></code>.</p>
 <p>If you just have one tree, your output will be in a file named <code class="docutils literal"><span class="pre">[name</span> <span class="pre">of</span> <span class="pre">whatever</span> <span class="pre">tree]_tree_indvtree_checks.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">TREEID,</span> <span class="pre">SPECIES,</span> <span class="pre">INTERVAL,</span> <span class="pre">SHRINK_X_FLAGGED,</span> <span class="pre">GROWTH_X_FLAGGED,</span> <span class="pre">DOUBLE_DEATH_FLAG,</span> <span class="pre">LAZARUS_FLAG,</span> <span class="pre">HOUDINI_FLAG,</span> <span class="pre">DEGRADE_FLAG</span></code>.</p>
 </div>
 <div class="section" id="npp-at-the-stand-scale-for-all-stands">
