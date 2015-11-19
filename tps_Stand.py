@@ -24,6 +24,17 @@ class Stand(object):
     >>> A.od.keys()
     >>> dict_keys([1985, 1987, 1988, 2007, 1993, 1978, 1981, 1998, 1983])
 
+    **INPUTS**
+
+    :cur: the pymssql cursor object created by YamlConn
+    :XFACTOR: instance of the Capture object for parameterization (see ``poptree_basis.py``)
+    :queries: queries from ``qf_2.yaml``, created by YamlConn
+    :standid: 4 character stand id, in lowercase.
+
+    **RETURNS**
+
+    An instance of the Stand object, which is used to do all plot, stand, and study level computations as well as output individual trees.
+
     .. note:: Stands have mortalities, additions, and replacements dictionaries for both of these within themselves. These are very helpful for checking errors in the study set-up.
  
     """
@@ -69,7 +80,11 @@ class Stand(object):
         
 
     def create_num_plots(self):
-        """ Creates a number of plots count for each stand and year.
+        """ Creates a number of plots count for each stand and year. Uses a special query to the database to do this. Currently we use this for the stand composite output only.
+
+        **INPUTS**
+
+        No explicit inputs are needed.
 
         **RETURNS**
 
@@ -104,16 +119,19 @@ class Stand(object):
 
         This is designed to limit the calls to the database and the amount of conditionals in the program. All trees on the stand are 'grouped' by species and then each group is mapped by the appropriate equation. Only the equations needed are used.
 
-        **INTERNAL VARIABLES**
+        **INPUTS**
+
+        No explicit inputs are needed; this function is called automatically upon Stand creation.
+        
+        **RETURNS**
+
+        Populates some of the Stands attributes:
 
         :list_species: a list of the species on that stand in any year, used to query the database for distinct species
         :self.woodden_dict: a dictionary of wood densities by species
         :self.proxy_dict: a dictionary of equation proxies, by species
         :self.eqns: a dictionary of eqns keyed by 'normal', 'big', or 'component' containing lambda functions to receive dbh (in cm) inputs and compute Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins' Biomass ( Mg ), and wood density.
 
-        **RETURNS**
-
-        Populates Stand.eqns with a reference of 'species' : 'function', where the function is a pointer to the appropriate equation form populated by parameters extracted from TP00110. 
         """
         list_species = []
         
@@ -221,10 +239,10 @@ class Stand(object):
 
         :XFACTOR: passed inherently, uses its additions and mortalities attributes to determine the shifting of the years to fit the data.
 
-        **INTERNAL VARIABLES**
+        **RETURNS**
 
-        :additions: stand additions are years that have live trees measured that were not measured in previous year's inventory. we allocate additions to the subsequent year's inventory. There's only about 15 plots this happens on. 
-        :replacement: replaces the years of "additions" with the subsequent year that is not an additions.
+        Fixes additions and mortalities by replacing their years with a proxy year in remeasurements.
+
         """
 
         if self.standid.lower() in XFACTOR.additions.keys():
@@ -301,14 +319,19 @@ class Stand(object):
     def get_total_area(self, XFACTOR):
         """ Get the total area for each year on that stand and create a reference table to be used when figuring out the per hectare output. The percent of area on the plot over the percent of the area of the stand is the proportion represented by that plot.
 
-        **INPUTS**
-
-        :XFACTOR: XFACTOR.total_areas has the areas by stand, like this: 
-
-        :Example:
+        .. Example:
 
         >>> XFACTOR.total_areas['hr03']
-        >>> {1984: 10000.0, 1985: 10000.0, 1986: 10000.0, 1988: 10000.0, 1989: 10000.0, 2000: 10000.0, 2007: 10000.0, 1978: 10000.0, 1995: 10000.0}
+        >>> {1984: 10000.0, 1985: 10000.0, 1986: 10000.0, 1988: 10000.0, 1989: 10000.0, 2000: 10000.0, 2007: 10000.0}
+
+        **INPUTS**
+
+        :XFACTOR: An instance of the Capture object used here to know the area of the stand.
+
+        **RETURNS**
+
+        The area of the stand, as a float. If not, 0.
+
         """
 
         try:
@@ -321,11 +344,16 @@ class Stand(object):
 
         Queries both the live trees and the dead trees in the live database who do not have a DBH given. The dead trees then come in and replace the live ones without the DBH's in get_all_dead_trees(). First get the live from self.tree_list. 
 
-        .. Note: ingrowth is included in "live" (live statuses are all but "6" and "9"), but ingrowth is exclusive when status is "2"
+        
+        **INPUTS**
 
-        **INTERNAL VARIABLES**
+        No explicit inputs are needed.
 
-        :self.query: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, fsdbdata.dbo.tp00102.year, fsdbdata.dbo.tp00102.dbh_code, fsdbdata.dbo.tp00101.PSP_STUDYID FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00102 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid WHERE fsdbdata.dbo.tp00101.standid like '{standid}' ORDER BY fsdbdata.dbo.tp00102.treeid ASC"
+        **RETURNS**
+
+        This function gathers all the live trees from FSDBDATA.dbo.TP00102.
+
+        .. note:: ingrowth is included in "live" (live statuses are all but "6" and "9"), but ingrowth is exclusive when status is "2"
 
         """
         self.cur.execute(self.tree_list.format(standid=self.standid))
@@ -467,9 +495,13 @@ class Stand(object):
     def get_all_dead_trees(self):
         """ Gets all the dead trees from TP00103. Updates self.od, which was made in get_all_live_trees().
 
-        **INTERNAL VARIABLES**
+        **INPUTS**
 
-        :self.tree_list_m: "SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00103.dbh_last, fsdbdata.dbo.tp00103.year FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00103 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00103.treeid WHERE fsdbdata.dbo.tp00101.standid like '{standid}' ORDER BY fsdbdata.dbo.tp00103.treeid ASC"
+        No explicit inputs are needed.
+
+        **RETURNS**
+
+        Gathers all the dead trees and data from FSDBDATA.dbo.TP00103.
         """
 
         self.cur.execute(self.tree_list_m.format(standid=self.standid))
@@ -538,10 +570,13 @@ class Stand(object):
     def update_all_missing_trees(self):
         """ Get the missing trees from self.missing and try to match each to a tree in the main dictionary that is alive in the preceding year from self.decent_years, and then return a copy of that tree to the year it is missing, so we can compute its biomass. Trees were assigned here when pulled in from live. Because all trees are there now, we can roll the dbh from the appropriate last good measurement into this new year. The assumption is that all trees not known dead are considered alive.
 
-        **INTERNAL VARIABLES**
+        **INPUTS**
 
-        :replacement_year_index: the index in the list of valid years to get the year of replacement from. It needs to precede the missing year
-        :replacement_year: the year whose data we use to replace the missing year
+        No explicit inputs are needed.
+
+        **RETURNS**
+
+        This function updates the missing trees so that they are viewed as alive and with a dbh. It is actually fairly hard to manage as many trees have been missing for a good long time. If a tree ID can't be found, check it through ``tps_Tree`` and if it has many `9` status, you'll want to modify this script to help you catch those statuses and replace them.
 
         """
 
@@ -595,16 +630,13 @@ class Stand(object):
         This function uses the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.
             Load in the appropriate parameters for this computation. Separate "small" trees from "large" ones so that small ones can get the expansion factor. If they aren't on a detail plot, this number will just be "1".)
 
+        **INPUTS**
 
         :XFACTOR: a Capture object containing the detail plots, minimum dbhs, etc.
-        :XFACTOR.detail_reference: plots which are detail plots and when
-        :XFACTOR.stands_with_unusual_mins: plots which have minimums that are not 15 and are not detail plots
-        :XFACTOR.unusual_plot_areas: plots whose areas are not 625m
-
-        **INTERNAL VARIABLES**
-
-        Basically, this is the same as compute_normal_biomasses except the unique area of each plot and stand is referenced from a table rather than assumed to be 625 m\ :sup: 2.
-
+        
+        **RETURNS**
+        
+        :Biomasses: a species-separated, stand-scale composite of biomasses that are needed for the final output.
         """
 
         Biomasses = {}
@@ -906,6 +938,14 @@ class Stand(object):
 
         For every one of the attributes in Biomasses for Trees Per Hectare (TPHA), Biomass ( Mg ), Basal Area (m\ :sup:`2`),  Volume (m\ :sup:`3`), Jenkins'' Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. When writing occurs, the aggregate is expanded to the hectare.
 
+        **INPUTS**
+
+        :Biomasses: the biomasses by species for a whole stand, separated into `live`, `dead`, and `ingrowth`.
+
+        **RETURNS**
+
+        :Biomasses_agg: the `all` biomass for the aggregate of all species on that stand in that year.
+
         """
         Biomasses_Agg = {}
 
@@ -922,6 +962,8 @@ class Stand(object):
 
     def write_stand_rob(self, RobBiomass, XFACTOR, *args):
         """ quick little method that ignores all the detail plot (trees < 15.)
+
+        .. note:: This is NOT a permanent script. It is here to help look at detail plots. It should not be considered final.
         """
 
         if args and args != []:
@@ -969,10 +1011,13 @@ class Stand(object):
         :Biomasses: data structure containing portions of biomass and other desired outputs, grouped by species
         :Biomasses_Agg: data structure containing the aggregate biomass over all the species.
         :XFACTOR: the reference object used for computing areas and such. You've already created it. No worries.
+        :args: two arguements, a csv filename and a mode of write or append
 
-        **OUTPUTS**
+        If the mode is ``w`` for write, this will always over-write previous stands. If it is ``a`` for append, this will add to the last file. When doing many stands I suggest doing ``w`` for the first one and ``a`` for the rest. Understand though that if the program freezes up or you need to stop, if you start using ``a`` again, you will just append to the file you already made.  ``tps_cli`` handles this for you.
 
-        Writes a file named `standid + stand_composite_output.csv`
+        **RETURNS**
+
+        Writes a file named `standid + stand_composite_output.csv`. If you are running through ``tps_cli`` there is also an option of returning an ``all`` version
         """
 
         if args and args != []:
@@ -1047,6 +1092,16 @@ class Stand(object):
     def write_individual_trees(self, *args):
         """ Writes a csv file, containing the tree measurements for the individual trees on the stand. File contains only the measurement attributes from the composite file; it does not contain "trees per hectare" because only one tree.
 
+        **INPUTS**
+
+        :args: is two command line args indicating the filename for output and the mode, either write or append
+
+        When the first tree is run, we want to write the file. However, then we want to append because re-opening and writing would destroy the first one. The ``tps_cli`` interface handles this for you!
+
+        **RETURNS**
+
+        A csv file containing all the individual trees, or sets of csv files by aggregation level. This function is managed in ``tps_cli``.
+
         .. note: this method is faster than using `tps_Tree`. However, `tps_Tree` provides more detailed information. 
         """
 
@@ -1118,10 +1173,13 @@ class Plot(Stand):
     def compute_biomasses_plot(self, XFACTOR):
         """ Compute the biomass ( Mg/ha ), volume (m\ :sup:`3`), Jenkins biomass ( Mg/ha ), TPH (number of trees/ ha), and basal area (m\ :sup:`2` / ha). Use at the plot scale, so no expansion factors are needed here. 
 
-        **INTERNAL VARIABLES**
+        **INPUTS**
 
-        :self.Stand: basically the same as the stand-level computation, but in this case we actually will output the biomasses at each plot's level
+        :XFACTOR: An instance of the Capture object used for parameterization.
 
+        **RETURNS**
+
+        :Biomasses: Biomasses by plot, separated into special groups such as `live`, `dead`, and `ingrowth` as well as into `biomass`, `basal`, `volume`, `Jenkins' biomass`, and `trees per hectare.`
         """
 
         # if the plotlist is in uppercase make lower case
@@ -1258,6 +1316,13 @@ class Plot(Stand):
 
         For every one of the attributes in Biomasses for Biomass ( Mg ), Volume (m\ :sup:`3`), Jenkins'' Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. In the write out, we'll multiply it out to the HA level
 
+        **INPUTS**
+
+        :Biomasses: the species aggregated results from the plot scale analyses of biomass
+
+        **RETURNS**
+
+        :Biomasses_Agg: The biomasses by plot, but now aggregated over all the species on that plot.
         """
         Biomasses_Agg = {}
 
@@ -1321,7 +1386,7 @@ class Plot(Stand):
         :Biomasses_Agg: data structure containing the aggregate biomass over all the species.
         :XFACTOR: the reference object used for computing areas and such. You've already created it. No worries.
 
-        **OUTPUTS**
+        **RETURNS**
 
         Writes a file named `standid + stand_composite_output.csv`
 

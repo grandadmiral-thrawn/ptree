@@ -70,7 +70,7 @@ SQL queries are in ``qf_2.yaml``. This file is included with this program, and s
     print([row for row in sql])
 
 
-In the command line interface, ``tps_cli``, commands can be issued to gather a specific tree, stand, set of trees, etc. See documentation in the README.rst file on`GitHub <https://github.com/dataRonin/ptree>`_.
+In the command line interface, ``tps_cli``, commands can be issued to gather a specific tree, stand, set of trees, etc. See documentation in the ``README.rst`` file on `GitHub <https://github.com/dataRonin/ptree>`_.
 
 .. automodule:: poptree_basis
    :members:
@@ -122,10 +122,21 @@ NPP:
    :inherited-members:
    :show-inheritance:
 
+SAMPLE:
+-------
+
+``tps_Sample.py`` is a set of sample data you can test the program on. Run at the command line like: 
+
+.. code-block:: bash
+
+    $ python3 tps_Sample.py
+
+See ``README.rst`` for more details.
+
 CLI:
 ----
 
-``tps_cli.py`` is the command line interface. Please see ``README.md`` for how to use this interface. 
+``tps_cli.py`` is the command line interface. Please see ``README.rst`` for how to use this interface. 
 
 Indices and tables
 ==================

@@ -343,6 +343,7 @@ def jenkins2014(dbh, j3, j4):
     The math form for Jenkins is jenkins' biomass = 0.001 * exp( j1 + j2 * ln(dbh))
 
     **INPUTS**
+    
     :dbh: cm diameter at breast height
     :j3: first Jenkins2014 parameter
     :j4: second Jenkins2014 parameter
@@ -361,14 +362,10 @@ def which_fx(function_string):
     """ Find the correct function for doing the Biomass ( Mg ), Jenkins Biomass ( Mg ), Volume ( m\ :sup:`3` ) , and Basal Area ( m\ :sup:`2` ) and wood density in the lookup table.
     The keys for the lookup table are the same as the FORM field in TP00110
 
-    **INTERNAL VARIABLES**
+    
+    **INPUTS**
 
-    :as_lnln: function call for the lnln form 
-    :as_oak_biopak: function call for the oak biomass form
-    :as_chinq_biopak: function call for the chinquapin biomass form
-    :as_biopak: function call for the biopak form
-    :as_d2ht: function call for the d2ht form
-    :mod_biopak: function call for the mod_biopak form
+    :function_string: the string that is in the `form` attribute in TP00110, used to generate the above functions for computation.
 
     **RETURNS**
 

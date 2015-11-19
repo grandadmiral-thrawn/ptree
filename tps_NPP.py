@@ -11,6 +11,15 @@ import tps_Stand
 
 def plot_wrap_compute_NPP(Bios_plot, type):
     """ To compute NPP by Plot, this function wraps around the Stand method, so that the years for the plot are specific.
+
+    **INPUTS**
+    
+    :Bios_plot: biomasses by plot need this wrapper
+    :type: species or aggregate, used internally
+
+    **RETURNS**
+
+    :NPP_output_plot: NPP at the plot scale
     """
     new_plots = {}
     NPP_output_plot = {}
@@ -62,12 +71,16 @@ def plot_wrap_compute_NPP(Bios_plot, type):
 def compute_NPP(Stand, Bios, type, breakdown_type):
     """ Computes NPP from either a Biomasses data structure or a Biomasses_agg data structure. The Biomasses data structure is species-specific, while the Biomasses_agg data structure is a sum of all the species.
 
-    **INPUT VARIABLES**
+    **INPUTS**
 
     :Stand: a tps_Stand generated Stand which has the metadata needed for the output
     :Bios: a Biomasses or Biomasses_agg data structure
     :type: either `species` or `agg`
     :breakdown_type: either `stand` or `plot`
+
+    **RETURNS**
+
+    :NPP_output: NPP at the stand or plot scale
     """
 
     if breakdown_type != 'plot':
@@ -228,6 +241,16 @@ def compute_NPP(Stand, Bios, type, breakdown_type):
 
 def write_NPP_composite_stand(Stand, BM, BMA, *args):
     """ Computes the Biomass for each species and for the stand as a whole together.
+
+    **INPUTS**
+
+    :BM: Biomasses, from ``tps_Stand``
+    :BMA: Biomass Aggregate, from ``tps_Stand``
+    :args: arguements of the filename and the mode (``w`` or ``a``) for write or append. Write the first plot or stand, append the rest!
+
+    **RETURNS**
+
+    A csv file containing the NPPS at the stand scale
     """
     npp_out = compute_NPP(Stand, BM, 'species', 'stand')
     npp_out_agg = compute_NPP(Stand, BMA, 'agg', 'stand')
@@ -268,6 +291,16 @@ def write_NPP_composite_stand(Stand, BM, BMA, *args):
 
 def write_NPP_composite_plot(Plot, BM_plot, BMA_plot, *args):
     """ Computes the Biomass for each species and for the stand as a whole together.
+
+    **INPUTS**
+
+    :BM_plot: Biomasses, from ``tps_Stand``
+    :BMA_plot: Biomass Aggregate, from ``tps_Stand``
+    :args: arguements of the filename and the mode (``w`` or ``a``) for write or append. Write the first plot or stand, append the rest!
+
+    **RETURNS**
+
+    A csv file containing the NPPS at the plot scale
     """
     npp_out = plot_wrap_compute_NPP(BM_plot, 'species')
     npp_out_agg = plot_wrap_compute_NPP(BMA_plot, 'agg')

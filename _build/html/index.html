@@ -106,7 +106,7 @@
 <span class="k">print</span><span class="p">([</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sql</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>In the command line interface, <code class="docutils literal"><span class="pre">tps_cli</span></code>, commands can be issued to gather a specific tree, stand, set of trees, etc. See documentation in the README.rst file on`GitHub &lt;<a class="reference external" href="https://github.com/dataRonin/ptree">https://github.com/dataRonin/ptree</a>&gt;`_.</p>
+<p>In the command line interface, <code class="docutils literal"><span class="pre">tps_cli</span></code>, commands can be issued to gather a specific tree, stand, set of trees, etc. See documentation in the <code class="docutils literal"><span class="pre">README.rst</span></code> file on <a class="reference external" href="https://github.com/dataRonin/ptree">GitHub</a>.</p>
 <span class="target" id="module-poptree_basis"></span><dl class="class">
 <dt id="poptree_basis.Capture">
 <em class="property">class </em><code class="descclassname">poptree_basis.</code><code class="descname">Capture</code><span class="sig-paren">(</span><em>cursor</em>, <em>queries</em><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture" title="Permalink to this definition">¶</a></dt>
@@ -147,6 +147,17 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="mi">1983</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;pila0010&#39;</span><span class="p">,</span> <span class="s">&#39;pila0011&#39;</span><span class="p">,</span> <span class="s">&#39;pila0012&#39;</span><span class="p">,</span> <span class="s">&#39;pila0013&#39;</span><span class="p">,</span> <span class="s">&#39;pila0014&#39;</span><span class="p">,</span> <span class="s">&#39;pila0015&#39;</span><span class="p">,</span> <span class="s">&#39;pila0016&#39;</span><span class="p">,</span> <span class="s">&#39;pila0017&#39;</span><span class="p">,</span> <span class="s">&#39;pila0018&#39;</span><span class="p">]}</span>
 </pre></div>
 </div>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Cursor:</th><td class="field-body">a pymssql cursor created by YamlConn from <cite>config_2.yml</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Queries:</th><td class="field-body">the queries in the <cite>qf_2.yml</cite> file co-located with <cite>poptree_basis.py</cite></td>
+</tr>
+</tbody>
+</table>
 <p><strong>RETURNS</strong></p>
 <p>This is a description of all the properties of a Capture class. Throughout the program, this class is often named XFACTOR.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -200,7 +211,6 @@
 </tr>
 </tbody>
 </table>
-<p>A slot exists for computing the number of plots, although we currently do not use this output.</p>
 <dl class="method">
 <dt id="poptree_basis.Capture.condense_detail_reference">
 <code class="descname">condense_detail_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.condense_detail_reference" title="Permalink to this definition">¶</a></dt>
@@ -215,6 +225,8 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">4.0</span>
 </pre></div>
 </div>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
 <p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -239,6 +251,8 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">4047.0</span>
 </pre></div>
 </div>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
 <p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -255,6 +269,8 @@
 <dt id="poptree_basis.Capture.create_additions">
 <code class="descname">create_additions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.create_additions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates the look-up of plots which are &#8220;additions&#8221; in the database (activity code is A).</p>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
 <p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -293,6 +309,8 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">5.0</span>
 </pre></div>
 </div>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
 <p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -309,6 +327,8 @@
 <dt id="poptree_basis.Capture.create_mortalities">
 <code class="descname">create_mortalities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.Capture.create_mortalities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates the look-up of stands, years, and plots which are &#8220;mortality checks&#8221;</p>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
 <p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -341,6 +361,8 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">10.0</span>
 </pre></div>
 </div>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
 <p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -365,6 +387,8 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">2500.0</span>
 </pre></div>
 </div>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
 <p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -399,13 +423,28 @@
 &gt;&gt;&gt; &lt;pymssql.connection, pymssql.cursor&gt; = A.sql_connect()
 </pre></div>
 </div>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed. YamlConn uses configurations in yaml files!</p>
 <p><strong>RETURNS</strong></p>
-<p>A instance of the YamlConn connection object, used to keep you plugged into the database.</p>
+<p>An instance of the YamlConn connection object, used to keep you plugged into the database.</p>
 <dl class="method">
 <dt id="poptree_basis.YamlConn.sql_connect">
 <code class="descname">sql_connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#poptree_basis.YamlConn.sql_connect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connects to the MS SQL server database</p>
 <p>Configuration parameters are in config_2.yaml file.</p>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed. Configuration comes from <cite>config_2.yaml</cite></p>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Conn:</th><td class="field-body">a pymssql connection object. If you have write abilities in the database, this is needed to execute code that could change the server.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Cur:</th><td class="field-body">a pymssql cursor object. This object is used generically to control and execute queries. It is all you will need to use the TPS tools.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -606,10 +645,19 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 <code class="descclassname">biomass_basis.</code><code class="descname">jenkins2014</code><span class="sig-paren">(</span><em>dbh</em>, <em>j3</em>, <em>j4</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.jenkins2014" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes 2014 jenkins values for some species. If you add in new parameters, you might want this.</p>
 <p>The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(dbh))</p>
-<p><strong>INPUTS</strong>
-:dbh: cm diameter at breast height
-:j3: first Jenkins2014 parameter
-:j4: second Jenkins2014 parameter</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Dbh:</th><td class="field-body">cm diameter at breast height</td>
+</tr>
+<tr class="field-even field"><th class="field-name">J3:</th><td class="field-body">first Jenkins2014 parameter</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">J4:</th><td class="field-body">second Jenkins2014 parameter</td>
+</tr>
+</tbody>
+</table>
 <p><strong>RETURNS</strong></p>
 <p>A tuple like this : <cite>(biomass, volume, jenkins biomass, wood density)</cite> or zeros, if any of these cannot be computed.</p>
 </dd></dl>
@@ -716,23 +764,13 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 <code class="descclassname">biomass_basis.</code><code class="descname">which_fx</code><span class="sig-paren">(</span><em>function_string</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.which_fx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the correct function for doing the Biomass ( Mg ), Jenkins Biomass ( Mg ), Volume ( m<sup>3</sup> ) , and Basal Area ( m<sup>2</sup> ) and wood density in the lookup table.
 The keys for the lookup table are the same as the FORM field in TP00110</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">As_lnln:</th><td class="field-body">function call for the lnln form</td>
-</tr>
-<tr class="field-even field"><th class="field-name">As_oak_biopak:</th><td class="field-body">function call for the oak biomass form</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">As_chinq_biopak:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">function call for the chinquapin biomass form</td>
-</tr>
-<tr class="field-even field"><th class="field-name">As_biopak:</th><td class="field-body">function call for the biopak form</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">As_d2ht:</th><td class="field-body">function call for the d2ht form</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Mod_biopak:</th><td class="field-body">function call for the mod_biopak form</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">Function_string:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the string that is in the <cite>form</cite> attribute in TP00110, used to generate the above functions for computation.</td>
 </tr>
 </tbody>
 </table>
@@ -767,7 +805,20 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </pre></div>
 </div>
 <p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Cur:</th><td class="field-body">a pymssql cursor, created by YamlConn.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Queries:</th><td class="field-body">queries, taken from <cite>qf_2.yml</cite>, also created by YamlConn</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Tid:</th><td class="field-body">a 15-character tree id, whose format is roughly <cite>plotid</cite> + <cite>tree number</cite></td>
+</tr>
+</tbody>
+</table>
 <p><strong>RETURNS</strong></p>
+<p>An instance of the Tree object, which holds the tree in all its years and all that is needed to process it. This method is great for introspecting one specific tree, but is pretty slow for anything more than 1 tree (two trees is okay, also).</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last"><cite>Tree.state</cite> contains <cite>[year, dbh, status, dbh_code]</cite>. Although status is an integer, it is recorded as a string here because it is descriptive. <cite>1</cite> is OK, <cite>2</cite> is Ingrowth, <cite>3</cite> is merged or fused, <cite>6</cite> is Dead, and <cite>9</cite> is Missing. See : <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&amp;dbcode=Tp001&amp;attid=7291&amp;topnav=8/">Tree Status Codes</a> . DBH Codes are also all displayed as strings, although some are integers. See : <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&amp;dbcode=Tp001&amp;attid=7287&amp;topnav=8/">Tree DBH Codes</a>.</p>
@@ -790,7 +841,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <li>We should be told if a tree&#8217;s dbh code changes from G or V to any inferior dbh code (1,2,3,4,8,9,M or U) - see <a class="reference external" href="http://andrewsforest.oregonstate.edu/data/domains.cfm?domain=enum&amp;dbcode=Tp001&amp;attid=7287&amp;topnav=8">DBH CODES</a> (<code class="docutils literal"><span class="pre">degradex</span></code>)</li>
 <li>This method shouldn&#8217;t be called in the case where there is only one state</li>
 </ul>
-<p><strong>INTERNAL VARIABLES</strong></p>
+<p>The internal function of check_trees uses a few non-standard parameters, including:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -803,6 +854,8 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 </tbody>
 </table>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
 <p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -846,7 +899,11 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="mf">1.2639</span><span class="p">,</span> <span class="mf">2.8725</span><span class="p">,</span> <span class="mf">1.14323</span><span class="p">,</span> <span class="mf">0.44</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.2639</span><span class="p">,</span> <span class="mf">2.8725</span><span class="p">,</span> <span class="mf">1.14323</span><span class="p">,</span> <span class="mf">0.44</span><span class="p">),</span> <span class="p">[</span><span class="mf">0.002</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p><strong>INTERNAL VARIABLES</strong></p>
+<p>If a tree is missing (i.e. it has a status of &#8216;9&#8217;), it is assumed to be alive, with the last known live tree dbh.</p>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed</p>
+<p><strong>RETURNS</strong></p>
+<p>Populates the Tree object with the biomasses and basal area for that specific tree, using these parameters:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -854,9 +911,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <tr class="field-odd field"><th class="field-name" colspan="2">List_of_biomasses:</th></tr>
 <tr class="field-odd field"><td>&nbsp;</td><td class="field-body">a list of tuples generated by the biomass equations&#8217; returns</td>
 </tr>
-<tr class="field-even field"><th class="field-name">List_of_basal:</th><td class="field-body">a list of basal areas created by <cite>dbh`*`dbh`*`0.00007854</cite></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Proxy_dbh:</th><td class="field-body">in years where the dbh is not extant because of mortality, the proxy dbh is used to compute the biomasses. It is the dbh of the last live remeasurement.</td>
+<tr class="field-even field"><th class="field-name">List_of_basal:</th><td class="field-body">a list of basal areas created by <code class="docutils literal"><span class="pre">dbh</span> <span class="pre">*</span> <span class="pre">dbh</span> <span class="pre">*</span> <span class="pre">0.00007854</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -866,7 +921,10 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dt id="tps_Tree.Tree.get_a_tree">
 <code class="descname">get_a_tree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.get_a_tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves a single tree and assign its species, standid, and plot; create a list of lists describing that tree for each remeasurement in its life. Gathers the equations the tree needs to have its attributes computed.</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed</p>
+<p><strong>RETURNS</strong></p>
+<p>Populates the Tree object with the data for that specific tree, generating these parameters:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -877,11 +935,9 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">Sql:</th><td class="field-body">sql query defined in &#8216;qf_2.yaml&#8217;</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Sql_2:</th><td class="field-body">another sql query defined in &#8216;qf_2.yaml&#8217;</td>
+<tr class="field-even field"><th class="field-name">Form:</th><td class="field-body">equation &#8216;form&#8217; such as lnln, d2ht, etc.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Form:</th><td class="field-body">equation &#8216;form&#8217; such as as_lnln, as_compbio, etc.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Proxy:</th><td class="field-body">if a tree does not have its own equation, a proxy equation is used from a similar species. For example, <cite>prunu</cite> uses <cite>alru</cite> as both are small hardwoods.</td>
+<tr class="field-odd field"><th class="field-name">Proxy:</th><td class="field-body">if a tree does not have its own equation, a proxy equation is used from a similar species. For example, <cite>prunu</cite> uses <cite>alru</cite> as both are small hardwoods.</td>
 </tr>
 </tbody>
 </table>
@@ -896,10 +952,12 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Mode:</th><td class="field-body">either <cite>&#8211;screen</cite> (default) or <cite>&#8211;csv</cite> (specified). If <cite>&#8211;csv</cite> the outputs will have their own csv file</td>
+<tr class="field-odd field"><th class="field-name">Mode:</th><td class="field-body">either <cite>&#8211;screen</cite> (default) or <cite>&#8211;csv</cite> (specified). If <cite>&#8211;csv</cite> the outputs will have their own csv file.</td>
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong></p>
+<p>Either a csv file is saved or a screen of information is presented. For details, see the documentation for <code class="docutils literal"><span class="pre">tps_cli.py</span></code>, which is where this function is generally called.</p>
 </dd></dl>
 
 <dl class="method">
@@ -908,20 +966,12 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dd><p>Returns the expansion attribute from the Capture object as a dictionary specific for this tree.</p>
 <p>First the stand is checked against the list of stands taht at some point in time contained a detail plot. If the stand is not in the list a default lookup of 1.0 is returned. Otherwise, a multiplier for detail plot is returned.</p>
 <p>If the plot is a detail plot and the tree has a dbh which is less than 15.0 cm but greater than the minimum dbh listed, then a factor other than 1.0 will be returned.</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">is an instance of the Capture object, which tells us if a plot is a detail plot or not.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Standid:</th><td class="field-body">the stand of a tree object</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Plot:</th><td class="field-body">the plotid attribute of a tree object</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">the dbh attribute of a tree object</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Year:</th><td class="field-body">the year attribute of a tree object</td>
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">an instance of Capture, which is used here to map year and plot id onto the area of the plot and the minimum dbh. Detail plots get <cite>expanded</cite> if they have small trees to a greater proportion of the stand&#8217;s area.</td>
 </tr>
 </tbody>
 </table>
@@ -941,20 +991,12 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <code class="descname">is_unusual_area</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.is_unusual_area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the uplot_areas attribute from the Capture object as a dictionary specific for this tree.</p>
 <p>If the plot is listed in the unique areas reference, that reference will be returned for the year, otherwise, the default 625 m<sup>2</sup> is returned</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">is an instance of the Capture object.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Standid:</th><td class="field-body">the stand of a tree object</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Plot:</th><td class="field-body">the plotid attribute of a tree object</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Dbh:</th><td class="field-body">the dbh attribute of a tree object</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Year:</th><td class="field-body">the year attribute of a tree object</td>
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">an instance of Capture, which is used here to map year and plot id onto the area of the plot. If the plot has a non-standard area (i.e. it is not 625 m<sup>2</sup>), this value is returned.</td>
 </tr>
 </tbody>
 </table>
@@ -978,7 +1020,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <p class="last">This method is slow if doing more than just a few trees. It only writes the attributes, rather than trying to write all the checks as well, which take longer.</p>
 </div>
 <p>When the program is executed on the stand level, and this output is given (see example in <cite>tps_Sample.py</cite>) trees are sorted by tree id (ascending alphabetical order.)</p>
-<p><strong>INPUT VARIABLES</strong></p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -991,13 +1033,15 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong></p>
+<p>A file containing only biomass information about a tree or set of 3 or fewer trees.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Tree.Tree.only_output_checks">
 <code class="descname">only_output_checks</code><span class="sig-paren">(</span><em>Checks</em>, <em>checkfile='all_indv_tree_checks.csv'</em>, <em>mode='wt'</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Tree.Tree.only_output_checks" title="Permalink to this definition">¶</a></dt>
 <dd><p>A method to only write out the Checks when computed. Run separately from biomasses for faster results.</p>
-<p><strong>INPUT VARIABLES</strong></p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1010,6 +1054,8 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong></p>
+<p>A file containing true or false for the tree checks from <cite>check_trees</cite></p>
 </dd></dl>
 
 <dl class="method">
@@ -1020,7 +1066,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <p class="first admonition-title">Note</p>
 <p class="last">This method is really slow if doing more than just a few trees.</p>
 </div>
-<p><strong>INPUT VARIABLES</strong></p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1036,6 +1082,8 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong></p>
+<p>A file containing individual trees, aggregated by stand or plot. It is really slow to run this function. Save it for very peculiar trees and use <code class="docutils literal"><span class="pre">tps_cli.py</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -1075,6 +1123,24 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <code class="descname">aggregate_biomasses</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.aggregate_biomasses" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each year in biomasses, add up all the trees from all the species, and output the stand summary over all the species as a nearly identical data structure.</p>
 <p>For every one of the attributes in Biomasses for Trees Per Hectare (TPHA), Biomass ( Mg ), Basal Area (m<sup>2</sup>),  Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. When writing occurs, the aggregate is expanded to the hectare.</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Biomasses:</th><td class="field-body">the biomasses by species for a whole stand, separated into <cite>live</cite>, <cite>dead</cite>, and <cite>ingrowth</cite>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Biomasses_agg:</th><td class="field-body">the <cite>all</cite> biomass for the aggregate of all species on that stand in that year.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1082,6 +1148,24 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <code class="descname">aggregate_biomasses_plot</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.aggregate_biomasses_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>for each year in biomasses, add up all the trees from all the species, and output the plot summary over all the species as a nearly identical data structure.</p>
 <p>For every one of the attributes in Biomasses for Biomass ( Mg ), Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. In the write out, we&#8217;ll multiply it out to the HA level</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Biomasses:</th><td class="field-body">the species aggregated results from the plot scale analyses of biomass</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Biomasses_Agg:</th><td class="field-body">The biomasses by plot, but now aggregated over all the species on that plot.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1100,17 +1184,8 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 </tbody>
 </table>
-<p><strong>INTERNAL VARIABLES</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Additions:</th><td class="field-body">stand additions are years that have live trees measured that were not measured in previous year&#8217;s inventory. we allocate additions to the subsequent year&#8217;s inventory. There&#8217;s only about 15 plots this happens on.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Replacement:</th><td class="field-body">replaces the years of &#8220;additions&#8221; with the subsequent year that is not an additions.</td>
-</tr>
-</tbody>
-</table>
+<p><strong>RETURNS</strong></p>
+<p>Fixes additions and mortalities by replacing their years with a proxy year in remeasurements.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1121,37 +1196,45 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dt>This function uses the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.</dt>
 <dd>Load in the appropriate parameters for this computation. Separate &#8220;small&#8221; trees from &#8220;large&#8221; ones so that small ones can get the expansion factor. If they aren&#8217;t on a detail plot, this number will just be &#8220;1&#8221;.)</dd>
 </dl>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">a Capture object containing the detail plots, minimum dbhs, etc.</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">XFACTOR.detail_reference:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">plots which are detail plots and when</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">XFACTOR.stands_with_unusual_mins:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">plots which have minimums that are not 15 and are not detail plots</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">XFACTOR.unusual_plot_areas:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">plots whose areas are not 625m</td>
+</tbody>
+</table>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Biomasses:</th><td class="field-body">a species-separated, stand-scale composite of biomasses that are needed for the final output.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>INTERNAL VARIABLES</strong></p>
-<p>Basically, this is the same as compute_normal_biomasses except the unique area of each plot and stand is referenced from a table rather than assumed to be 625 m:sup: 2.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Plot.compute_biomasses_plot">
 <code class="descname">compute_biomasses_plot</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.compute_biomasses_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the biomass ( Mg/ha ), volume (m<sup>3</sup>), Jenkins biomass ( Mg/ha ), TPH (number of trees/ ha), and basal area (m<sup>2</sup> / ha). Use at the plot scale, so no expansion factors are needed here.</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Self.Stand:</th><td class="field-body">basically the same as the stand-level computation, but in this case we actually will output the biomasses at each plot&#8217;s level</td>
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">An instance of the Capture object used for parameterization.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Biomasses:</th><td class="field-body">Biomasses by plot, separated into special groups such as <cite>live</cite>, <cite>dead</cite>, and <cite>ingrowth</cite> as well as into <cite>biomass</cite>, <cite>basal</cite>, <cite>volume</cite>, <cite>Jenkins&#8217; biomass</cite>, and <cite>trees per hectare.</cite></td>
 </tr>
 </tbody>
 </table>
@@ -1160,7 +1243,9 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dl class="method">
 <dt id="tps_Stand.Plot.create_num_plots">
 <code class="descname">create_num_plots</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.create_num_plots" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a number of plots count for each stand and year.</p>
+<dd><p>Creates a number of plots count for each stand and year. Uses a special query to the database to do this. Currently we use this for the stand composite output only.</p>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
 <p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1177,16 +1262,10 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dt id="tps_Stand.Plot.get_all_dead_trees">
 <code class="descname">get_all_dead_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.get_all_dead_trees" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all the dead trees from TP00103. Updates self.od, which was made in get_all_live_trees().</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Self.tree_list_m:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">&#8220;SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00103.dbh_last, fsdbdata.dbo.tp00103.year FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00103 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00103.treeid WHERE fsdbdata.dbo.tp00101.standid like &#8216;{standid}&#8217; ORDER BY fsdbdata.dbo.tp00103.treeid ASC&#8221;</td>
-</tr>
-</tbody>
-</table>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
+<p><strong>RETURNS</strong></p>
+<p>Gathers all the dead trees and data from FSDBDATA.dbo.TP00103.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1194,36 +1273,35 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <code class="descname">get_all_live_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.get_all_live_trees" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the trees on that stand by querying FSDBDATA and sort them by year, plot, live or dead, and species.</p>
 <p>Queries both the live trees and the dead trees in the live database who do not have a DBH given. The dead trees then come in and replace the live ones without the DBH&#8217;s in get_all_dead_trees(). First get the live from self.tree_list.</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Self.query:</th><td class="field-body">&#8220;SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, fsdbdata.dbo.tp00102.year, fsdbdata.dbo.tp00102.dbh_code, fsdbdata.dbo.tp00101.PSP_STUDYID FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00102 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid WHERE fsdbdata.dbo.tp00101.standid like &#8216;{standid}&#8217; ORDER BY fsdbdata.dbo.tp00102.treeid ASC&#8221;</td>
-</tr>
-</tbody>
-</table>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
+<p><strong>RETURNS</strong></p>
+<p>This function gathers all the live trees from FSDBDATA.dbo.TP00102.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">ingrowth is included in &#8220;live&#8221; (live statuses are all but &#8220;6&#8221; and &#8220;9&#8221;), but ingrowth is exclusive when status is &#8220;2&#8221;</p>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Plot.get_total_area">
 <code class="descname">get_total_area</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.get_total_area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the total area for each year on that stand and create a reference table to be used when figuring out the per hectare output. The percent of area on the plot over the percent of the area of the stand is the proportion represented by that plot.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">XFACTOR</span><span class="o">.</span><span class="n">total_areas</span><span class="p">[</span><span class="s">&#39;hr03&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="mi">1984</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1985</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1986</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1988</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1989</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">2000</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">2007</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">}</span>
+</pre></div>
+</div>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">XFACTOR.total_areas has the areas by stand, like this:</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">An instance of the Capture object used here to know the area of the stand.</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">XFACTOR</span><span class="o">.</span><span class="n">total_areas</span><span class="p">[</span><span class="s">&#39;hr03&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="mi">1984</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1985</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1986</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1988</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1989</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">2000</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">2007</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1978</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1995</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">}</span>
-</pre></div>
-</div>
+<p><strong>RETURNS</strong></p>
+<p>The area of the stand, as a float. If not, 0.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1231,7 +1309,10 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <code class="descname">select_eqns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.select_eqns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets only the equations you need based on the species on that plot by querying the database for individual species that will be on this stand and makes an equation table.</p>
 <p>This is designed to limit the calls to the database and the amount of conditionals in the program. All trees on the stand are &#8216;grouped&#8217; by species and then each group is mapped by the appropriate equation. Only the equations needed are used.</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed; this function is called automatically upon Stand creation.</p>
+<p><strong>RETURNS</strong></p>
+<p>Populates some of the Stands attributes:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1248,33 +1329,34 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 </tbody>
 </table>
-<p><strong>RETURNS</strong></p>
-<p>Populates Stand.eqns with a reference of &#8216;species&#8217; : &#8216;function&#8217;, where the function is a pointer to the appropriate equation form populated by parameters extracted from TP00110.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Plot.update_all_missing_trees">
 <code class="descname">update_all_missing_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.update_all_missing_trees" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the missing trees from self.missing and try to match each to a tree in the main dictionary that is alive in the preceding year from self.decent_years, and then return a copy of that tree to the year it is missing, so we can compute its biomass. Trees were assigned here when pulled in from live. Because all trees are there now, we can roll the dbh from the appropriate last good measurement into this new year. The assumption is that all trees not known dead are considered alive.</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Replacement_year_index:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the index in the list of valid years to get the year of replacement from. It needs to precede the missing year</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Replacement_year:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the year whose data we use to replace the missing year</td>
-</tr>
-</tbody>
-</table>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
+<p><strong>RETURNS</strong></p>
+<p>This function updates the missing trees so that they are viewed as alive and with a dbh. It is actually fairly hard to manage as many trees have been missing for a good long time. If a tree ID can&#8217;t be found, check it through <code class="docutils literal"><span class="pre">tps_Tree</span></code> and if it has many <cite>9</cite> status, you&#8217;ll want to modify this script to help you catch those statuses and replace them.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Plot.write_individual_trees">
 <code class="descname">write_individual_trees</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_individual_trees" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes a csv file, containing the tree measurements for the individual trees on the stand. File contains only the measurement attributes from the composite file; it does not contain &#8220;trees per hectare&#8221; because only one tree.</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args:</th><td class="field-body">is two command line args indicating the filename for output and the mode, either write or append</td>
+</tr>
+</tbody>
+</table>
+<p>When the first tree is run, we want to write the file. However, then we want to append because re-opening and writing would destroy the first one. The <code class="docutils literal"><span class="pre">tps_cli</span></code> interface handles this for you!</p>
+<p><strong>RETURNS</strong></p>
+<p>A csv file containing all the individual trees, or sets of csv files by aggregation level. This function is managed in <code class="docutils literal"><span class="pre">tps_cli</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1294,7 +1376,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 </tbody>
 </table>
-<p><strong>OUTPUTS</strong></p>
+<p><strong>RETURNS</strong></p>
 <p>Writes a file named <cite>standid + stand_composite_output.csv</cite></p>
 <p>If an additional argument is specified, this is the generic output file to write to for the <cite>&#8211;all</cite> command line method</p>
 </dd></dl>
@@ -1314,16 +1396,23 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">the reference object used for computing areas and such. You&#8217;ve already created it. No worries.</td>
 </tr>
+<tr class="field-even field"><th class="field-name">Args:</th><td class="field-body">two arguements, a csv filename and a mode of write or append</td>
+</tr>
 </tbody>
 </table>
-<p><strong>OUTPUTS</strong></p>
-<p>Writes a file named <cite>standid + stand_composite_output.csv</cite></p>
+<p>If the mode is <code class="docutils literal"><span class="pre">w</span></code> for write, this will always over-write previous stands. If it is <code class="docutils literal"><span class="pre">a</span></code> for append, this will add to the last file. When doing many stands I suggest doing <code class="docutils literal"><span class="pre">w</span></code> for the first one and <code class="docutils literal"><span class="pre">a</span></code> for the rest. Understand though that if the program freezes up or you need to stop, if you start using <code class="docutils literal"><span class="pre">a</span></code> again, you will just append to the file you already made.  <code class="docutils literal"><span class="pre">tps_cli</span></code> handles this for you.</p>
+<p><strong>RETURNS</strong></p>
+<p>Writes a file named <cite>standid + stand_composite_output.csv</cite>. If you are running through <code class="docutils literal"><span class="pre">tps_cli</span></code> there is also an option of returning an <code class="docutils literal"><span class="pre">all</span></code> version</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Plot.write_stand_rob">
 <code class="descname">write_stand_rob</code><span class="sig-paren">(</span><em>RobBiomass</em>, <em>XFACTOR</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Plot.write_stand_rob" title="Permalink to this definition">¶</a></dt>
 <dd><p>quick little method that ignores all the detail plot (trees &lt; 15.)</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is NOT a permanent script. It is here to help look at detail plots. It should not be considered final.</p>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -1345,6 +1434,23 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dict_keys</span><span class="p">([</span><span class="mi">1985</span><span class="p">,</span> <span class="mi">1987</span><span class="p">,</span> <span class="mi">1988</span><span class="p">,</span> <span class="mi">2007</span><span class="p">,</span> <span class="mi">1993</span><span class="p">,</span> <span class="mi">1978</span><span class="p">,</span> <span class="mi">1981</span><span class="p">,</span> <span class="mi">1998</span><span class="p">,</span> <span class="mi">1983</span><span class="p">])</span>
 </pre></div>
 </div>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Cur:</th><td class="field-body">the pymssql cursor object created by YamlConn</td>
+</tr>
+<tr class="field-even field"><th class="field-name">XFACTOR:</th><td class="field-body">instance of the Capture object for parameterization (see <code class="docutils literal"><span class="pre">poptree_basis.py</span></code>)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Queries:</th><td class="field-body">queries from <code class="docutils literal"><span class="pre">qf_2.yaml</span></code>, created by YamlConn</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Standid:</th><td class="field-body">4 character stand id, in lowercase.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RETURNS</strong></p>
+<p>An instance of the Stand object, which is used to do all plot, stand, and study level computations as well as output individual trees.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Stands have mortalities, additions, and replacements dictionaries for both of these within themselves. These are very helpful for checking errors in the study set-up.</p>
@@ -1354,6 +1460,24 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <code class="descname">aggregate_biomasses</code><span class="sig-paren">(</span><em>Biomasses</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.aggregate_biomasses" title="Permalink to this definition">¶</a></dt>
 <dd><p>For each year in biomasses, add up all the trees from all the species, and output the stand summary over all the species as a nearly identical data structure.</p>
 <p>For every one of the attributes in Biomasses for Trees Per Hectare (TPHA), Biomass ( Mg ), Basal Area (m<sup>2</sup>),  Volume (m<sup>3</sup>), Jenkins&#8217;&#8217; Biomass ( Mg ), sum the values for the whole stand. These values are already normalized into the per meters squared version. When writing occurs, the aggregate is expanded to the hectare.</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Biomasses:</th><td class="field-body">the biomasses by species for a whole stand, separated into <cite>live</cite>, <cite>dead</cite>, and <cite>ingrowth</cite>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Biomasses_agg:</th><td class="field-body">the <cite>all</cite> biomass for the aggregate of all species on that stand in that year.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1372,17 +1496,8 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 </tbody>
 </table>
-<p><strong>INTERNAL VARIABLES</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Additions:</th><td class="field-body">stand additions are years that have live trees measured that were not measured in previous year&#8217;s inventory. we allocate additions to the subsequent year&#8217;s inventory. There&#8217;s only about 15 plots this happens on.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Replacement:</th><td class="field-body">replaces the years of &#8220;additions&#8221; with the subsequent year that is not an additions.</td>
-</tr>
-</tbody>
-</table>
+<p><strong>RETURNS</strong></p>
+<p>Fixes additions and mortalities by replacing their years with a proxy year in remeasurements.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1393,31 +1508,32 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dt>This function uses the Capture object to tell if a fancy computation (i.e. get a special area, minimum, etc. needs to be performed.</dt>
 <dd>Load in the appropriate parameters for this computation. Separate &#8220;small&#8221; trees from &#8220;large&#8221; ones so that small ones can get the expansion factor. If they aren&#8217;t on a detail plot, this number will just be &#8220;1&#8221;.)</dd>
 </dl>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">a Capture object containing the detail plots, minimum dbhs, etc.</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">XFACTOR.detail_reference:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">plots which are detail plots and when</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">XFACTOR.stands_with_unusual_mins:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">plots which have minimums that are not 15 and are not detail plots</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">XFACTOR.unusual_plot_areas:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">plots whose areas are not 625m</td>
+</tbody>
+</table>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Biomasses:</th><td class="field-body">a species-separated, stand-scale composite of biomasses that are needed for the final output.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>INTERNAL VARIABLES</strong></p>
-<p>Basically, this is the same as compute_normal_biomasses except the unique area of each plot and stand is referenced from a table rather than assumed to be 625 m:sup: 2.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.create_num_plots">
 <code class="descname">create_num_plots</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.create_num_plots" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a number of plots count for each stand and year.</p>
+<dd><p>Creates a number of plots count for each stand and year. Uses a special query to the database to do this. Currently we use this for the stand composite output only.</p>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
 <p><strong>RETURNS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1434,16 +1550,10 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dt id="tps_Stand.Stand.get_all_dead_trees">
 <code class="descname">get_all_dead_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.get_all_dead_trees" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all the dead trees from TP00103. Updates self.od, which was made in get_all_live_trees().</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Self.tree_list_m:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">&#8220;SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00103.dbh_last, fsdbdata.dbo.tp00103.year FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00103 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00103.treeid WHERE fsdbdata.dbo.tp00101.standid like &#8216;{standid}&#8217; ORDER BY fsdbdata.dbo.tp00103.treeid ASC&#8221;</td>
-</tr>
-</tbody>
-</table>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
+<p><strong>RETURNS</strong></p>
+<p>Gathers all the dead trees and data from FSDBDATA.dbo.TP00103.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1451,36 +1561,35 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <code class="descname">get_all_live_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.get_all_live_trees" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the trees on that stand by querying FSDBDATA and sort them by year, plot, live or dead, and species.</p>
 <p>Queries both the live trees and the dead trees in the live database who do not have a DBH given. The dead trees then come in and replace the live ones without the DBH&#8217;s in get_all_dead_trees(). First get the live from self.tree_list.</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Self.query:</th><td class="field-body">&#8220;SELECT fsdbdata.dbo.tp00101.treeid, fsdbdata.dbo.tp00101.species, fsdbdata.dbo.tp00101.standid, fsdbdata.dbo.tp00101.plotid, fsdbdata.dbo.tp00102.dbh, fsdbdata.dbo.tp00102.tree_status, fsdbdata.dbo.tp00102.year, fsdbdata.dbo.tp00102.dbh_code, fsdbdata.dbo.tp00101.PSP_STUDYID FROM fsdbdata.dbo.tp00101 LEFT JOIN fsdbdata.dbo.tp00102 ON fsdbdata.dbo.tp00101.treeid = fsdbdata.dbo.tp00102.treeid WHERE fsdbdata.dbo.tp00101.standid like &#8216;{standid}&#8217; ORDER BY fsdbdata.dbo.tp00102.treeid ASC&#8221;</td>
-</tr>
-</tbody>
-</table>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
+<p><strong>RETURNS</strong></p>
+<p>This function gathers all the live trees from FSDBDATA.dbo.TP00102.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">ingrowth is included in &#8220;live&#8221; (live statuses are all but &#8220;6&#8221; and &#8220;9&#8221;), but ingrowth is exclusive when status is &#8220;2&#8221;</p>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.get_total_area">
 <code class="descname">get_total_area</code><span class="sig-paren">(</span><em>XFACTOR</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.get_total_area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the total area for each year on that stand and create a reference table to be used when figuring out the per hectare output. The percent of area on the plot over the percent of the area of the stand is the proportion represented by that plot.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">XFACTOR</span><span class="o">.</span><span class="n">total_areas</span><span class="p">[</span><span class="s">&#39;hr03&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="mi">1984</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1985</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1986</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1988</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1989</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">2000</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">2007</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">}</span>
+</pre></div>
+</div>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">XFACTOR.total_areas has the areas by stand, like this:</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body"></td>
+<tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">An instance of the Capture object used here to know the area of the stand.</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">XFACTOR</span><span class="o">.</span><span class="n">total_areas</span><span class="p">[</span><span class="s">&#39;hr03&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="mi">1984</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1985</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1986</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1988</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1989</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">2000</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">2007</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1978</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">,</span> <span class="mi">1995</span><span class="p">:</span> <span class="mf">10000.0</span><span class="p">}</span>
-</pre></div>
-</div>
+<p><strong>RETURNS</strong></p>
+<p>The area of the stand, as a float. If not, 0.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1488,7 +1597,10 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <code class="descname">select_eqns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.select_eqns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets only the equations you need based on the species on that plot by querying the database for individual species that will be on this stand and makes an equation table.</p>
 <p>This is designed to limit the calls to the database and the amount of conditionals in the program. All trees on the stand are &#8216;grouped&#8217; by species and then each group is mapped by the appropriate equation. Only the equations needed are used.</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed; this function is called automatically upon Stand creation.</p>
+<p><strong>RETURNS</strong></p>
+<p>Populates some of the Stands attributes:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1505,33 +1617,34 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 </tbody>
 </table>
-<p><strong>RETURNS</strong></p>
-<p>Populates Stand.eqns with a reference of &#8216;species&#8217; : &#8216;function&#8217;, where the function is a pointer to the appropriate equation form populated by parameters extracted from TP00110.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.update_all_missing_trees">
 <code class="descname">update_all_missing_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.update_all_missing_trees" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the missing trees from self.missing and try to match each to a tree in the main dictionary that is alive in the preceding year from self.decent_years, and then return a copy of that tree to the year it is missing, so we can compute its biomass. Trees were assigned here when pulled in from live. Because all trees are there now, we can roll the dbh from the appropriate last good measurement into this new year. The assumption is that all trees not known dead are considered alive.</p>
-<p><strong>INTERNAL VARIABLES</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Replacement_year_index:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">the index in the list of valid years to get the year of replacement from. It needs to precede the missing year</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Replacement_year:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">the year whose data we use to replace the missing year</td>
-</tr>
-</tbody>
-</table>
+<p><strong>INPUTS</strong></p>
+<p>No explicit inputs are needed.</p>
+<p><strong>RETURNS</strong></p>
+<p>This function updates the missing trees so that they are viewed as alive and with a dbh. It is actually fairly hard to manage as many trees have been missing for a good long time. If a tree ID can&#8217;t be found, check it through <code class="docutils literal"><span class="pre">tps_Tree</span></code> and if it has many <cite>9</cite> status, you&#8217;ll want to modify this script to help you catch those statuses and replace them.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.write_individual_trees">
 <code class="descname">write_individual_trees</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_individual_trees" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes a csv file, containing the tree measurements for the individual trees on the stand. File contains only the measurement attributes from the composite file; it does not contain &#8220;trees per hectare&#8221; because only one tree.</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args:</th><td class="field-body">is two command line args indicating the filename for output and the mode, either write or append</td>
+</tr>
+</tbody>
+</table>
+<p>When the first tree is run, we want to write the file. However, then we want to append because re-opening and writing would destroy the first one. The <code class="docutils literal"><span class="pre">tps_cli</span></code> interface handles this for you!</p>
+<p><strong>RETURNS</strong></p>
+<p>A csv file containing all the individual trees, or sets of csv files by aggregation level. This function is managed in <code class="docutils literal"><span class="pre">tps_cli</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1549,16 +1662,23 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">XFACTOR:</th><td class="field-body">the reference object used for computing areas and such. You&#8217;ve already created it. No worries.</td>
 </tr>
+<tr class="field-even field"><th class="field-name">Args:</th><td class="field-body">two arguements, a csv filename and a mode of write or append</td>
+</tr>
 </tbody>
 </table>
-<p><strong>OUTPUTS</strong></p>
-<p>Writes a file named <cite>standid + stand_composite_output.csv</cite></p>
+<p>If the mode is <code class="docutils literal"><span class="pre">w</span></code> for write, this will always over-write previous stands. If it is <code class="docutils literal"><span class="pre">a</span></code> for append, this will add to the last file. When doing many stands I suggest doing <code class="docutils literal"><span class="pre">w</span></code> for the first one and <code class="docutils literal"><span class="pre">a</span></code> for the rest. Understand though that if the program freezes up or you need to stop, if you start using <code class="docutils literal"><span class="pre">a</span></code> again, you will just append to the file you already made.  <code class="docutils literal"><span class="pre">tps_cli</span></code> handles this for you.</p>
+<p><strong>RETURNS</strong></p>
+<p>Writes a file named <cite>standid + stand_composite_output.csv</cite>. If you are running through <code class="docutils literal"><span class="pre">tps_cli</span></code> there is also an option of returning an <code class="docutils literal"><span class="pre">all</span></code> version</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tps_Stand.Stand.write_stand_rob">
 <code class="descname">write_stand_rob</code><span class="sig-paren">(</span><em>RobBiomass</em>, <em>XFACTOR</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_Stand.Stand.write_stand_rob" title="Permalink to this definition">¶</a></dt>
 <dd><p>quick little method that ignores all the detail plot (trees &lt; 15.)</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is NOT a permanent script. It is here to help look at detail plots. It should not be considered final.</p>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -1571,7 +1691,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <dt id="tps_NPP.compute_NPP">
 <code class="descclassname">tps_NPP.</code><code class="descname">compute_NPP</code><span class="sig-paren">(</span><em>Stand</em>, <em>Bios</em>, <em>type</em>, <em>breakdown_type</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.compute_NPP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes NPP from either a Biomasses data structure or a Biomasses_agg data structure. The Biomasses data structure is species-specific, while the Biomasses_agg data structure is a sum of all the species.</p>
-<p><strong>INPUT VARIABLES</strong></p>
+<p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1586,30 +1706,98 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 </tr>
 </tbody>
 </table>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">NPP_output:</th><td class="field-body">NPP at the stand or plot scale</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="tps_NPP.plot_wrap_compute_NPP">
 <code class="descclassname">tps_NPP.</code><code class="descname">plot_wrap_compute_NPP</code><span class="sig-paren">(</span><em>Bios_plot</em>, <em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.plot_wrap_compute_NPP" title="Permalink to this definition">¶</a></dt>
 <dd><p>To compute NPP by Plot, this function wraps around the Stand method, so that the years for the plot are specific.</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Bios_plot:</th><td class="field-body">biomasses by plot need this wrapper</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">species or aggregate, used internally</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RETURNS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">NPP_output_plot:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">NPP at the plot scale</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="tps_NPP.write_NPP_composite_plot">
 <code class="descclassname">tps_NPP.</code><code class="descname">write_NPP_composite_plot</code><span class="sig-paren">(</span><em>Plot</em>, <em>BM_plot</em>, <em>BMA_plot</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.write_NPP_composite_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the Biomass for each species and for the stand as a whole together.</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">BM_plot:</th><td class="field-body">Biomasses, from <code class="docutils literal"><span class="pre">tps_Stand</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">BMA_plot:</th><td class="field-body">Biomass Aggregate, from <code class="docutils literal"><span class="pre">tps_Stand</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Args:</th><td class="field-body">arguements of the filename and the mode (<code class="docutils literal"><span class="pre">w</span></code> or <code class="docutils literal"><span class="pre">a</span></code>) for write or append. Write the first plot or stand, append the rest!</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RETURNS</strong></p>
+<p>A csv file containing the NPPS at the plot scale</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tps_NPP.write_NPP_composite_stand">
 <code class="descclassname">tps_NPP.</code><code class="descname">write_NPP_composite_stand</code><span class="sig-paren">(</span><em>Stand</em>, <em>BM</em>, <em>BMA</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tps_NPP.write_NPP_composite_stand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the Biomass for each species and for the stand as a whole together.</p>
+<p><strong>INPUTS</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">BM:</th><td class="field-body">Biomasses, from <code class="docutils literal"><span class="pre">tps_Stand</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">BMA:</th><td class="field-body">Biomass Aggregate, from <code class="docutils literal"><span class="pre">tps_Stand</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Args:</th><td class="field-body">arguements of the filename and the mode (<code class="docutils literal"><span class="pre">w</span></code> or <code class="docutils literal"><span class="pre">a</span></code>) for write or append. Write the first plot or stand, append the rest!</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RETURNS</strong></p>
+<p>A csv file containing the NPPS at the stand scale</p>
 </dd></dl>
 
 </div>
+<div class="section" id="sample">
+<h2>SAMPLE:<a class="headerlink" href="#sample" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">tps_Sample.py</span></code> is a set of sample data you can test the program on. Run at the command line like:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_Sample.py
+</pre></div>
+</div>
+<p>See <code class="docutils literal"><span class="pre">README.rst</span></code> for more details.</p>
+</div>
 <div class="section" id="cli">
 <h2>CLI:<a class="headerlink" href="#cli" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">tps_cli.py</span></code> is the command line interface. Please see <code class="docutils literal"><span class="pre">README.md</span></code> for how to use this interface.</p>
+<p><code class="docutils literal"><span class="pre">tps_cli.py</span></code> is the command line interface. Please see <code class="docutils literal"><span class="pre">README.rst</span></code> for how to use this interface.</p>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -1636,6 +1824,7 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <li><a class="reference internal" href="#individual-trees">Individual Trees:</a></li>
 <li><a class="reference internal" href="#stands">Stands:</a></li>
 <li><a class="reference internal" href="#npp">NPP:</a></li>
+<li><a class="reference internal" href="#sample">SAMPLE:</a></li>
 <li><a class="reference internal" href="#cli">CLI:</a></li>
 </ul>
 </li>

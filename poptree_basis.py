@@ -20,9 +20,14 @@ class YamlConn(object):
     >>> A.queries= <class 'dict'>
     >>> <pymssql.connection, pymssql.cursor> = A.sql_connect()
 
+    **INPUTS**
+
+    No explicit inputs are needed. YamlConn uses configurations in yaml files!
+
     **RETURNS**
 
-    A instance of the YamlConn connection object, used to keep you plugged into the database.
+    An instance of the YamlConn connection object, used to keep you plugged into the database.
+
     """
     def __init__( self ):
         self.configfilename = os.path.join( HERE, "config_2.yaml" )
@@ -34,6 +39,16 @@ class YamlConn(object):
         """ Connects to the MS SQL server database
 
         Configuration parameters are in config_2.yaml file. 
+
+        **INPUTS**
+
+        No explicit inputs are needed. Configuration comes from `config_2.yaml`
+
+        **RETURNS**
+
+        :conn: a pymssql connection object. If you have write abilities in the database, this is needed to execute code that could change the server.
+        :cur: a pymssql cursor object. This object is used generically to control and execute queries. It is all you will need to use the TPS tools.
+
         """
         sql_server = self.config['server']
         sql_user = self.config['user']
@@ -81,6 +96,11 @@ class Capture(object):
     >>> A.additions['pila']
     >>> {1983: ['pila0010', 'pila0011', 'pila0012', 'pila0013', 'pila0014', 'pila0015', 'pila0016', 'pila0017', 'pila0018']}
 
+    **INPUTS**
+
+    :cursor: a pymssql cursor created by YamlConn from `config_2.yml`
+    :queries: the queries in the `qf_2.yml` file co-located with `poptree_basis.py`
+
     **RETURNS**
 
     This is a description of all the properties of a Capture class. Throughout the program, this class is often named XFACTOR.
@@ -108,10 +128,9 @@ class Capture(object):
 
     :A.total_areas[standid][year]: the area of the whole stand for a given year by summing the plots.
 
-    .. note:
 
-    A slot exists for computing the number of plots, although we currently do not use this output.
-    
+    .. note: A slot exists for computing the number of plots, although we currently do not use this output.
+
     """
     def __init__(self, cursor, queries):
         self.detail_reference = {}
@@ -136,9 +155,14 @@ class Capture(object):
     def create_additions(self):
         """ Generates the look-up of plots which are "additions" in the database (activity code is A).
 
+        **INPUTS**
+
+        No explicit inputs are needed.
+
         **RETURNS**
 
         :Capture.additions: Additions plots, indexed by standid, year, and plot id.
+
         """
         sql = self.queries['stand']['query_additions']
 
@@ -164,6 +188,10 @@ class Capture(object):
 
     def create_mortalities(self):
         """ Generates the look-up of stands, years, and plots which are "mortality checks"
+
+        **INPUTS**
+
+        No explicit inputs are needed.
 
         **RETURNS**
 
@@ -219,6 +247,10 @@ class Capture(object):
         >>> True
         >>> H.detail_reference['rs01'][2004]['rs010003']['min']
         >>> 5.0
+
+        **INPUTS**
+
+        No explicit inputs are needed.
 
         **RETURNS**
 
@@ -289,6 +321,10 @@ class Capture(object):
         >>> H.umins_reference['pf28'][1959][3]
         >>> 10.0
 
+        **INPUTS**
+
+        No explicit inputs are needed.
+
         **RETURNS**
 
         :Capture.umins_reference: The unusual minimums table contains the stand, year, and plot that have a minimum that is not 15.0 cm and is also not a detail plot.
@@ -348,6 +384,10 @@ class Capture(object):
         >>> H.expansion['rs32'][2006]
         >>> 4.0
 
+        **INPUTS**
+
+        No explicit inputs are needed.
+
         **RETURNS**
 
         :Capture.expansion: the name of the lookup table created, which can be referenced as an attribute of the Capture object.
@@ -394,6 +434,10 @@ class Capture(object):
         >>> dict_keys(['ybnf', 'gp04', 'ch10', ...
         >>> H.uplot_areas['GP04'][1957][1]
         >>> 4047.0
+
+        **INPUTS**
+
+        No explicit inputs are needed.
 
         **RETURNS**
 
@@ -445,6 +489,10 @@ class Capture(object):
         >>> dict_keys(['ybnf', 'gp04', 'ch10', ...
         >>> H.total_areas['sp06'][2001]
         >>> 2500.0
+
+        **INPUTS**
+
+        No explicit inputs are needed.
 
         **RETURNS**
 
