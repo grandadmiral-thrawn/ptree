@@ -2,3 +2,5 @@
 *.csv
 areas*
 biomass_basis.pyc
+config_2.yaml
+.DS_Store
