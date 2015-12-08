@@ -104,9 +104,9 @@ def as_lnln(woodden, dbh, b1, b2, b3, j1, j2, *args):
 
     """
     try:
-        biomass = round(b1*woodden*(b2*dbh**b3),7)
-        volume = round(biomass/woodden,7)
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
+        biomass = round(b1*woodden*(b2*dbh**b3),11)
+        volume = round(biomass/woodden,11)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,4))),11)
         return (biomass, volume, jbio, woodden)
     except ValueError:
 
@@ -145,9 +145,9 @@ def as_d2ht(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     """
     try:
         height = 1.37+ h1*(1-math.exp(h2*dbh))**h3
-        biomass =  round(woodden*(height*b1*(0.01*dbh)**2),7)
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
-        volume = round(biomass/woodden,7)
+        biomass =  round(woodden*(height*b1*(0.01*dbh)**2),11)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,4))),11)
+        volume = round(biomass/woodden,11)
         return (biomass, volume, jbio, woodden)
     except ValueError:
 
@@ -180,9 +180,9 @@ def as_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
 
     """
     try:
-        biomass = round(1.*10**(-6)*math.exp(b1 + b2 * math.log(dbh)),7)
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
-        volume = round(biomass/woodden,7)
+        biomass = round(1.*10**(-6)*math.exp(b1 + b2 * math.log(dbh)),11)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,4))),11)
+        volume = round(biomass/woodden,11)
         return (biomass, volume, jbio, woodden)
     except ValueError:
 
@@ -215,9 +215,9 @@ def segi_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
 
     """
     try:
-        biomass = round(math.exp(b1 + b2 * math.log(dbh)),7)
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
-        volume = round(biomass/woodden,7)
+        biomass = round(math.exp(b1 + b2 * math.log(dbh)),11)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,4))),11)
+        volume = round(biomass/woodden,11)
         return (biomass, volume, jbio, woodden)
     except ValueError:
 
@@ -253,9 +253,9 @@ def as_chinq_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     """
     try:
         height = 1.37 + h1*(1-math.exp(h2*dbh))**h3
-        biomass =  round(woodden*height**b1*b2*(dbh)**b3,7)
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
-        volume = round(biomass/woodden,7)
+        biomass =  round(woodden*height**b1*b2*(dbh)**b3,11)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,4))),11)
+        volume = round(biomass/woodden,11)
         return (biomass, volume, jbio, woodden)
     except ValueError:
 
@@ -291,9 +291,9 @@ def mod_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     """
     try:
         height = 1.37 + h1*(1-math.exp(h2*dbh))**h3
-        biomass = round(woodden*(b1*dbh**b2*height**b3),7)
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
-        volume = round(biomass/woodden,7)
+        biomass = round(woodden*(b1*dbh**b2*height**b3),11)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,4))),11)
+        volume = round(biomass/woodden,11)
         return (biomass, volume, jbio, woodden)
     except ValueError:
 
@@ -326,9 +326,9 @@ def alder_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
 
     """
     try:
-        biomass = round(1.*10**(-6)*math.exp(b1 + b2 * math.log(dbh)),7)*woodden
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
-        volume = round(biomass/woodden,7)
+        biomass = round(1.*10**(-6)*math.exp(b1 + b2 * math.log(dbh)),11)*woodden
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,4))),11)
+        volume = round(biomass/woodden,11)
         return (biomass, volume, jbio, woodden)
     except ValueError:
 
@@ -363,9 +363,9 @@ def as_oak_biopak(woodden, dbh, b1, b2, b3, j1, j2, h1, h2, h3):
     """
     try:
         height = 1.37+h1*(1-math.exp(h2*dbh))**h3
-        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,2))),7)
-        biomass = round(math.exp(b1 + b2*math.log(0.01*dbh) + b3*math.log(height)),7)
-        volume = round(biomass/woodden,7)
+        jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,4))),11)
+        biomass = round(math.exp(b1 + b2*math.log(0.01*dbh) + b3*math.log(height)),11)
+        volume = round(biomass/woodden,11)
         return (biomass, volume, jbio, woodden)
     except ValueError:
 
@@ -389,7 +389,7 @@ def jenkins2014(dbh, j3, j4):
 
     """
 
-    jbio2 = round(0.001*math.exp(j3 + j4*math.log(round(dbh,2))),7)
+    jbio2 = round(0.001*math.exp(j3 + j4*math.log(round(dbh,4))),11)
 
     return jbio2
 

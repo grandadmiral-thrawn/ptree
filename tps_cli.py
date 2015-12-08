@@ -4,7 +4,7 @@ __author__ = 'dataRonin'
 
 import poptree_basis
 import biomass_basis
-import tps_Tree 
+import tps_Tree
 import tps_Stand
 import tps_NPP
 import math
@@ -29,7 +29,7 @@ if num_args == 3 and sys.argv[1] == "dtx":
     file_in = input("if you would like to save your tree details to a text file please type Y otherwise they will be printed to screen.")
     if file_in != 'Y':
         mode = "--screen"
-    else: 
+    else:
         mode = "--file"
 
     A = tps_Tree.Tree(cur, queries, special_tree)
@@ -64,7 +64,7 @@ if args.action.lower() == 'bio':
 
             # the first argument is all, so we get all the biomass on the stand
             if len(args.number) == 1 and args.number[0]=="--all":
-                
+
                 print("computing ALL " + args.scale.lower() + "s with the " + args.analysis.lower() + " analysis for " + args.action.lower())
 
                 # get all the stands, in this case from the database
@@ -94,7 +94,7 @@ if args.action.lower() == 'bio':
                     del A
                     del BM
                     del BMA
-            
+
             # if the first arguement is not all, no further arguements would be all, so we just check the number of inputs
             elif args.number[0] != "--all":
 
@@ -141,9 +141,9 @@ if args.action.lower() == 'bio':
                     del A
                     del BM
                     del BMA
-                else: 
+                else:
                     print("You must specify at least one unit to compute, or use the --all tag at the end of your line, like : tps_cli.py bio stand composite --all")
-                
+
                 print("Computed : " + list_of_stands + " at the scale of " + args.scale.lower() + " with the " + args.analysis.lower() + " analysis for " + args.action.lower())
 
         ### BIOMASS > STAND > TREE ###
@@ -157,7 +157,7 @@ if args.action.lower() == 'bio':
                 list_all_stands = []
                 # create a file for all the trees
                 cli_filename = "all_stand_indvtree_output.csv"
-                
+
                 sql = cur.execute(queries['execution']['list_of_all_stands'])
                 for row in cur:
                     list_all_stands.append(str(row[0]))
@@ -175,9 +175,9 @@ if args.action.lower() == 'bio':
 
             # if the first arguement is not all, no further arguements would be all, so we just get whatever arguements are there.
             elif args.number[0] != "--all":
-                
+
                 if len(args.number) > 1:
-                    
+
                     list_of_stands = ", ".join(args.number)
 
                     # create the output file based on the first given stand
@@ -206,11 +206,11 @@ if args.action.lower() == 'bio':
                     A.write_individual_trees()
                     print("wrote biomass for " + A.standid + " to " + A.standid + "_stand_indvtree_output.csv")
                     del A
-                
-                else: 
+
+                else:
                     print("You must specify at least one unit to compute, or use the --all tag at the end of your line, like : tps_cli.py bio tree tre --all")
                 print("computed : " + list_of_stands + " at the scale of " + args.scale.lower() + " with the " + args.analysis.lower() + " analysis for " + args.action.lower())
-        
+
         elif args.analysis.lower() not in ['composite','tree']:
             print("Your input for the analysis arguement is not valid. Please follow your input of " + args.action + " and " + args.scale + " with either `composite` or `tree`")
 
@@ -221,7 +221,7 @@ if args.action.lower() == 'bio':
         if args.analysis.lower() == 'composite' or args.analysis.lower() == 'tree':
 
             # the first argument is all, so we do all the things
-            if len(args.number) > 3: 
+            if len(args.number) > 3:
                 print("For individual trees, please only select up to 3 tree id numbers; otherwise, use the `tps_cli.py bio stand tree [list of items]` arguement")
 
             elif len(args.number) <=3 and len(args.number) > 1:
@@ -242,7 +242,7 @@ if args.action.lower() == 'bio':
 
             elif len(args.number) == 1:
                 list_of_units = args.number[0]
-                
+
                 First_Tree = tps_Tree.Tree(cur, queries, args.number[0])
                 Bios = First_Tree.compute_biomasses()
                 First_Tree.only_output_attributes(Bios, datafile = 'selected_indvtree_output.csv', mode='wt')
@@ -253,7 +253,7 @@ if args.action.lower() == 'bio':
             print("args.analysis is `checks`, which can also be called from the `qc argument.`")
 
             # the first argument is all, so we do all the things
-            if len(args.number) > 3: 
+            if len(args.number) > 3:
                 print("For individual trees, please only select up to 3 tree id numbers; otherwise, use the `tps_cli.py qc stand tree [list of items]` arguement for faster results")
 
             elif len(args.number) <=3 and len(args.number) > 1:
@@ -274,14 +274,14 @@ if args.action.lower() == 'bio':
 
             elif len(args.number) == 1:
                 list_of_units = args.number[0]
-                
+
                 First_Tree = tps_Tree.Tree(cur, queries, args.number[0])
                 Checks = First_Tree.check_trees()
                 First_Tree.only_output_checks(Checks, checkfile = 'selected_indvtree_checks.csv', mode='wt')
                 print("checked biomass for " + args.number[0])
 
         elif args.analysis.lower() not in ['composite','tree','checks']:
-            
+
             print("Your input for the analysis arguement is not valid. Please follow your input of " + args.action + " and " + args.scale + " with either `composite`,`tree`, or `checks`")
 
     ### BIOMASS > PLOT ###
@@ -289,7 +289,7 @@ if args.action.lower() == 'bio':
 
         ### BIOMASS > PLOT > COMPOSITE ###
         if args.analysis.lower() == 'composite':
-                
+
             # the first argument is all, so we do all the things
             if len(args.number) == 1 and args.number[0]=="--all":
                 print("computing ALL " + args.scale.lower() + "s with the " + args.analysis.lower() + " analysis for " + args.action.lower())
@@ -299,7 +299,7 @@ if args.action.lower() == 'bio':
 
                 # name your output file locally
                 cli_filename = "all_plot_composite_output.csv"
-                
+
                 sql = cur.execute(queries['execution']['list_of_all_stands'])
                 for row in cur:
                     list_all_stands.append(str(row[0]))
@@ -336,13 +336,13 @@ if args.action.lower() == 'bio':
 
                     # name your output file here
                     cli_filename = "selected_plot_composite_output.csv"
-                    
+
                     #get the stand names for all the plots
                     all_standids = [x[0:4] for x in args.number]
-                    
-                    # identify unique standids 
+
+                    # identify unique standids
                     unique_ids = {k:None for k in all_standids}
-                    
+
                     # list of unique stand ids
                     uids = list(unique_ids.keys())
 
@@ -355,7 +355,7 @@ if args.action.lower() == 'bio':
 
                     BM_plot = K.compute_biomasses_plot(XFACTOR)
                     BMA_plot = K.aggregate_biomasses_plot(BM_plot)
-            
+
                     K.write_plot_composite(BM_plot, BMA_plot, XFACTOR, cli_filename, 'w')
 
                     del A
@@ -379,32 +379,37 @@ if args.action.lower() == 'bio':
 
                 elif len(args.number) == 1:
 
+
                     list_of_units = args.number[0]
+
+                    print("Processing one plot: " + list_of_units)
 
                     cli_filename = args.number[0] + "_plot_composite_output.csv"
 
                     standid = args.number[0][0:4]
 
                     A = tps_Stand.Stand(cur, XFACTOR, queries, standid.lower())
-                    K = tps_Stand.Plot(A, XFACTOR, [standid])
+                    K = tps_Stand.Plot(A, XFACTOR, [list_of_units])
                     BM_plot = K.compute_biomasses_plot(XFACTOR)
+
+
                     BMA_plot = K.aggregate_biomasses_plot(BM_plot)
 
                     K.write_plot_composite(BM_plot, BMA_plot, XFACTOR, cli_filename, 'w')
-                else: 
+                else:
                     print("You must specify at least one unit to compute, or use the --all tag at the end of your line, like : tps_cli.py bio stand composite --all")
                 print("Finished computation of plot scale biomass on " + list_of_units)
 
         ### BIOMASS > PLOT > TREE ###
         elif args.analysis != 'composite':
             print("Your input for the analysis arguement is not valid. Please follow your input of " + args.action + " and " + args.scale + " with `composite`. At the plot scale, individual tree computations are invalid.")
-    
+
     ### BIOMASS > STUDY ###
     elif args.scale.lower() == "study":
 
         ### BIOMASS > STUDY > COMPOSITE ###
         if args.analysis.lower() == 'composite':
-                
+
             # the first argument is all, so we do all the things
             if len(args.number) == 1 and args.number[0]=="--all":
                 print("computing ALL " + args.scale.lower() + "s with the " + args.analysis.lower() + " analysis for " + args.action.lower())
@@ -413,15 +418,15 @@ if args.action.lower() == 'bio':
 
                 # get all the studies
                 list_of_all_studies = []
-                
+
                 for row in cur:
                     list_of_all_studies.append(str(row[0]))
-                
+
                 first_study = list_of_all_studies[0]
 
 
                 sql = queries['execution']['list_of_stands_in_studies'].format(studyid=first_study)
-                
+
                 cur.execute(sql)
 
                 # a blank list for each stand on this study
@@ -462,7 +467,7 @@ if args.action.lower() == 'bio':
                         list_of_stands.append(str(row[0]))
 
                     # get each stand from the list of stands and append output to the file
-                    # for the -- all method 
+                    # for the -- all method
                     for each_stand in list_of_stands:
                         A = tps_Stand.Stand(cur, XFACTOR, queries, each_stand.lower())
                         BM, BTR, _ = A.compute_biomasses(XFACTOR)
@@ -517,7 +522,7 @@ if args.action.lower() == 'bio':
                         # extract the first stand and start a file
                         for row in cur:
                             list_of_stands.append(str(row[0]))
-                    
+
                         # create the file with the first stand
                         A = tps_Stand.Stand(cur, XFACTOR, queries, list_of_stands[0].lower())
                         BM, BTR, _ = A.compute_biomasses(XFACTOR)
@@ -528,7 +533,7 @@ if args.action.lower() == 'bio':
                         del BMA
 
                         # get each stand from the list of stands and append output to the file
-                        # for the -- all method 
+                        # for the -- all method
                         for each_stand in list_of_stands[1:]:
                             print(each_stand)
                             A = tps_Stand.Stand(cur, XFACTOR, queries, each_stand.lower())
@@ -550,7 +555,7 @@ if args.action.lower() == 'bio':
                     # extract the first stand and start a file
                     for row in cur:
                         list_of_stands.append(str(row[0]))
-                
+
                     # create the file with the first stand
                     A = tps_Stand.Stand(cur, XFACTOR, queries, list_of_stands[0].lower())
                     BM, BTR, _ = A.compute_biomasses(XFACTOR)
@@ -562,7 +567,7 @@ if args.action.lower() == 'bio':
                     del BMA
 
                     # get each stand from the list of stands and append output to the file
-                    # for the -- all method 
+                    # for the -- all method
                     for each_stand in list_of_stands[1:]:
                         print(each_stand)
                         A = tps_Stand.Stand(cur, XFACTOR, queries, each_stand.lower())
@@ -572,7 +577,7 @@ if args.action.lower() == 'bio':
                         del A
                         del BM
                         del BMA
-            else: 
+            else:
                 print("You must specify at least one study to compute, or use the --all tag at the end of your line, like : tps_cli.py bio study composite --all")
 
             print("computed : " + args.scale.lower() + " with the " + args.analysis.lower() + " analysis for " + args.action.lower())
@@ -589,12 +594,12 @@ if args.action.lower() == 'bio':
                 list_all_stands = []
 
                 cli_filename = "all_study_indvtree_output.csv"
-                
+
                 cur.execute(queries['execution']['list_of_all_studies'])
 
                 # get all the studies
                 list_of_all_studies = []
-                
+
                 for row in cur:
                     list_of_all_studies.append(str(row[0]))
 
@@ -603,11 +608,11 @@ if args.action.lower() == 'bio':
                 sql = queries['execution']['list_of_stands_in_studies'].format(studyid=first_study)
                 cur.execute(sql)
                 list_of_stands = []
-                
+
                 # extract the first stand and start a file
                 for row in cur:
                     list_of_stands.append(str(row[0]))
-            
+
                 # create the file with the first stand
                 A = tps_Stand.Stand(cur, XFACTOR, queries, list_of_stands[0].lower())
 
@@ -640,7 +645,7 @@ if args.action.lower() == 'bio':
             elif args.number[0] != "--all":
 
                 if len(args.number) > 1:
-                    
+
                     list_of_units = ", ".join(args.number)
 
                     cli_filename = "selected_studies_indvtree_output.csv"
@@ -650,11 +655,11 @@ if args.action.lower() == 'bio':
                     sql = queries['execution']['list_of_stands_in_studies'].format(studyid=first_study)
                     cur.execute(sql)
                     list_of_stands = []
-                    
+
                     # extract the first stand and start a file
                     for row in cur:
                         list_of_stands.append(str(row[0]))
-                
+
                     # create the file with the first stand
                     A = tps_Stand.Stand(cur, XFACTOR, queries, list_of_stands[0].lower())
 
@@ -706,11 +711,11 @@ if args.action.lower() == 'bio':
                         A = tps_Stand.Stand(cur, XFACTOR, queries, each_stand.lower())
                         A.write_individual_trees(cli_filename,'a')
                         del A
-                
-                else: 
+
+                else:
                     print("You must specify at least one unit to compute, or use the --all tag at the end of your line, like : tps_cli.py bio tree tree --all")
                 print("computed : " + args.scale.lower() + " with the " + args.analysis.lower() + " analysis for " + args.action.lower())
-        
+
         elif args.analysis.lower() not in ['composite','tree']:
             print("Your input for the analysis arguement is not valid. Please follow your input of " + args.action + " and " + args.scale + " with either `composite` or `tree`")
 
@@ -723,7 +728,7 @@ if args.action.lower() == 'npp':
 
     ### NPP > STAND ###
     if args.scale.lower() =='stand':
-        
+
         ### NPP > STAND > COMPOSITE ###
         if args.analysis.lower() == 'composite':
 
@@ -802,8 +807,8 @@ if args.action.lower() == 'npp':
                 del A
                 del BM
                 del BMA
-                
-            else: 
+
+            else:
                 print("You must specify at least one unit to compute, or use the --all tag at the end of your line, like : tps_cli.py bio stand composite --all")
             print("computing :   NPP  at the scale of " + args.scale.lower() + " with the " + args.analysis.lower() + " analysis for " + args.action.lower())
 
@@ -867,10 +872,10 @@ if args.action.lower() == 'npp':
 
                 #get the stand names for all the plots
                 all_standids = [x[0:4] for x in args.number]
-                
-                # identify unique standids 
+
+                # identify unique standids
                 unique_ids = {k:None for k in all_standids}
-                
+
                 # list of unique stand ids
                 uids = list(unique_ids.keys())
 
@@ -904,7 +909,7 @@ if args.action.lower() == 'npp':
                     del BM_plot
                     del BMA_plot
                     del K
-                    
+
             elif len(args.number) == 1:
                 list_of_units = args.number[0]
 
@@ -925,7 +930,7 @@ if args.action.lower() == 'npp':
         ### NPP> PLOT > TREE (not composite) ###
         elif args.analysis != 'composite':
             print("You can only compute NPP for stands or plots. Please try the syntax `tps_cli.py npp plot composite [list of plots]`")
-    
+
     ### NPP > STUDY ###
     elif args.scale.lower() not in ["stand", "plot"]:
         print("Please do NPP analyses on the scale of stands, plots, or --all")
@@ -933,7 +938,7 @@ if args.action.lower() == 'npp':
         # ### NPP > STUDY > COMPOSITE ###
         # if args.analysis.lower() == 'composite':
         #     print("args.analysis is composite")
-                
+
         #     # the first argument is all, so we do all the things
         #     if len(args.number) == 1 and args.number[0]=="--all":
         #         print("computing ALL " + args.scale.lower() + "s with the " + args.analysis.lower() + " analysis for " + args.action.lower())
@@ -944,7 +949,7 @@ if args.action.lower() == 'npp':
         #             list_of_units = ", ".join(args.number)
         #         elif len(args.number) == 1:
         #             list_of_units = args.number
-        #         else: 
+        #         else:
         #             print("You must specify at least one unit to compute, or use the --all tag at the end of your line, like : tps_cli.py bio stand composite --all")
         #         print("computing : " + list_of_units + " at the scale of " + args.scale.lower() + " with the " + args.analysis.lower() + " analysis for " + args.action.lower())
 
@@ -962,7 +967,7 @@ if args.action.lower() == 'qc':
     # ### QC > STAND ###
     # if args.scale.lower() =='stand':
     #     print("Stand scale QC is still being refined.. thanks for patience")
-        
+
     #     # if args.analysis.lower() == 'composite':
     #     #     print("args.analysis is composite for quality control, doing population type analysis for trees at the stand scale- only 1 stand id at a time!")
 
@@ -978,7 +983,7 @@ if args.action.lower() == 'qc':
     #     #         print("You may not do QC on more than 1 stand at a time.")
     #     #     else:
     #     #         print("Doing QC on " + args.number[0])
-    
+
     #     # elif args.analysis.lower() not in ['composite', 'tree']:
     #     #     print("no QC method is defined for aggregate units outside of stands and trees, please try again with `tps_cli.py qc stand composite standid`")
 
@@ -999,11 +1004,11 @@ if args.action.lower() == 'qc':
     #         print("Processing QC for tree named " + list_of_units)
 
     #         A = tps_Tree.Tree()
-        
+
     #     elif len(args.number) <= 5 and len(args.number >= 1) and args.number[0] != "--all":
     #         list_of_units = ", ".join(args.number)
-            
-    #         print("Processing QC for trees named " + list_of_units) 
+
+    #         print("Processing QC for trees named " + list_of_units)
     #     else:
     #         print("Doing QC on " + args.number[0])
 

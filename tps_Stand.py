@@ -1052,6 +1052,7 @@ class Stand(object):
 
                 for each_species in Biomasses[each_year]:
 
+
                     # remember to multiply by 10000 to go from m2 to hectare
                     new_row_1 = ['TP001', '06', self.standid.upper(), each_species.upper(), each_year,'INGROWTH', math.ceil(Biomasses[each_year][each_species]['total_ingrowth_trees']*10000), round(Biomasses[each_year][each_species]['total_ingrowth_basal']*10000, 3), round(Biomasses[each_year][each_species]['total_ingrowth_volume']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_bio']*10000,3), round(Biomasses[each_year][each_species]['total_ingrowth_jenkins']*10000,3), num_plots]
 
@@ -1184,12 +1185,6 @@ class Plot(Stand):
 
         :Biomasses: Biomasses by plot, separated into special groups such as `live`, `dead`, and `ingrowth` as well as into `biomass`, `basal`, `volume`, `Jenkins' biomass`, and `trees per hectare.`
         """
-
-        # if the plotlist is in uppercase make lower case
-        if self.plotlist != []:
-            temporary_plotlist = [x[i].lower() for i,x in enumerate(self.plotlist)]
-            self.plotlist = temporary_plotlist
-
         Biomasses = {}
 
         all_years = sorted([x for x in self.Stand.od.keys() if x != None])
@@ -1442,7 +1437,6 @@ class Plot(Stand):
                         writer.writerow(new_row_2)
                         writer.writerow(new_row_3)
 
-
             for each_plot in sorted(Biomasses_Agg.keys()):
 
                 for each_year in sorted(Biomasses_Agg[each_plot].keys()):
@@ -1456,12 +1450,10 @@ class Plot(Stand):
                     # remember to multiply by 10000 to go from m2 to hectare
 
                     new_row6 = ['TP001', '08', each_plot.upper(), 'ALL', each_year,'MORTALITY', math.ceil(Biomasses_Agg[each_plot][each_year]['total_dead_trees']*10000), round(Biomasses_Agg[each_plot][each_year]['total_dead_basal']*10000, 3), round(Biomasses_Agg[each_plot][each_year]['total_dead_volume']*10000,3), round(Biomasses_Agg[each_plot][each_year]['total_dead_bio']*10000,3), round(Biomasses_Agg[each_plot][each_year]['total_dead_jenkins']*10000,3)]
+
                     writer.writerow(new_row4)
                     writer.writerow(new_row5)
                     writer.writerow(new_row6)
-
-
-
 
 
 if __name__ == "__main__":
@@ -1491,8 +1483,6 @@ if __name__ == "__main__":
         A = Stand(cur, XFACTOR, queries, each_stand)
 
         A.write_individual_trees()
-
-        import pdb; pdb.set_trace()
 
         BM, BTR, ROB = A.compute_biomasses(XFACTOR)
 
