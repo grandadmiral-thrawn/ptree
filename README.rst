@@ -272,7 +272,7 @@ If you just have one study, your output will be in a file named ``[name of whate
 Biomass at the Stand Scale for Individual Trees for a set of one or more stands
 -------------------------------------------------------------------------------
 
-.. note: You cannot process individual tree biomasses at the scale of ``plot``. There does not exist code to do this. You get ``Stand`` and ``Tree`` but not ``plot``.
+**You cannot process individual tree biomasses at the scale of ``plot``. There does not exist code to do this. You get ``Stand`` and ``Tree`` but not ``plot``.**
 
 
 
@@ -336,6 +336,8 @@ To check the status of the the biomass at the individual tree scale for one or t
 
 Your output will be in a file named ``selected_trees_indvtree_checks.csv``. It will be organized like ``TREEID, SPECIES, INTERVAL, SHRINK_X_FLAGGED, GROWTH_X_FLAGGED, DOUBLE_DEATH_FLAG, LAZARUS_FLAG, HOUDINI_FLAG, DEGRADE_FLAG``.
 
+IF A TREE ONLY HAS ONE REMEASUREMENT IT WILL NOT BE OUTPUT. THE STATUS CHECKS DEPEND ON A DIFFERENCE BETWEEN SUBSEQUENT REMEASUREMENTS. THE DEFINITIONS OF THE FLAGS ARE IN THE BUILD DOCUMENTATION.
+
 If you just have one tree, your output will be in a file named ``[name of whatever tree]_tree_indvtree_checks.csv``. It will be organized like ``TREEID, SPECIES, INTERVAL, SHRINK_X_FLAGGED, GROWTH_X_FLAGGED, DOUBLE_DEATH_FLAG, LAZARUS_FLAG, HOUDINI_FLAG, DEGRADE_FLAG``.
 
 -------------------------------------
@@ -387,7 +389,7 @@ To compute the NPP at the plot scale for one or more plots, just add those plots
 
     $ python3 tps_cli.py npp plot composite ncna0001 rs010001 srnf0005 ncna0004
 
-If you have more than one plot, your output will in a file named ``selected_plots_composite_npp.csv``. It will be organized like ``DBCODE, ENTITY, PLOTID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
+If you have more than one plot, your output will in a file named either ``plotname_plotname_plotname_plot_npp_output.csv``, or, if this cannot work, in ``selected_plots_composite_npp.csv``. It will be organized like ``DBCODE, ENTITY, PLOTID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
 
 If you just have one plot, your output will be in a file named ``[name of whatever plot]_plot_npp_output.csv``. It will be organized like ``DBCODE, ENTITY, PLOTID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
 
@@ -402,20 +404,4 @@ To compute the NPP at the plot scale for all of the plots on all of the studies,
     $ python3 tps_cli.py npp study composite --all
 
 Your output will be in a file named ``all_plots_composite_npp.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
-
--------------------------------------------------------
-NPP at the Stand Scale for a set of one or more studies
--------------------------------------------------------
-
-To compute the NPP at the stand scale for one or more studies, just add those studies to the end of the line ``tps_cli.py npp study composite``. You can add as many as you want! You don't need quotes, but you can put them. Don't put commas. Separate them with one space. There are not so many studies out there, and be careful that you make the names accurate. Again, this is just a luxury function for looking at studies instead of stands or plots.
-
-.. code-block:: bash
-
-    $ python3 tps_cli.py npp study composite alco hsgy
-
-If you have more than one plot, your output will in a file named ``selected_studies_composite_npp.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
-
-If you just have one plot, your output will be in a file named ``[name of whatever study]_npp_output.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
-
-
 
