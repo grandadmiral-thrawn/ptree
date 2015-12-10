@@ -2,7 +2,7 @@
 TPS: Tree, Plot, Stand - Biomass Aggregation
 ********************************************
 
-TPS is a set of Python 3 modules for the aggregation of trees, plots, and stands from the USFS reference stands data maintained by the Corvallis Forest Science Lab.  
+TPS is a set of Python 3 modules for the aggregation of trees, plots, and stands from the USFS reference stands data maintained by the Corvallis Forest Science Lab.
 
 
 .. contents::
@@ -34,7 +34,7 @@ Best to start with ``tps_Sample``, which will run a series of test trees and sta
 
     $ python3 tps_Sample.py
 
-Assuming this goes well, please read the docs! The docs are in index.html, currently in the ``_build/`` folder. You'll be running the remainder of your analyses out of the command line interface (`tps_cli.py`) for now, but there are a lot of options. 
+Assuming this goes well, please read the docs! The docs are in index.html, currently in the ``_build/`` folder. You'll be running the remainder of your analyses out of the command line interface (`tps_cli.py`) for now, but there are a lot of options.
 
 If you have an issue with the code, please submit it using github and github only. Issues submitted via email or other methods will not be addressed. To get a fixed copy of the program, you'll need to install github and get your own clone of the repository, and keep it up to date with this master. Fox is not responsible for helping you maintain your local copy of the repository.
 
@@ -48,7 +48,7 @@ The **latest development version** can be installed directly from GitHub. Use th
 Documentation in the Literature
 ===============================
 
-The biomass computations began with computations by Gody and Lutz. These were later passed on to Becky, Rob, and myself. There are two main sources, BIOPAK and dendrometer regressions. Dendrometer regressions are from volume, and use the TV009 or TP072 databases available from the FSDB. The TP072 database references the `BIOPAK <http://andrewsforest.oregonstate.edu/data/tools/software/biopak.cfm?topnav=149>`_ software. Metadata and data from TV009 is `here <http://andrewsforest.oregonstate.edu/data/abstract.cfm?dbcode=TV009>`_. 
+The biomass computations began with computations by Gody and Lutz. These were later passed on to Becky, Rob, and myself. There are two main sources, BIOPAK and dendrometer regressions. Dendrometer regressions are from volume, and use the TV009 or TP072 databases available from the FSDB. The TP072 database references the `BIOPAK <http://andrewsforest.oregonstate.edu/data/tools/software/biopak.cfm?topnav=149>`_ software. Metadata and data from TV009 is `here <http://andrewsforest.oregonstate.edu/data/abstract.cfm?dbcode=TV009>`_.
 
 For computation of height (where needed), the `Garman <http://andrewsforest.oregonstate.edu/pubs/pdf/pub1445.pdf>`_  et al.(1995) methods were used, and height was computed as ``Ht_m = 1.37 + (b0*(1-exp(b1*DBH_cm))**b2)``. Height computations are largely internal to the `biomass_basis.py` module.
 
@@ -71,30 +71,30 @@ Species    Component    Biomass
 ``ABCO``   ``VSW``      ``1.03060*woodden*(0.0000932*dbh**2.62060)``
 ``ABCO``   ``VSW``      ``1.02560*woodden*(0.0000473*dbh**2.77270)``
 ``ABGR``   ``VSW``      ``1.02560*woodden*(0.0000473*dbh**2.77270)``
-``ABLA2``  ``VSW``      ``1.01540*woodden*(0.0001896*dbh**2.38090)``           
-``ABMA``   ``VSW``      ``1.01440*woodden*(0.0000527*dbh**2.74780)``           
+``ABLA2``  ``VSW``      ``1.01540*woodden*(0.0001896*dbh**2.38090)``
+``ABMA``   ``VSW``      ``1.01440*woodden*(0.0000527*dbh**2.74780)``
 ``ABPR``   ``VSW``      ``1.01710*woodden*(0.0001227*dbh**2.58120)``
 ``PSME``   ``VSW``      ``1.03090*woodden*(0.0002146*dbh**2.43670)``
 ``PSME``   ``VSW``      ``1.02960*woodden*(0.0002286*dbh**2.42470)``
 ``PICO``   ``VSW``      ``1.02140*woodden*(0.0002840*dbh**2.33630)``
 ``PIEN``   ``VSW``      ``1.01400*woodden*(0.0001160*dbh**2.57180)``
 ``PIJE``   ``VSW``      ``1.01560*woodden*(0.0000158*dbh**2.95420)``
-``PILA``   ``VSW``      ``1.02110*woodden*(0.0000557*dbh**2.70890)``           
-``PILA``   ``VSW``      ``1.02110*woodden*(0.0000557*dbh**2.70890)``           
-``PISI``   ``VSW``      ``1.02220*woodden*(0.0003460*dbh**2.33200)``           
-``PISI``   ``VSW``      ``1.02220*woodden*(0.0003460*dbh**2.33200)``           
-``TABR``   ``VSW``      ``1.05960*woodden*(0.0001189*dbh**2.59890)``           
-``THPL``   ``VSW``      ``1.01600*woodden*(0.0001860*dbh**2.40240)``           
-``TSHE``   ``VSW``      ``1.05960*woodden*(0.0001189*dbh**2.59890)``           
+``PILA``   ``VSW``      ``1.02110*woodden*(0.0000557*dbh**2.70890)``
+``PILA``   ``VSW``      ``1.02110*woodden*(0.0000557*dbh**2.70890)``
+``PISI``   ``VSW``      ``1.02220*woodden*(0.0003460*dbh**2.33200)``
+``PISI``   ``VSW``      ``1.02220*woodden*(0.0003460*dbh**2.33200)``
+``TABR``   ``VSW``      ``1.05960*woodden*(0.0001189*dbh**2.59890)``
+``THPL``   ``VSW``      ``1.01600*woodden*(0.0001860*dbh**2.40240)``
+``TSHE``   ``VSW``      ``1.05960*woodden*(0.0001189*dbh**2.59890)``
 ``TSME``   ``VSW``      ``1.01920*woodden*(0.0000929*dbh**2.59150)``
-``THPL``   ``VSW``      ``woodden*0.23080*(HT*(0.01*dbh)**2)`` 
-``PIMO``   ``VSW``      ``woodden*0.36080*(HT*(0.01*dbh)**2)``           
-``PIPO``   ``VSW``      ``woodden*0.36080*(HT*(0.01*dbh)**2)``           
-``LIDE2``  ``VSW``      ``woodden*0.33250*(HT*(0.01*dbh)**2)``           
-``ABPR``   ``VSW``      ``woodden*0.27340*(HT*(0.01*dbh)**2)``          
-``ABMA``   ``VSW``      ``woodden*0.31020*(HT*(0.01*dbh)**2)``           
+``THPL``   ``VSW``      ``woodden*0.23080*(HT*(0.01*dbh)**2)``
+``PIMO``   ``VSW``      ``woodden*0.36080*(HT*(0.01*dbh)**2)``
+``PIPO``   ``VSW``      ``woodden*0.36080*(HT*(0.01*dbh)**2)``
+``LIDE2``  ``VSW``      ``woodden*0.33250*(HT*(0.01*dbh)**2)``
+``ABPR``   ``VSW``      ``woodden*0.27340*(HT*(0.01*dbh)**2)``
+``ABMA``   ``VSW``      ``woodden*0.31020*(HT*(0.01*dbh)**2)``
 ``CADE3``  ``VSW``      ``woodden*0.33250*(HT*(0.01*dbh)**2)``
-``CONU``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``       
+``CONU``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
 ``ALIN``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
 ``ALRU``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
 ``ALSI``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
@@ -102,10 +102,10 @@ Species    Component    Biomass
 ``POTR2``  ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
 ``PREM``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
 ``PRUNU``  ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
-``ARME``   ``BAT``      ``1.*10**(-6)*math.exp(1.01532+0.0000380*math.log(dbh))``         
-``ACGL``   ``BAT``      ``1.*10**(-6)*math.exp(3.63400+2.7520000*math.log(dbh))``        
-``SASC``   ``BAT``      ``1.*10**(-6)*math.exp(3.45950+2.3891300*math.log(dbh))``        
-``SEGI``   ``BSW``      ``math.exp(-11.01740+2.5907000*math.log(dbh))``           
+``ARME``   ``BAT``      ``1.*10**(-6)*math.exp(1.01532+0.0000380*math.log(dbh))``
+``ACGL``   ``BAT``      ``1.*10**(-6)*math.exp(3.63400+2.7520000*math.log(dbh))``
+``SASC``   ``BAT``      ``1.*10**(-6)*math.exp(3.45950+2.3891300*math.log(dbh))``
+``SEGI``   ``BSW``      ``math.exp(-11.01740+2.5907000*math.log(dbh))``
 ``CACH``   ``VSW``      ``woodden*HT**0.77467*0.0000569*(dbh)**2.07202``
 =========  ===========  =============================================================================
 
@@ -130,7 +130,7 @@ Species    Component    Height
 Programmatic Documentation Link
 -------------------------------
 
-Documentation for the `TPS` programs is located `here <http://htmlpreview.github.io/?https://github.com/dataRonin/ptree/blob/dev/_build/html/index.html>`_. Documentation is autogenerated by `sphinx autodoc <http://sphinx-doc.org/ext/autodoc.html>`_. 
+Documentation for the `TPS` programs is located `here <http://htmlpreview.github.io/?https://github.com/dataRonin/ptree/blob/dev/_build/html/index.html>`_. Documentation is autogenerated by `sphinx autodoc <http://sphinx-doc.org/ext/autodoc.html>`_.
 
 ====================
 Command Line Options
@@ -162,7 +162,7 @@ The computer will ask if you would like to have a file, and if so to type ``Y``.
     Status: 1
     DBH Code: G
     Tag: 46
-    Notes: 
+    Notes:
     -------------------
     Tree: ncna000100001
     Year: 1984
@@ -173,7 +173,7 @@ The computer will ask if you would like to have a file, and if so to type ``Y``.
     Status: 1
     DBH Code: G
     Tag: 46
-    Notes: 
+    Notes:
     -------------------
     Tree: ncna000100001
     Year: 1989
@@ -184,7 +184,7 @@ The computer will ask if you would like to have a file, and if so to type ``Y``.
     Status: 1
     DBH Code: G
     Tag: 46
-    Notes: 
+    Notes:
     -------------------
 
 But this will be for all the years of the tree, not just these first few.
@@ -211,9 +211,9 @@ To compute the biomass at the stand scale for one or more stands, just add those
 
     $ python3 tps_cli.py bio stand composite ncna rs01 srnf ws01
 
-If you have more than one stand, your output will in a file named ``selected_stands_biomass_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.   
+If you have more than one stand, your output will in a file named ``selected_stands_biomass_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 
-If you just have one stand, your output will be in a file named ``[name of whatever stand]_stand_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.    
+If you just have one stand, your output will be in a file named ``[name of whatever stand]_stand_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 
 ---------------------------------------
 Biomass at the Plot Scale for All Plots
@@ -237,9 +237,9 @@ To compute the biomass at the plot scale for one or more plots, just add those p
 
     $ python3 tps_cli.py bio plot composite ncna0001 rs010001 srnf0005 ncna0004
 
-If you have more than one plot, your output will in a file named ``selected_plots_biomass_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, PLOTID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.   
+If you have more than one plot, your output will in a file named ``selected_plots_biomass_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, PLOTID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 
-If you just have one plot, your output will be in a file named ``[name of whatever plot]_plot_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, PLOTID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.  
+If you just have one plot, your output will be in a file named ``[name of whatever plot]_plot_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, PLOTID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 
 ------------------------------------------
 Biomass at the Stand Scale for All Studies
@@ -263,28 +263,18 @@ To compute the biomass at the study scale for one or more studies, just add thos
 
     $ python3 tps_cli.py bio study composite hsgy alco
 
-If you have more than one study, your output will in a file named ``selected_studies_biomass_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, STUDYID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.   
+If you have more than one study, your output will in a file named ``selected_studies_biomass_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, STUDYID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 
-If you just have one study, your output will be in a file named ``[name of whatever study]_studies_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, STUDYID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.   
+If you just have one study, your output will be in a file named ``[name of whatever study]_studies_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, STUDYID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 
------------------------------------------------------------------------------
-Biomass at the Plot Scale for Individual Trees for a set of one or more plots
------------------------------------------------------------------------------
-
-To compute the biomass at the individual scale for one or more plots, just add those plots to the end of the line `tps_cli.py bio plot composite`. You can add as many as you want! You don't need quotes, but you can put them. Don't put commas. Separate them with one space. You don't have to put them all from the same stand, either, or be organized about it. Here's how you could ask for ``ncna0001``, ``rs010001``, ``srnf0005``, and ``ncna0004``.
-
-.. code-block:: bash
-
-    $ python3 tps_cli.py bio plot tree ncna0001 rs010001 srnf0005 ncna0004
-
-Your output will be in a file named ``selected_plots_indvtree_output.csv``. It will be organized like ``DBCODE, ENTITY, TREEID, COMPONENT, YEAR, BA_M2, VOL_M3, BIO_MG, JENKBIO_MG``.
-
-
-If you just have one plot, your output will be in a file named ``[name of whatever plot]_plot_indvtree_output.csv``. It will be organized like ``DBCODE, ENTITY, TREEID, COMPONENT, YEAR, BA_M2, VOL_M3, BIO_MG, JENKBIO_MG``.
 
 -------------------------------------------------------------------------------
 Biomass at the Stand Scale for Individual Trees for a set of one or more stands
 -------------------------------------------------------------------------------
+
+.. note: You cannot process individual tree biomasses at the scale of ``plot``. There does not exist code to do this. You get ``Stand`` and ``Tree`` but not ``plot``.
+
+
 
 To compute the biomass at the individual tree scale for one or more stands, just add those stands to the end of the line `tps_cli.py bio stand tree`. You can add as many as you want! You don't need quotes, but you can put them. Don't put commas. Separate them with one space. Here's how you could ask for `ncna`, `rs01`, `srnf`, and `wr01`.
 
