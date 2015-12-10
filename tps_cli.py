@@ -151,6 +151,7 @@ if args.action.lower() == 'bio':
 
             # the first argument is all, so we do all the things
             if len(args.number) == 1 and args.number[0]=="--all":
+
                 print("computing ALL " + args.scale.lower() + "s with the " + args.analysis.lower() + " analysis for " + args.action.lower())
 
                 # get all the stands
@@ -226,11 +227,21 @@ if args.action.lower() == 'bio':
 
             elif len(args.number) <=3 and len(args.number) > 1:
                 list_of_units = ", ".join(args.number)
-                print("computing the individual tree biomasses for : " + list_of_units )
+                print("computing the individual tree biomasses for : " + list_of_units)
 
                 First_Tree = tps_Tree.Tree(cur, queries, args.number[0])
                 Bios = First_Tree.compute_biomasses()
-                First_Tree.only_output_attributes(Bios, datafile = 'selected_indvtree_output.csv', mode='wt')
+
+
+                try:
+                    if len(args.number) == 2:
+                        datafile = str(args.number[0]) + "_" + str(args.number[1]) + "_indvtree_output.csv"
+                    elif len(args.number) ==3:
+                        datafile = str(args.number[0]) + "_" + str(args.number[1]) + "_" + str(args.number[2]) + "_indvtree_output.csv"
+                except Exception:
+                    datafile = 'selected_indvtree_output.csv'
+
+                First_Tree.only_output_attributes(Bios, datafile = datafile, mode='wt')
                 print("computed biomass for " + args.number[0])
                 del Bios
 
@@ -238,14 +249,19 @@ if args.action.lower() == 'bio':
                     A = tps_Tree.Tree(cur, queries, each_tree)
                     Bios = A.compute_biomasses()
 
-                    A.only_output_attributes(Bios, datafile = 'selected_indvtree_output.csv', mode='a')
+                    A.only_output_attributes(Bios, datafile = datafile, mode='a')
 
             elif len(args.number) == 1:
-                list_of_units = args.number[0]
+
+                try:
+                    datafile = str(args.number[0]) + "_indvtree_output.csv"
+                except Exception:
+                    print("Cannot construct filename, using default of `selected_indvtree_ouput.csv`")
+                    datafile = "selected_indvtree_output.csv"
 
                 First_Tree = tps_Tree.Tree(cur, queries, args.number[0])
                 Bios = First_Tree.compute_biomasses()
-                First_Tree.only_output_attributes(Bios, datafile = 'selected_indvtree_output.csv', mode='wt')
+                First_Tree.only_output_attributes(Bios, datafile = datafile, mode='wt')
                 print("computed biomass for " + args.number[0])
 
         ### BIOMASS > TREE > CHECKS ###
@@ -724,7 +740,6 @@ if args.action.lower() == 'bio':
 
 ### NPP ###
 if args.action.lower() == 'npp':
-    print("args.action is npp")
 
     ### NPP > STAND ###
     if args.scale.lower() =='stand':
@@ -865,26 +880,29 @@ if args.action.lower() == 'npp':
 
             # if the first arguement is not all, no further arguements would be all
             elif args.number[0] != "--all":
-                if len(args.number) > 1:
+                if len(args.number) >= 1:
                     list_of_units = ", ".join(args.number)
+                    list_for_file = "_".join(args.number)
 
-                cli_filename = "selected_plot_npp_output.csv"
+                cli_filename = list_for_file + "_plot_npp_output.csv"
 
                 #get the stand names for all the plots
                 all_standids = [x[0:4] for x in args.number]
 
                 # identify unique standids
-                unique_ids = {k:None for k in all_standids}
+                unique_ids = {k: None for k in all_standids}
 
                 # list of unique stand ids
-                uids = list(unique_ids.keys())
+                uids = sorted(list(unique_ids.keys()))
 
                 # first plots in the first stand
+
                 first_plots = [x for x in args.number if uids[0] in x]
 
                 # create a file with the first stand
                 A = tps_Stand.Stand(cur, XFACTOR, queries, uids[0].lower())
-                K = tps_Stand.Plot(A, XFACTOR, [first_plots])
+
+                K = tps_Stand.Plot(A, XFACTOR, first_plots)
 
                 BM_plot = K.compute_biomasses_plot(XFACTOR)
                 BMA_plot = K.aggregate_biomasses_plot(BM_plot)
