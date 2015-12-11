@@ -141,12 +141,12 @@ class Stand(object):
             list_species.append(str(row[0]).strip().lower())
 
         for each_species in list_species:
-            sql2 = self.eqn_query.format(species=each_species)
 
+            sql2 = self.eqn_query.format(species=each_species)
             self.cur.execute(sql2)
 
             for row in self.cur:
-
+                print(row)
                 form = str(row[2]).strip().lower()
 
                 try:
@@ -169,7 +169,6 @@ class Stand(object):
                 else:
                     pass
 
-
                 try:
                     component = str(row[13]).strip().lower()
                 except Exception:
@@ -181,49 +180,63 @@ class Stand(object):
                     pass
 
                 try:
-                    h1 = round(float(str(row[3])), 6)
+                    h1 = round(float(str(row[3])), 11)
                 except:
                     h1 = None
                 try:
-                    h2 = round(float(str(row[4])), 6)
+                    h2 = round(float(str(row[4])), 11)
                 except:
                     h2 = None
                 try:
-                    h3 = round(float(str(row[5])), 6)
+                    h3 = round(float(str(row[5])), 11)
                 except:
                     h3 = None
                 try:
-                    b1 = round(float(str(row[6])), 6)
+                    b1 = round(float(str(row[6])), 11)
                 except:
                     b1 = None
                 try:
-                    b2 = round(float(str(row[7])), 6)
+                    b2 = round(float(str(row[7])), 11)
                 except:
                     b2 = None
                 try:
-                    b3 = round(float(str(row[8])), 6)
+                    b3 = round(float(str(row[8])), 11)
                 except:
                     b3 = None
                 try:
-                    j1 = round(float(str(row[9])), 6)
+                    j1 = round(float(str(row[9])), 11)
                 except:
                     j1 = None
                 try:
-                    j2 = round(float(str(row[10])), 6)
+                    j2 = round(float(str(row[10])), 11)
                 except:
                     j2 = None
 
-                if each_species != "segi":
-                    this_eqn = lambda x : biomass_basis.which_fx(form)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
-                elif each_species == "segi":
-                    this_eqn = lambda x : biomass_basis.which_fx('segi_biopak')(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
 
-                if each_species not in self.eqns:
-                    self.eqns.update({each_species:{str(row[1]).rstrip().lower():this_eqn}})
+                if each_species not in sorted(list(self.eqns.keys())) and each_species != 'segi':
+                    form_type = form
+                    self.eqns[each_species] = {str(row[1]).rstrip().lower() : lambda x, b1=b1, b2=b2, b3=b3, j1=j1, j2=j2, h1=h1, h2=h2, h3=h3, form_type = form, woodden= woodden: biomass_basis.which_fx(form_type)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)}
+                    #this_eqn = lambda x=row : biomass_basis.which_fx(form)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
 
-                elif each_species in self.eqns:
-                    # when there are 2 or more sizes
-                    self.eqns[each_species].update({str(row[1]).rstrip().lower():this_eqn})
+
+                elif each_species not in sorted(list(self.eqns.keys())) and each_species == 'segi':
+                    form_type = 'segi_biopak'
+                    self.eqns[each_species] = {str(row[1]).rstrip().lower() : lambda x, b1=b1, b2=b2, b3=b3, j1=j1, j2=j2, h1=h1, h2=h2, h3=h3, form_type = form, woodden = woodden: biomass_basis.which_fx(form_type)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)}
+
+
+                elif each_species in sorted(list(self.eqns.keys())) and each_species != 'segi':
+                    if str(row[1]).rstrip().lower() not in sorted(list(self.eqns[each_species].keys())):
+                        form_type = form
+                        self.eqns[each_species][str(row[1]).rstrip().lower()] = lambda x, b1=b1, b2=b2, b3=b3, j1=j1, j2=j2, h1=h1, h2=h2, h3=h3, form_type=form, woodden=woodden: biomass_basis.which_fx(form_type)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
+                    else:
+                        pass
+
+                elif each_species in sorted(list(self.eqns.keys())) and each_species =='segi':
+                    form_type = 'segi_biopak'
+                    if str(row[1]).rstrip().lower() not in sorted(list(self.eqns[each_species].keys())):
+                        self.eqns[each_species] = {str(row[1]).rstrip().lower() : lambda x, b1=b1, b2=b2, b3=b3, j1=j1, j2=j2, h1=h1, h2=h2, h3=h3, form_type = form, woodden = woodden: biomass_basis.which_fx(form_type)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)}
+                    else:
+                        pass
 
 
     def check_additions_and_mort(self, XFACTOR):
@@ -1474,7 +1487,7 @@ if __name__ == "__main__":
     ### A shorter set of test stands ###
     #test_stands = ["CH06"]
 
-    test_stands = ['rs01']
+    test_stands = ['lmcc']
 
     for each_stand in test_stands:
 
