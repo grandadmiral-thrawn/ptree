@@ -146,7 +146,7 @@ class Stand(object):
             self.cur.execute(sql2)
 
             for row in self.cur:
-                print(row)
+                #print(row)
                 form = str(row[2]).strip().lower()
 
                 try:
