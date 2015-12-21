@@ -13,7 +13,7 @@ class YamlConn(object):
     """ This class connects to the YAML files containing the configuration to run the ptree program, including the database connection in the Config File and the Queries in the Query File.
 
     :Example:
-    
+
     >>> A = YamlConn()
     >>> A.configfilename = "config_2.yaml"
     >>> A.config = <class 'dict'>
@@ -38,7 +38,7 @@ class YamlConn(object):
     def sql_connect(self):
         """ Connects to the MS SQL server database
 
-        Configuration parameters are in config_2.yaml file. 
+        Configuration parameters are in config_2.yaml file.
 
         **INPUTS**
 
@@ -56,7 +56,7 @@ class YamlConn(object):
         sql_db = self.config['database']
         conn = pymssql.connect(server = sql_server, user=sql_user, password=sql_pw, database = sql_db)
         cur = conn.cursor()
-        
+
         return conn, cur
 
 class Capture(object):
@@ -216,7 +216,7 @@ class Capture(object):
                         self.mortalities[standid][year].append(plotid)
                     else:
                         print("the plotid : " + plotid + " is already listed as an addition for this stand and year")
-        
+
         return self.mortalities
 
     def create_detail_reference(self):
@@ -224,7 +224,7 @@ class Capture(object):
 
         Here is a case where the stand, year, and plot in question is NOT a detail plot.
 
-        .. Example: 
+        .. Example:
 
         >>> H = Capture.detail_reference.keys()
         >>> dict_keys(['ab08', 'av14', 'ar07', 'rs01', 'to11', 'am16', 'ax15', 'rs29', 'rs02', 'rs30', 'rs28', 'tb13', 'rs32', 'ag05', 'to04', 'ae10', 'rs31', 'pp17', 'av06'])
@@ -240,7 +240,7 @@ class Capture(object):
         Here is a case where the stand, year, and plot in question is a detail plot. See how the `min` is smaller.
 
         .. Example :
-        
+
         >>> H.detail_reference['rs01'][2004]['rs010003']['area']
         >>> 625
         >>> H.detail_reference['rs01'][2004]['rs010003']['detail']
@@ -254,12 +254,12 @@ class Capture(object):
 
         **RETURNS**
 
-        :Capture.detail_reference: The name of the lookup table for detail plots and their areas and minimum dbh's. If not otherwise specified, the minimum dbh for a tree on a non-detail plot or the cutoff for a big tree on a detail plot is 15.0 cm. 
+        :Capture.detail_reference: The name of the lookup table for detail plots and their areas and minimum dbh's. If not otherwise specified, the minimum dbh for a tree on a non-detail plot or the cutoff for a big tree on a detail plot is 15.0 cm.
         """
         stands_with_details = []
         sql = self.queries['stand']['query_context_dtl']
         self.cur.execute(sql)
-        
+
         for row in self.cur:
             standid = str(row[0])[0:4]
             if standid not in stands_with_details:
@@ -277,13 +277,13 @@ class Capture(object):
 
             sql = self.queries['stand']['query_context_dtl1'].format(standid=each_stand)
             self.cur.execute(sql)
-            
+
             for row in self.cur:
                 # plot is now a string in the new method from sql server - 8 character string
                 plotid = str(row[0]).rstrip().lower()
                 year = int(row[1])
                 detail = str(row[2])
-                
+
                 # default area is 625
                 try:
                     area = int(row[3])
@@ -309,12 +309,12 @@ class Capture(object):
                     pass
 
     def create_unusual_mins_reference(self):
-        """ Creates a lookup for plots that do not have minimum dbh of 15.0 cm, but are also not detail plots. That is, they are still sampled proportionally to the rest of the stand in their given year, but for whatever reason in that year, the minimum dbh is not 15.0 cm. 
+        """ Creates a lookup for plots that do not have minimum dbh of 15.0 cm, but are also not detail plots. That is, they are still sampled proportionally to the rest of the stand in their given year, but for whatever reason in that year, the minimum dbh is not 15.0 cm.
 
-        :create_unusual_mins_reference: queries the database to create a reference for plots where detailPlot is not 'T' and minimum DBH is not 15.0 cm 
+        :create_unusual_mins_reference: queries the database to create a reference for plots where detailPlot is not 'T' and minimum DBH is not 15.0 cm
 
         .. Example:
-        
+
         >>> H = poptree_basis.Capture()
         >>> H.umins_reference.keys()
         >>> dict_keys(['ybnf', 'srnf', 'mrna', 'ch10',...
@@ -329,10 +329,10 @@ class Capture(object):
 
         :Capture.umins_reference: The unusual minimums table contains the stand, year, and plot that have a minimum that is not 15.0 cm and is also not a detail plot.
         """
-        
+
         sql = self.queries['stand']['query_unusual_plot_minimums_sql']
         self.cur.execute(sql)
-        
+
         for row in self.cur:
             # returns plotid, year, plot areas
             try:
@@ -342,7 +342,7 @@ class Capture(object):
 
 
             try:
-                plotid = str(row[0]).rstrip().lower() 
+                plotid = str(row[0]).rstrip().lower()
                 standid = plotid[0:4]
             except Exception:
                 plotid = "None"
@@ -369,7 +369,7 @@ class Capture(object):
         """ Condenses the detail reference into a readable dictionary of expansion factors by plot. The expansion factor relates the area of the detail plots (in total) to the area of the stand, in total. For example, if there are 4 detail plots of 625 m\ :sup:`2` each which is a total of 2500 m\ :sup:`2` of detail plots representing a whole stand which has 16 plots of 625 m\ :sup: `2` each on it with a total of 10000 m\ :sup: `2` (one Ha), then the expansion in this case is 4. Each Mg of biomass or single tree measured in the `detail` study is worth 4 x itself in the full sized study. In the final synopsis these are back weighted by the proportionate area of the plots to the whole
 
         The expansion factor only applies to trees whose dbhs are greater than the minimum dbh (usually 5.0 cm) and less than the smallest dbh for the not-detail plots (usually 15.0 cm). The terms `large` and `small` are used casually throughout the program to refer to these size groups.
-        
+
         .. Example:
 
         `Given stand attribute * (area of all plots / area of all detail plots) = Representative stand attribute`
@@ -394,16 +394,16 @@ class Capture(object):
 
         .. note: Unlike the other Capture methods, expansion does not require the "plot" attribute to be called. Expasion has already found the aggregate of the plots and that aggregate is the same regardless of which detail plot one is on.
         """
-        
+
         for each_stand in self.detail_reference.keys():
             for each_year in self.detail_reference[each_stand].keys():
-                
+
                 try:
                     total_area = sum([self.detail_reference[each_stand][each_year][x]['area'] for x in self.detail_reference[each_stand][each_year].keys()])
                 except Exception as e3:
                     total_area = sum([self.detail_reference[each_stand][each_year][x]['area'] for x in self.detail_reference[each_stand][each_year].keys() if x != None])
 
-            
+
                 try:
                     detail_area = sum([self.detail_reference[each_stand][each_year][x]['area'] for x in self.detail_reference[each_stand][each_year].keys() if self.detail_reference[each_stand][each_year][x]['detail'] is not False])
                 except Exception as e3:
@@ -426,7 +426,7 @@ class Capture(object):
         """ Creates a lookup table for stands, plots, and years which have areas other than 625 m\ :sup:`2`. This is the most common area.
 
         While many of the plots have the same area, those that do not can be called from the database explicitly. It is then easier to add all the plots together to get the total area of the stand, or to apply this area to the individual trees per hectare method.
-        
+
         .. Example:
 
         >>> H = poptree_basis.Capture()
@@ -448,9 +448,9 @@ class Capture(object):
 
         sql = self.queries['stand']['query_unusual_plot_sql']
         self.cur.execute(sql)
-        
+
         for row in self.cur:
-            try: 
+            try:
                 area = round(float(row[2]),2)
             except Exception:
                 area = None
@@ -470,18 +470,18 @@ class Capture(object):
 
             if standid not in self.uplot_areas:
                 self.uplot_areas[standid]={plotid:{year: area}}
-            
+
             elif standid in self.uplot_areas:
                 if plotid not in self.uplot_areas[standid]:
                     self.uplot_areas[standid][plotid] = {year: area}
-                elif plotid in self.uplot_areas[standid]: 
+                elif plotid in self.uplot_areas[standid]:
                     self.uplot_areas[standid][plotid].update({year: area})
 
     def get_total_stand_area(self):
         """ Creates a lookup table for stands total areas in m\ :sup:`2`.
 
         Summing must be done locally for this because we now list the plots independently
-        
+
         .. Example:
 
         >>> H = poptree_basis.Capture()
@@ -502,7 +502,7 @@ class Capture(object):
         self.cur.execute(sql)
 
         for row in self.cur:
-            try: 
+            try:
                 area_plot = round(float(row[2]),2)
             except Exception:
                 area_plot = None
@@ -523,8 +523,8 @@ class Capture(object):
                 elif standid in self.total_areas:
                     if year not in self.total_areas[standid]:
                         self.total_areas[standid][year] = area_plot
-                    # if the year is already listed for that stand then add the area of the chosen plot    
-                    elif year in self.total_areas[standid]: 
+                    # if the year is already listed for that stand then add the area of the chosen plot
+                    elif year in self.total_areas[standid]:
                         self.total_areas[standid][year]+=area_plot
             except Exception:
                 pass

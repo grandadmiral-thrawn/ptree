@@ -215,26 +215,26 @@ class Stand(object):
 
                 if each_species not in sorted(list(self.eqns.keys())) and each_species != 'segi':
                     form_type = form
-                    self.eqns[each_species] = {str(row[1]).rstrip().lower() : lambda x, b1=b1, b2=b2, b3=b3, j1=j1, j2=j2, h1=h1, h2=h2, h3=h3, form_type = form, woodden= woodden: biomass_basis.which_fx(form_type)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)}
+                    self.eqns[each_species] = {str(row[1]).rstrip().lower() : lambda x, b1=b1, b2=b2, b3=b3, j1=j1, j2=j2, h1=h1, h2=h2, h3=h3, form_type = form_type, woodden= woodden: biomass_basis.which_fx(form_type)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)}
                     #this_eqn = lambda x=row : biomass_basis.which_fx(form)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
 
 
                 elif each_species not in sorted(list(self.eqns.keys())) and each_species == 'segi':
                     form_type = 'segi_biopak'
-                    self.eqns[each_species] = {str(row[1]).rstrip().lower() : lambda x, b1=b1, b2=b2, b3=b3, j1=j1, j2=j2, h1=h1, h2=h2, h3=h3, form_type = form, woodden = woodden: biomass_basis.which_fx(form_type)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)}
+                    self.eqns[each_species] = {str(row[1]).rstrip().lower() : lambda x, b1=b1, b2=b2, b3=b3, j1=j1, j2=j2, h1=h1, h2=h2, h3=h3, form_type = form_type, woodden = woodden: biomass_basis.which_fx(form_type)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)}
 
 
                 elif each_species in sorted(list(self.eqns.keys())) and each_species != 'segi':
                     if str(row[1]).rstrip().lower() not in sorted(list(self.eqns[each_species].keys())):
                         form_type = form
-                        self.eqns[each_species][str(row[1]).rstrip().lower()] = lambda x, b1=b1, b2=b2, b3=b3, j1=j1, j2=j2, h1=h1, h2=h2, h3=h3, form_type=form, woodden=woodden: biomass_basis.which_fx(form_type)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
+                        self.eqns[each_species][str(row[1]).rstrip().lower()] = lambda x, b1=b1, b2=b2, b3=b3, j1=j1, j2=j2, h1=h1, h2=h2, h3=h3, form_type=form_type, woodden=woodden: biomass_basis.which_fx(form_type)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)
                     else:
                         pass
 
                 elif each_species in sorted(list(self.eqns.keys())) and each_species =='segi':
                     form_type = 'segi_biopak'
                     if str(row[1]).rstrip().lower() not in sorted(list(self.eqns[each_species].keys())):
-                        self.eqns[each_species] = {str(row[1]).rstrip().lower() : lambda x, b1=b1, b2=b2, b3=b3, j1=j1, j2=j2, h1=h1, h2=h2, h3=h3, form_type = form, woodden = woodden: biomass_basis.which_fx(form_type)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)}
+                        self.eqns[each_species] = {str(row[1]).rstrip().lower() : lambda x, b1=b1, b2=b2, b3=b3, j1=j1, j2=j2, h1=h1, h2=h2, h3=h3, form_type = form_type, woodden = woodden: biomass_basis.which_fx(form_type)(woodden, x, b1, b2, b3, j1, j2, h1, h2, h3)}
                     else:
                         pass
 

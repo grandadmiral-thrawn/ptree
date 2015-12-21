@@ -175,7 +175,7 @@ To compute the biomass at the plot scale for all of the plots on all of the stan
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py bio plot composite --all
+    $ python tps_cli.py bio plot composite --all
 
 Your output will be in a file named ``all_plots_biomass_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, PLOTID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 
@@ -187,7 +187,7 @@ To compute the biomass at the plot scale for one or more plots, just add those p
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py bio plot composite ncna0001 rs010001 srnf0005 ncna0004
+    $ python tps_cli.py bio plot composite ncna0001 rs010001 srnf0005 ncna0004
 
 If you have more than one plot, your output will in a file named ``selected_plots_biomass_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, PLOTID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 
@@ -201,7 +201,7 @@ To compute the biomass at the stand scale for all of the stands on all of the st
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py bio study composite --all
+    $ python tps_cli.py bio study composite --all
 
 Your output will be in a file named ``all_studies_biomass_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, PLOTID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 
@@ -213,7 +213,7 @@ To compute the biomass at the study scale for one or more studies, just add thos
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py bio study composite hsgy alco
+    $ python tps_cli.py bio study composite hsgy alco
 
 If you have more than one study, your output will in a file named ``selected_studies_biomass_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, STUDYID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 
@@ -232,7 +232,7 @@ To compute the biomass at the individual tree scale for one or more stands, just
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py bio stand tree ncna rs01 srnf wr01
+    $ python tps_cli.py bio stand tree ncna rs01 srnf wr01
 
 Your output will be in a file named ``selected_stands_indvtree_output.csv``. It will be organized like ``DBCODE, ENTITY, TREEID, COMPONENT, YEAR, BA_M2, VOL_M3, BIO_MG, JENKBIO_MG``.
 
@@ -246,7 +246,7 @@ To compute the biomass at the individual tree scale for all of the plots on all 
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py bio plot tree --all
+    $ python tps_cli.py bio plot tree --all
 
 Your output will be in a file named ``all_plots_indvtree_output.csv``. It will be organized like ``DBCODE, ENTITY, TREEID, COMPONENT, YEAR, BA_M2, VOL_M3, BIO_MG, JENKBIO_MG``.
 
@@ -258,7 +258,7 @@ To compute the biomass at the individual tree scale for all of the stands, use t
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py bio stand tree --all
+    $ python tps_cli.py bio stand tree --all
 
 Your output will be in a file named ``all_stands_indvtree_output.csv``. It will be organized like ``DBCODE, ENTITY, TREEID, COMPONENT, YEAR, BA_M2, VOL_M3, BIO_MG, JENKBIO_MG``.
 
@@ -270,7 +270,7 @@ To compute the biomass at the individual tree scale for one or two trees, you ca
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py bio tree tree ncna000100001 ta010001000001
+    $ python tps_cli.py bio tree tree ncna000100001 ta010001000001
 
 Your output will be in a file named ``selected_trees_indvtree_output.csv``. It will be organized like ``DBCODE, ENTITY, TREEID, COMPONENT, YEAR, BA_M2, VOL_M3, BIO_MG, JENKBIO_MG``.
 
@@ -284,7 +284,7 @@ To check the status of the the biomass at the individual tree scale for one or t
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py bio tree checks ncna000100001 ta010001000001
+    $ python tps_cli.py bio tree checks ncna000100001 ta010001000001
 
 Your output will be in a file named ``selected_trees_indvtree_checks.csv``. It will be organized like ``TREEID, SPECIES, INTERVAL, SHRINK_X_FLAGGED, GROWTH_X_FLAGGED, DOUBLE_DEATH_FLAG, LAZARUS_FLAG, HOUDINI_FLAG, DEGRADE_FLAG``.
 

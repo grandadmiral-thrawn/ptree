@@ -214,6 +214,7 @@ def segi_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
         jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,4))),11)
         volume = round(biomass/woodden,11)
         return (biomass, volume, jbio, woodden)
+
     except ValueError:
 
         return (0., 0., 0., woodden)
