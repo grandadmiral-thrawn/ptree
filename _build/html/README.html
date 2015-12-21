@@ -29,19 +29,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
 
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ptree 0.1 documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
@@ -71,18 +59,16 @@
 <li><a class="reference internal" href="#biomass-at-the-plot-scale-for-a-set-of-one-or-more-plots" id="id15">Biomass at the Plot Scale for a set of one or more plots</a></li>
 <li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-studies" id="id16">Biomass at the Stand Scale for All Studies</a></li>
 <li><a class="reference internal" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-studies" id="id17">Biomass at the Stand Scale for a set of one or more studies</a></li>
-<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-for-a-set-of-one-or-more-plots" id="id18">Biomass at the Plot Scale for Individual Trees for a set of one or more plots</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-for-a-set-of-one-or-more-stands" id="id19">Biomass at the Stand Scale for Individual Trees for a set of one or more stands</a></li>
-<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-on-all-plots" id="id20">Biomass at the Plot Scale for Individual Trees on All Plots</a></li>
-<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-on-all-stands" id="id21">Biomass at the Stand Scale for Individual Trees on All Stands</a></li>
-<li><a class="reference internal" href="#biomass-at-the-tree-scale-for-less-than-3-trees" id="id22">Biomass at the Tree Scale for Less Than 3 Trees</a></li>
-<li><a class="reference internal" href="#status-checks-at-the-tree-scale-for-less-than-3-trees" id="id23">Status Checks at the Tree Scale for Less Than 3 Trees</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-stands" id="id24">NPP at the Stand Scale for All Stands</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-stands" id="id25">NPP at the Stand Scale for a set of one or more stands</a></li>
-<li><a class="reference internal" href="#npp-at-the-plot-scale-for-all-plots" id="id26">NPP at the Plot Scale for All Plots</a></li>
-<li><a class="reference internal" href="#npp-at-the-plot-scale-for-a-set-of-one-or-more-plots" id="id27">NPP at the Plot Scale for a set of one or more plots</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-studies" id="id28">NPP at the Stand Scale for All Studies</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-studies" id="id29">NPP at the Stand Scale for a set of one or more studies</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-for-a-set-of-one-or-more-stands" id="id18">Biomass at the Stand Scale for Individual Trees for a set of one or more stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-on-all-plots" id="id19">Biomass at the Plot Scale for Individual Trees on All Plots</a></li>
+<li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-on-all-stands" id="id20">Biomass at the Stand Scale for Individual Trees on All Stands</a></li>
+<li><a class="reference internal" href="#biomass-at-the-tree-scale-for-less-than-3-trees" id="id21">Biomass at the Tree Scale for Less Than 3 Trees</a></li>
+<li><a class="reference internal" href="#status-checks-at-the-tree-scale-for-less-than-3-trees" id="id22">Status Checks at the Tree Scale for Less Than 3 Trees</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-stands" id="id23">NPP at the Stand Scale for All Stands</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-stands" id="id24">NPP at the Stand Scale for a set of one or more stands</a></li>
+<li><a class="reference internal" href="#npp-at-the-plot-scale-for-all-plots" id="id25">NPP at the Plot Scale for All Plots</a></li>
+<li><a class="reference internal" href="#npp-at-the-plot-scale-for-a-set-of-one-or-more-plots" id="id26">NPP at the Plot Scale for a set of one or more plots</a></li>
+<li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-studies" id="id27">NPP at the Stand Scale for All Studies</a></li>
 </ul>
 </li>
 </ul>
@@ -468,17 +454,9 @@ Notes:
 <p>If you have more than one study, your output will in a file named <code class="docutils literal"><span class="pre">selected_studies_biomass_composite_output.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">STUDYID,</span> <span class="pre">SPECIES,</span> <span class="pre">YEAR,</span> <span class="pre">PORTION,</span> <span class="pre">TPH_NHA,</span> <span class="pre">BA_M2HA,</span> <span class="pre">VOL_M3HA,</span> <span class="pre">BIO_MGHA,</span> <span class="pre">JENKBIO_MGHA</span></code>.</p>
 <p>If you just have one study, your output will be in a file named <code class="docutils literal"><span class="pre">[name</span> <span class="pre">of</span> <span class="pre">whatever</span> <span class="pre">study]_studies_composite_output.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">STUDYID,</span> <span class="pre">SPECIES,</span> <span class="pre">YEAR,</span> <span class="pre">PORTION,</span> <span class="pre">TPH_NHA,</span> <span class="pre">BA_M2HA,</span> <span class="pre">VOL_M3HA,</span> <span class="pre">BIO_MGHA,</span> <span class="pre">JENKBIO_MGHA</span></code>.</p>
 </div>
-<div class="section" id="biomass-at-the-plot-scale-for-individual-trees-for-a-set-of-one-or-more-plots">
-<h3>Biomass at the Plot Scale for Individual Trees for a set of one or more plots<a class="headerlink" href="#biomass-at-the-plot-scale-for-individual-trees-for-a-set-of-one-or-more-plots" title="Permalink to this headline">¶</a></h3>
-<p>To compute the biomass at the individual scale for one or more plots, just add those plots to the end of the line <cite>tps_cli.py bio plot composite</cite>. You can add as many as you want! You don&#8217;t need quotes, but you can put them. Don&#8217;t put commas. Separate them with one space. You don&#8217;t have to put them all from the same stand, either, or be organized about it. Here&#8217;s how you could ask for <code class="docutils literal"><span class="pre">ncna0001</span></code>, <code class="docutils literal"><span class="pre">rs010001</span></code>, <code class="docutils literal"><span class="pre">srnf0005</span></code>, and <code class="docutils literal"><span class="pre">ncna0004</span></code>.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio plot tree ncna0001 rs010001 srnf0005 ncna0004
-</pre></div>
-</div>
-<p>Your output will be in a file named <code class="docutils literal"><span class="pre">selected_plots_indvtree_output.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">TREEID,</span> <span class="pre">COMPONENT,</span> <span class="pre">YEAR,</span> <span class="pre">BA_M2,</span> <span class="pre">VOL_M3,</span> <span class="pre">BIO_MG,</span> <span class="pre">JENKBIO_MG</span></code>.</p>
-<p>If you just have one plot, your output will be in a file named <code class="docutils literal"><span class="pre">[name</span> <span class="pre">of</span> <span class="pre">whatever</span> <span class="pre">plot]_plot_indvtree_output.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">TREEID,</span> <span class="pre">COMPONENT,</span> <span class="pre">YEAR,</span> <span class="pre">BA_M2,</span> <span class="pre">VOL_M3,</span> <span class="pre">BIO_MG,</span> <span class="pre">JENKBIO_MG</span></code>.</p>
-</div>
 <div class="section" id="biomass-at-the-stand-scale-for-individual-trees-for-a-set-of-one-or-more-stands">
 <h3>Biomass at the Stand Scale for Individual Trees for a set of one or more stands<a class="headerlink" href="#biomass-at-the-stand-scale-for-individual-trees-for-a-set-of-one-or-more-stands" title="Permalink to this headline">¶</a></h3>
+<p><strong>You cannot process individual tree biomasses at the scale of ``plot``. There does not exist code to do this. You get ``Stand`` and ``Tree`` but not ``plot``.</strong></p>
 <p>To compute the biomass at the individual tree scale for one or more stands, just add those stands to the end of the line <cite>tps_cli.py bio stand tree</cite>. You can add as many as you want! You don&#8217;t need quotes, but you can put them. Don&#8217;t put commas. Separate them with one space. Here&#8217;s how you could ask for <cite>ncna</cite>, <cite>rs01</cite>, <cite>srnf</cite>, and <cite>wr01</cite>.</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio stand tree ncna rs01 srnf wr01
 </pre></div>
@@ -518,6 +496,7 @@ Notes:
 </pre></div>
 </div>
 <p>Your output will be in a file named <code class="docutils literal"><span class="pre">selected_trees_indvtree_checks.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">TREEID,</span> <span class="pre">SPECIES,</span> <span class="pre">INTERVAL,</span> <span class="pre">SHRINK_X_FLAGGED,</span> <span class="pre">GROWTH_X_FLAGGED,</span> <span class="pre">DOUBLE_DEATH_FLAG,</span> <span class="pre">LAZARUS_FLAG,</span> <span class="pre">HOUDINI_FLAG,</span> <span class="pre">DEGRADE_FLAG</span></code>.</p>
+<p>IF A TREE ONLY HAS ONE REMEASUREMENT IT WILL NOT BE OUTPUT. THE STATUS CHECKS DEPEND ON A DIFFERENCE BETWEEN SUBSEQUENT REMEASUREMENTS. THE DEFINITIONS OF THE FLAGS ARE IN THE BUILD DOCUMENTATION.</p>
 <p>If you just have one tree, your output will be in a file named <code class="docutils literal"><span class="pre">[name</span> <span class="pre">of</span> <span class="pre">whatever</span> <span class="pre">tree]_tree_indvtree_checks.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">TREEID,</span> <span class="pre">SPECIES,</span> <span class="pre">INTERVAL,</span> <span class="pre">SHRINK_X_FLAGGED,</span> <span class="pre">GROWTH_X_FLAGGED,</span> <span class="pre">DOUBLE_DEATH_FLAG,</span> <span class="pre">LAZARUS_FLAG,</span> <span class="pre">HOUDINI_FLAG,</span> <span class="pre">DEGRADE_FLAG</span></code>.</p>
 </div>
 <div class="section" id="npp-at-the-stand-scale-for-all-stands">
@@ -551,7 +530,7 @@ Notes:
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py npp plot composite ncna0001 rs010001 srnf0005 ncna0004
 </pre></div>
 </div>
-<p>If you have more than one plot, your output will in a file named <code class="docutils literal"><span class="pre">selected_plots_composite_npp.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">PLOTID,</span> <span class="pre">YEAR_BEGIN,</span> <span class="pre">YEAR_END,</span> <span class="pre">SPECIES,</span> <span class="pre">DELTA_TPH_NHA,</span> <span class="pre">DELTA_BA_M2HA,</span> <span class="pre">DELTA_VOL_M3HA,</span> <span class="pre">DELTA_BIO_MGHA,</span> <span class="pre">DELTA_JENKBIO_MGHA,</span> <span class="pre">MEAN_ANNUAL_NPP_BIO,</span> <span class="pre">MEAN_ANNUAL_NPP_JENKBIO</span></code>.</p>
+<p>If you have more than one plot, your output will in a file named either <code class="docutils literal"><span class="pre">plotname_plotname_plotname_plot_npp_output.csv</span></code>, or, if this cannot work, in <code class="docutils literal"><span class="pre">selected_plots_composite_npp.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">PLOTID,</span> <span class="pre">YEAR_BEGIN,</span> <span class="pre">YEAR_END,</span> <span class="pre">SPECIES,</span> <span class="pre">DELTA_TPH_NHA,</span> <span class="pre">DELTA_BA_M2HA,</span> <span class="pre">DELTA_VOL_M3HA,</span> <span class="pre">DELTA_BIO_MGHA,</span> <span class="pre">DELTA_JENKBIO_MGHA,</span> <span class="pre">MEAN_ANNUAL_NPP_BIO,</span> <span class="pre">MEAN_ANNUAL_NPP_JENKBIO</span></code>.</p>
 <p>If you just have one plot, your output will be in a file named <code class="docutils literal"><span class="pre">[name</span> <span class="pre">of</span> <span class="pre">whatever</span> <span class="pre">plot]_plot_npp_output.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">PLOTID,</span> <span class="pre">YEAR_BEGIN,</span> <span class="pre">YEAR_END,</span> <span class="pre">SPECIES,</span> <span class="pre">DELTA_TPH_NHA,</span> <span class="pre">DELTA_BA_M2HA,</span> <span class="pre">DELTA_VOL_M3HA,</span> <span class="pre">DELTA_BIO_MGHA,</span> <span class="pre">DELTA_JENKBIO_MGHA,</span> <span class="pre">MEAN_ANNUAL_NPP_BIO,</span> <span class="pre">MEAN_ANNUAL_NPP_JENKBIO</span></code>.</p>
 </div>
 <div class="section" id="npp-at-the-stand-scale-for-all-studies">
@@ -561,15 +540,6 @@ Notes:
 </pre></div>
 </div>
 <p>Your output will be in a file named <code class="docutils literal"><span class="pre">all_plots_composite_npp.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">STANDID,</span> <span class="pre">YEAR_BEGIN,</span> <span class="pre">YEAR_END,</span> <span class="pre">SPECIES,</span> <span class="pre">DELTA_TPH_NHA,</span> <span class="pre">DELTA_BA_M2HA,</span> <span class="pre">DELTA_VOL_M3HA,</span> <span class="pre">DELTA_BIO_MGHA,</span> <span class="pre">DELTA_JENKBIO_MGHA,</span> <span class="pre">MEAN_ANNUAL_NPP_BIO,</span> <span class="pre">MEAN_ANNUAL_NPP_JENKBIO</span></code>.</p>
-</div>
-<div class="section" id="npp-at-the-stand-scale-for-a-set-of-one-or-more-studies">
-<h3>NPP at the Stand Scale for a set of one or more studies<a class="headerlink" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-studies" title="Permalink to this headline">¶</a></h3>
-<p>To compute the NPP at the stand scale for one or more studies, just add those studies to the end of the line <code class="docutils literal"><span class="pre">tps_cli.py</span> <span class="pre">npp</span> <span class="pre">study</span> <span class="pre">composite</span></code>. You can add as many as you want! You don&#8217;t need quotes, but you can put them. Don&#8217;t put commas. Separate them with one space. There are not so many studies out there, and be careful that you make the names accurate. Again, this is just a luxury function for looking at studies instead of stands or plots.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py npp study composite alco hsgy
-</pre></div>
-</div>
-<p>If you have more than one plot, your output will in a file named <code class="docutils literal"><span class="pre">selected_studies_composite_npp.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">STANDID,</span> <span class="pre">YEAR_BEGIN,</span> <span class="pre">YEAR_END,</span> <span class="pre">SPECIES,</span> <span class="pre">DELTA_TPH_NHA,</span> <span class="pre">DELTA_BA_M2HA,</span> <span class="pre">DELTA_VOL_M3HA,</span> <span class="pre">DELTA_BIO_MGHA,</span> <span class="pre">DELTA_JENKBIO_MGHA,</span> <span class="pre">MEAN_ANNUAL_NPP_BIO,</span> <span class="pre">MEAN_ANNUAL_NPP_JENKBIO</span></code>.</p>
-<p>If you just have one plot, your output will be in a file named <code class="docutils literal"><span class="pre">[name</span> <span class="pre">of</span> <span class="pre">whatever</span> <span class="pre">study]_npp_output.csv</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">STANDID,</span> <span class="pre">YEAR_BEGIN,</span> <span class="pre">YEAR_END,</span> <span class="pre">SPECIES,</span> <span class="pre">DELTA_TPH_NHA,</span> <span class="pre">DELTA_BA_M2HA,</span> <span class="pre">DELTA_VOL_M3HA,</span> <span class="pre">DELTA_BIO_MGHA,</span> <span class="pre">DELTA_JENKBIO_MGHA,</span> <span class="pre">MEAN_ANNUAL_NPP_BIO,</span> <span class="pre">MEAN_ANNUAL_NPP_JENKBIO</span></code>.</p>
 </div>
 </div>
 </div>
@@ -601,7 +571,6 @@ Notes:
 <li><a class="reference internal" href="#biomass-at-the-plot-scale-for-a-set-of-one-or-more-plots">Biomass at the Plot Scale for a set of one or more plots</a></li>
 <li><a class="reference internal" href="#biomass-at-the-stand-scale-for-all-studies">Biomass at the Stand Scale for All Studies</a></li>
 <li><a class="reference internal" href="#biomass-at-the-stand-scale-for-a-set-of-one-or-more-studies">Biomass at the Stand Scale for a set of one or more studies</a></li>
-<li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-for-a-set-of-one-or-more-plots">Biomass at the Plot Scale for Individual Trees for a set of one or more plots</a></li>
 <li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-for-a-set-of-one-or-more-stands">Biomass at the Stand Scale for Individual Trees for a set of one or more stands</a></li>
 <li><a class="reference internal" href="#biomass-at-the-plot-scale-for-individual-trees-on-all-plots">Biomass at the Plot Scale for Individual Trees on All Plots</a></li>
 <li><a class="reference internal" href="#biomass-at-the-stand-scale-for-individual-trees-on-all-stands">Biomass at the Stand Scale for Individual Trees on All Stands</a></li>
@@ -612,13 +581,18 @@ Notes:
 <li><a class="reference internal" href="#npp-at-the-plot-scale-for-all-plots">NPP at the Plot Scale for All Plots</a></li>
 <li><a class="reference internal" href="#npp-at-the-plot-scale-for-a-set-of-one-or-more-plots">NPP at the Plot Scale for a set of one or more plots</a></li>
 <li><a class="reference internal" href="#npp-at-the-stand-scale-for-all-studies">NPP at the Stand Scale for All Studies</a></li>
-<li><a class="reference internal" href="#npp-at-the-stand-scale-for-a-set-of-one-or-more-studies">NPP at the Stand Scale for a set of one or more studies</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -648,11 +622,11 @@ Notes:
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
       
       |
       <a href="_sources/README.txt"
-          rel="nofollow">Page source</a></li>
+          rel="nofollow">Page source</a>
     </div>
 
     
