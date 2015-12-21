@@ -32,7 +32,7 @@ Best to start with ``tps_Sample``, which will run a series of test trees and sta
 
 .. code-block:: bash
 
-    $ python3 tps_Sample.py
+    $ python tps_Sample.py
 
 Assuming this goes well, please read the docs! The docs are in index.html, currently in the ``_build/`` folder. You'll be running the remainder of your analyses out of the command line interface (`tps_cli.py`) for now, but there are a lot of options.
 
@@ -300,7 +300,7 @@ To compute the NPP at the stand scale for all of the stands, use this command.
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py npp stand composite --all
+    $ python tps_cli.py npp stand composite --all
 
 Your output will be in a file named ``all_stands_composite_npp.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
 
@@ -313,7 +313,7 @@ To compute the NPP at the stand scale for one or more stands, just add those sta
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py npp stand composite ncna rs01 srnf ws01
+    $ python tps_cli.py npp stand composite ncna rs01 srnf ws01
 
 If you have more than one stand, your output will in a file named ``selected_stands_composite_npp.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
 
@@ -327,7 +327,7 @@ To compute the NPP at the plot scale for all of the plots on all of the stands, 
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py npp plot composite --all
+    $ python tps_cli.py npp plot composite --all
 
 Your output will be in a file named ``all_plots_composite_npp.csv``. It will be organized like ``DBCODE, ENTITY, PLOTID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
 
@@ -339,7 +339,7 @@ To compute the NPP at the plot scale for one or more plots, just add those plots
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py npp plot composite ncna0001 rs010001 srnf0005 ncna0004
+    $ python tps_cli.py npp plot composite ncna0001 rs010001 srnf0005 ncna0004
 
 If you have more than one plot, your output will in a file named either ``plotname_plotname_plotname_plot_npp_output.csv``, or, if this cannot work, in ``selected_plots_composite_npp.csv``. It will be organized like ``DBCODE, ENTITY, PLOTID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
 
@@ -353,7 +353,7 @@ To compute the NPP at the plot scale for all of the plots on all of the studies,
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py npp study composite --all
+    $ python tps_cli.py npp study composite --all
 
 Your output will be in a file named ``all_plots_composite_npp.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, YEAR_BEGIN, YEAR_END, SPECIES, DELTA_TPH_NHA, DELTA_BA_M2HA, DELTA_VOL_M3HA, DELTA_BIO_MGHA, DELTA_JENKBIO_MGHA, MEAN_ANNUAL_NPP_BIO, MEAN_ANNUAL_NPP_JENKBIO``.
 
