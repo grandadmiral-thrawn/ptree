@@ -82,7 +82,7 @@
 <li><code class="docutils literal"><span class="pre">tps_cli</span></code> &lt;- command line interface</li>
 <li><code class="docutils literal"><span class="pre">tps_Sample</span></code> &lt;- tests - queries to &#8216;ncna&#8217; that should always work</li>
 <li>SQL queries and configs in yaml files for interoperability!</li>
-<li>lots of docs!</li>
+<li>lots of docs! which you can <a class="reference external" href="http://ptree.readthedocs.org/en/latest/">READ at readthedocs.org</a>.</li>
 </ul>
 </div>
 <div class="section" id="installation">
@@ -106,199 +106,8 @@ Best to start with <code class="docutils literal"><span class="pre">tps_Sample</
 <p>If you are at Oregon State, you can also access the equations in the shared <code class="docutils literal"><span class="pre">T-drive</span></code> under <code class="docutils literal"><span class="pre">GROUPS</span> <span class="pre">&gt;</span> <span class="pre">FSDB</span> <span class="pre">&gt;</span> <span class="pre">TP001</span> <span class="pre">&gt;</span> <span class="pre">biomass_programs</span></code> to see the original documentation from Gody.</p>
 <div class="section" id="equation-listing">
 <h3>Equation Listing<a class="headerlink" href="#equation-listing" title="Permalink to this headline">¶</a></h3>
-<p>Six different &#8220;forms&#8221; of biomass equation are used depending on source of data and tree species. The following shows the syntax for the math for every species of tree. When height is needed, the subsequent table shows the height calculation. Components are <code class="docutils literal"><span class="pre">BAT</span></code> (total aboveground biomass, Mg ), <code class="docutils literal"><span class="pre">VSW</span></code> (volume of the stemwood,  m<sup>3</sup> ), <code class="docutils literal"><span class="pre">HT</span></code> (height, m), <code class="docutils literal"><span class="pre">VAE</span></code> (volume aboveground entire tree, m<sup>3</sup>) and <code class="docutils literal"><span class="pre">dbh</span></code> (diameter at breast height, cm). When volume is the product, a wood density (<code class="docutils literal"><span class="pre">woodden</span></code>) value in g / m<sup>3</sup> (see reference) is used to convert to biomass.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="9%" />
-<col width="11%" />
-<col width="79%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Species</th>
-<th class="head">Component</th>
-<th class="head">Biomass</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">QUKE</span></code></td>
-<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
-<td><code class="docutils literal"><span class="pre">math.exp(-4.49787</span> <span class="pre">+</span> <span class="pre">0.7225820*math.log(0.01*dbh)</span> <span class="pre">+</span> <span class="pre">1.72264*math.log(HT)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ACMA</span></code></td>
-<td><code class="docutils literal"><span class="pre">VAE</span></code></td>
-<td><code class="docutils literal"><span class="pre">woodden*0.00007*dbh*2.2246200*HT**0.57561</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">CHNO</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.01600*woodden*(0.0001868*dbh**2.40240)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">CHNO</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.02090*woodden*(0.0001076*dbh**2.56160)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">ABAM</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.04720*woodden*(0.0001129*dbh**2.58670)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ABCO</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.03060*woodden*(0.0000932*dbh**2.62060)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">ABCO</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.02560*woodden*(0.0000473*dbh**2.77270)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ABGR</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.02560*woodden*(0.0000473*dbh**2.77270)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">ABLA2</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.01540*woodden*(0.0001896*dbh**2.38090)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ABMA</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.01440*woodden*(0.0000527*dbh**2.74780)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">ABPR</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.01710*woodden*(0.0001227*dbh**2.58120)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PSME</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.03090*woodden*(0.0002146*dbh**2.43670)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">PSME</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.02960*woodden*(0.0002286*dbh**2.42470)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PICO</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.02140*woodden*(0.0002840*dbh**2.33630)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">PIEN</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.01400*woodden*(0.0001160*dbh**2.57180)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PIJE</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.01560*woodden*(0.0000158*dbh**2.95420)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">PILA</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.02110*woodden*(0.0000557*dbh**2.70890)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PILA</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.02110*woodden*(0.0000557*dbh**2.70890)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">PISI</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.02220*woodden*(0.0003460*dbh**2.33200)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PISI</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.02220*woodden*(0.0003460*dbh**2.33200)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">TABR</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.05960*woodden*(0.0001189*dbh**2.59890)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">THPL</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.01600*woodden*(0.0001860*dbh**2.40240)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">TSHE</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.05960*woodden*(0.0001189*dbh**2.59890)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">TSME</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.01920*woodden*(0.0000929*dbh**2.59150)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">THPL</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">woodden*0.23080*(HT*(0.01*dbh)**2)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PIMO</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">woodden*0.36080*(HT*(0.01*dbh)**2)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">PIPO</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">woodden*0.36080*(HT*(0.01*dbh)**2)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">LIDE2</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">woodden*0.33250*(HT*(0.01*dbh)**2)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">ABPR</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">woodden*0.27340*(HT*(0.01*dbh)**2)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ABMA</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">woodden*0.31020*(HT*(0.01*dbh)**2)</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">CADE3</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">woodden*0.33250*(HT*(0.01*dbh)**2)</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">CONU</span></code></td>
-<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">ALIN</span></code></td>
-<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ALRU</span></code></td>
-<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">ALSI</span></code></td>
-<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">POTR</span></code></td>
-<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">POTR2</span></code></td>
-<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PREM</span></code></td>
-<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">PRUNU</span></code></td>
-<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ARME</span></code></td>
-<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(1.01532+0.0000380*math.log(dbh))</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">ACGL</span></code></td>
-<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(3.63400+2.7520000*math.log(dbh))</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">SASC</span></code></td>
-<td><code class="docutils literal"><span class="pre">BAT</span></code></td>
-<td><code class="docutils literal"><span class="pre">1.*10**(-6)*math.exp(3.45950+2.3891300*math.log(dbh))</span></code></td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">SEGI</span></code></td>
-<td><code class="docutils literal"><span class="pre">BSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">math.exp(-11.01740+2.5907000*math.log(dbh))</span></code></td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">CACH</span></code></td>
-<td><code class="docutils literal"><span class="pre">VSW</span></code></td>
-<td><code class="docutils literal"><span class="pre">woodden*HT**0.77467*0.0000569*(dbh)**2.07202</span></code></td>
-</tr>
-</tbody>
-</table>
-<p>The tables below show the height equations used, by species, when necessary.</p>
+<p>Seven different &#8220;forms&#8221; of biomass equation are used depending on source of data and tree species. The following shows the syntax for the math for every species of tree. When height is needed, the subsequent table shows the height calculation. Components are <code class="docutils literal"><span class="pre">BAT</span></code> (total aboveground biomass, Mg ), <code class="docutils literal"><span class="pre">VSW</span></code> (volume of the stemwood,  m<sup>3</sup> ), <code class="docutils literal"><span class="pre">HT</span></code> (height, m), <code class="docutils literal"><span class="pre">VAE</span></code> (volume aboveground entire tree, m<sup>3</sup>) and <code class="docutils literal"><span class="pre">dbh</span></code> (diameter at breast height, cm). When volume is the product, a wood density (<code class="docutils literal"><span class="pre">woodden</span></code>) value in g / m<sup>3</sup> (see reference) is used to convert to biomass. A table is no longer included here as the equations in use may change and maintaining the table could become burdensome.</p>
+<p>Some equations require height, which is not otherwise documented. The tables below show the height equations used as of 2015, by species, when necessary to run an equation. No output of height is generated.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="9%" />
@@ -362,7 +171,7 @@ Best to start with <code class="docutils literal"><span class="pre">tps_Sample</
 <div class="section" id="details-about-1-tree">
 <h3>Details About 1 Tree<a class="headerlink" href="#details-about-1-tree" title="Permalink to this headline">¶</a></h3>
 <p>This command will get you details about 1 tree and either print them to the screen or to a file. Pretend the tree of your desire is <code class="docutils literal"><span class="pre">ncna0001000001</span></code></p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py dtx ncna000100001
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python tps_cli.py dtx ncna000100001
 </pre></div>
 </div>
 <p>The computer will ask if you would like to have a file, and if so to type <code class="docutils literal"><span class="pre">Y</span></code>. If you type <code class="docutils literal"><span class="pre">Y</span></code>, the output will go to a file named (in this case for <code class="docutils literal"><span class="pre">ncna0001000001</span></code>) <code class="docutils literal"><span class="pre">ncna000100001_tags_and_checks.csv</span></code>. If you don&#8217;t type <code class="docutils literal"><span class="pre">Y</span></code> (you can even just press enter), you will see on your screen something like:</p>
@@ -406,7 +215,7 @@ Notes:
 <div class="section" id="biomass-at-the-stand-scale-for-all-stands">
 <h3>Biomass at the Stand Scale for All Stands<a class="headerlink" href="#biomass-at-the-stand-scale-for-all-stands" title="Permalink to this headline">¶</a></h3>
 <p>To compute the biomass at the stand scale for all of the stands, use this command.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_cli.py bio stand composite --all
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python tps_cli.py bio stand composite --all
 </pre></div>
 </div>
 <p>Your output will be in a file named <code class="docutils literal"><span class="pre">`all_stands_biomass_composite_output.csv`</span></code>. It will be organized like <code class="docutils literal"><span class="pre">DBCODE,</span> <span class="pre">ENTITY,</span> <span class="pre">STANDID,</span> <span class="pre">SPECIES,</span> <span class="pre">YEAR,</span> <span class="pre">PORTION,</span> <span class="pre">TPH_NHA,</span> <span class="pre">BA_M2HA,</span> <span class="pre">VOL_M3HA,</span> <span class="pre">BIO_MGHA,</span> <span class="pre">JENKBIO_MGHA</span></code>.</p>

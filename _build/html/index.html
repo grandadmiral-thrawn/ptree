@@ -80,6 +80,8 @@
 <ul class="simple">
 </ul>
 </div>
+<div class="section" id="database-connectors-and-cached-settings">
+<h2>Database Connectors and Cached Settings:<a class="headerlink" href="#database-connectors-and-cached-settings" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal"><span class="pre">poptree_basis.py</span></code> contains the classes and functions for connecting to the FSDBDATA database. To make this connection, one needs to also include a configuration file named specifically <code class="docutils literal"><span class="pre">config_2.yaml</span></code> in the base directory where <code class="docutils literal"><span class="pre">poptree_basis</span></code> is located. This file should look like this:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">server</span><span class="p">:</span> <span class="n">stewartia</span><span class="o">.</span><span class="n">forestry</span><span class="o">.</span><span class="n">oregonstate</span><span class="o">.</span><span class="n">edu</span><span class="p">:</span><span class="mi">1433</span>
 <span class="n">user</span><span class="p">:</span> <span class="n">USERNAME</span>
@@ -440,6 +442,9 @@
 
 </dd></dl>
 
+</div>
+<div class="section" id="biomass-equations">
+<h2>Biomass Equations:<a class="headerlink" href="#biomass-equations" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal"><span class="pre">biomass_basis.py</span></code> uses the information in TP00110 to compute the Biomass ( Mg and Mg/Ha ), Jenkins Biomass ( Mg and Mg/Ha ), Basal Area ( m<sup>2</sup> ), Volume ( m<sup>3</sup> ). Jenkins&#8217; biomass is from Jenkins&#8217; 2003 <a class="reference external" href="http://www.fs.fed.us/ne/durham/4104/papers/Heathbiomass_eqns.pdf">paper</a>. (Wood density is assigned by <code class="docutils literal"><span class="pre">biomass_basis</span></code> but no computation is involved apart from using it to switch between volume and biomass when needed. Proxy forms and components computed are also pulled from the database in this module.</p>
 <span class="target" id="module-biomass_basis"></span><dl class="function">
 <dt id="biomass_basis.alder_biopak">
@@ -689,10 +694,6 @@ The math form for Jenkins is jenkins&#8217; biomass = 0.001 * exp( j1 + j2 * ln(
 <dt id="biomass_basis.maxref">
 <code class="descclassname">biomass_basis.</code><code class="descname">maxref</code><span class="sig-paren">(</span><em>dbh</em>, <em>species</em><span class="sig-paren">)</span><a class="headerlink" href="#biomass_basis.maxref" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if given dbh (in cm) and given species is bigger than the maximum for that combination. The maximum was found from determining the top 1 percent of dbh&#8217;s in cm for each species from all the historical data. This function operates behind the scenes on inputs from TP00102 (dbh&#8217;s) and TP00101(species). It populates the .eqns attribute of the Tree or Stand classes so that the right equation or set of equations will be called.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">maxref</span><span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="s">&#39;ABAM&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="s">&quot;normal&quot;</span>
-</pre></div>
-</div>
 <p><strong>INPUTS</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -801,6 +802,9 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <p>This function will return a lambda to another function that is then assembled in tps_Tree or tps_Stand for the species at hand, and called with the dbhs there.</p>
 </dd></dl>
 
+</div>
+<div class="section" id="individual-trees">
+<h2>Individual Trees:<a class="headerlink" href="#individual-trees" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal"><span class="pre">tps_Tree.py</span></code> contains classes and functions for computing the attributes of individual trees. Each individual tree as defined in TP00101 is an instance of a class of <code class="docutils literal"><span class="pre">Tree</span></code>. For example, <code class="docutils literal"><span class="pre">NCNA000300005</span></code> is one Tree, even if it alive for 5 remeasurements. All the remeasurements taken on one individual tree are encapsulated into a single instance of Tree for that individual, and can be accessed using the property of <code class="docutils literal"><span class="pre">Tree.state</span></code>. If desired, checks on the state of a tree are generated. These are accessed through the QC portion of the interface. The equations used on the tree are foind in <code class="docutils literal"><span class="pre">Tree.eqns</span></code>. They are in <code class="docutils literal"><span class="pre">lambda</span></code> form; to access them, you&#8217;ll need to specify a dbh.</p>
 <span class="target" id="module-tps_Tree"></span><dl class="class">
 <dt id="tps_Tree.Tree">
@@ -1108,6 +1112,9 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 
 </dd></dl>
 
+</div>
+<div class="section" id="stands">
+<h2>Stands:<a class="headerlink" href="#stands" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal"><span class="pre">tps_Stand.py</span></code> contains classes and functions for computing the static attributes on the stand and plot scale. Each stand is defined as all the plots during a given re-measurement year. Both plot and stand attributes are computed on a per-hectare basis. Some stands contain <code class="docutils literal"><span class="pre">detail</span> <span class="pre">plots</span></code> with small trees representative of the stand as a whole. Plots sometimes have additional <code class="docutils literal"><span class="pre">meaning</span></code> we want to know beyond that of the stand. In all cases, we compute plot <code class="docutils literal"><span class="pre">on</span> <span class="pre">the</span> <span class="pre">way</span></code> to getting stand, so it&#8217;s easy for us to include it in the output as well. Additions on stands are rolled to the prior remeasurement. Mortalities on stands are rolled to the next remeasurement. DBH&#8217;s from the last known good DBH are assigned to <cite>mort-ed</cite> or missing trees. Stands can also be used for computing the individual trees they contain. When a set of individual trees are computed at the stand scale, the individuals on additions plots are rolled back in time to the previous remeasurement and those on mortality plots are rolled forward in time to the next remeasurement. Any mortality measurements that happen after the final re-measurement will not be included.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -1700,6 +1707,9 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 
 </dd></dl>
 
+</div>
+<div class="section" id="npp">
+<h2>NPP:<a class="headerlink" href="#npp" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal"><span class="pre">tps_NPP.py</span></code> contains classes and functions for computing the dynamic attributes on the stand and plot scale. Each stand is defined as all the plots during a given re-measurement year. Deltas are defined as the difference between remeasurement years, where mortalities are moved &#8220;up&#8221; to subsequent remeasurements and additions are moved &#8220;down&#8221; to early remeasurements. Both plot and stand attributes are computed on a per-hectare basis. NPP is computed on an annual basis. The rest of the details regarding the static stand and plot attributes apply to the dynamic attributes as well. There is no such thing as NPP on individual trees. Trying to run that from the command line interface will result in error.</p>
 <span class="target" id="module-tps_NPP"></span><dl class="function">
 <dt id="tps_NPP.compute_NPP">
@@ -1800,12 +1810,19 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <p>A csv file containing the NPPS at the stand scale</p>
 </dd></dl>
 
+</div>
+<div class="section" id="sample">
+<h2>SAMPLE:<a class="headerlink" href="#sample" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal"><span class="pre">tps_Sample.py</span></code> is a set of sample data you can test the program on. Run at the command line like:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python3 tps_Sample.py
 </pre></div>
 </div>
 <p>See <code class="docutils literal"><span class="pre">README.rst</span></code> for more details.</p>
+</div>
+<div class="section" id="cli">
+<h2>CLI:<a class="headerlink" href="#cli" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal"><span class="pre">tps_cli.py</span></code> is the command line interface. Please see <code class="docutils literal"><span class="pre">README.rst</span></code> for how to use this interface.</p>
+</div>
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
@@ -1828,7 +1845,16 @@ The keys for the lookup table are the same as the FORM field in TP00110</p>
 <li><a class="reference internal" href="#a-note-for-future-muna-work">A note for future MUNA work</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#contents">Contents:</a></li>
+<li><a class="reference internal" href="#contents">Contents:</a><ul>
+<li><a class="reference internal" href="#database-connectors-and-cached-settings">Database Connectors and Cached Settings:</a></li>
+<li><a class="reference internal" href="#biomass-equations">Biomass Equations:</a></li>
+<li><a class="reference internal" href="#individual-trees">Individual Trees:</a></li>
+<li><a class="reference internal" href="#stands">Stands:</a></li>
+<li><a class="reference internal" href="#npp">NPP:</a></li>
+<li><a class="reference internal" href="#sample">SAMPLE:</a></li>
+<li><a class="reference internal" href="#cli">CLI:</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 <div class="relations">

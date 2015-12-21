@@ -21,7 +21,7 @@ Main Modules
 * ``tps_cli`` <- command line interface
 * ``tps_Sample`` <- tests - queries to 'ncna' that should always work
 * SQL queries and configs in yaml files for interoperability!
-* lots of docs!
+* lots of docs! which you can `READ at readthedocs.org <http://ptree.readthedocs.org/en/latest/>`_.
 
 ============
 Installation
@@ -58,58 +58,10 @@ If you are at Oregon State, you can also access the equations in the shared ``T-
 Equation Listing
 ----------------
 
-Six different "forms" of biomass equation are used depending on source of data and tree species. The following shows the syntax for the math for every species of tree. When height is needed, the subsequent table shows the height calculation. Components are ``BAT`` (total aboveground biomass, Mg ), ``VSW`` (volume of the stemwood,  m\ :sup:`3` ), ``HT`` (height, m), ``VAE`` (volume aboveground entire tree, m\ :sup:`3`) and ``dbh`` (diameter at breast height, cm). When volume is the product, a wood density (``woodden``) value in g / m\ :sup:`3` (see reference) is used to convert to biomass.
+Seven different "forms" of biomass equation are used depending on source of data and tree species. The following shows the syntax for the math for every species of tree. When height is needed, the subsequent table shows the height calculation. Components are ``BAT`` (total aboveground biomass, Mg ), ``VSW`` (volume of the stemwood,  m\ :sup:`3` ), ``HT`` (height, m), ``VAE`` (volume aboveground entire tree, m\ :sup:`3`) and ``dbh`` (diameter at breast height, cm). When volume is the product, a wood density (``woodden``) value in g / m\ :sup:`3` (see reference) is used to convert to biomass. A table is no longer included here as the equations in use may change and maintaining the table could become burdensome.
 
-=========  ===========  =============================================================================
-Species    Component    Biomass
-=========  ===========  =============================================================================
-``QUKE``   ``BAT``      ``math.exp(-4.49787 + 0.7225820*math.log(0.01*dbh) + 1.72264*math.log(HT)``
-``ACMA``   ``VAE``      ``woodden*0.00007*dbh*2.2246200*HT**0.57561``
-``CHNO``   ``VSW``      ``1.01600*woodden*(0.0001868*dbh**2.40240)``
-``CHNO``   ``VSW``      ``1.02090*woodden*(0.0001076*dbh**2.56160)``
-``ABAM``   ``VSW``      ``1.04720*woodden*(0.0001129*dbh**2.58670)``
-``ABCO``   ``VSW``      ``1.03060*woodden*(0.0000932*dbh**2.62060)``
-``ABCO``   ``VSW``      ``1.02560*woodden*(0.0000473*dbh**2.77270)``
-``ABGR``   ``VSW``      ``1.02560*woodden*(0.0000473*dbh**2.77270)``
-``ABLA2``  ``VSW``      ``1.01540*woodden*(0.0001896*dbh**2.38090)``
-``ABMA``   ``VSW``      ``1.01440*woodden*(0.0000527*dbh**2.74780)``
-``ABPR``   ``VSW``      ``1.01710*woodden*(0.0001227*dbh**2.58120)``
-``PSME``   ``VSW``      ``1.03090*woodden*(0.0002146*dbh**2.43670)``
-``PSME``   ``VSW``      ``1.02960*woodden*(0.0002286*dbh**2.42470)``
-``PICO``   ``VSW``      ``1.02140*woodden*(0.0002840*dbh**2.33630)``
-``PIEN``   ``VSW``      ``1.01400*woodden*(0.0001160*dbh**2.57180)``
-``PIJE``   ``VSW``      ``1.01560*woodden*(0.0000158*dbh**2.95420)``
-``PILA``   ``VSW``      ``1.02110*woodden*(0.0000557*dbh**2.70890)``
-``PILA``   ``VSW``      ``1.02110*woodden*(0.0000557*dbh**2.70890)``
-``PISI``   ``VSW``      ``1.02220*woodden*(0.0003460*dbh**2.33200)``
-``PISI``   ``VSW``      ``1.02220*woodden*(0.0003460*dbh**2.33200)``
-``TABR``   ``VSW``      ``1.05960*woodden*(0.0001189*dbh**2.59890)``
-``THPL``   ``VSW``      ``1.01600*woodden*(0.0001860*dbh**2.40240)``
-``TSHE``   ``VSW``      ``1.05960*woodden*(0.0001189*dbh**2.59890)``
-``TSME``   ``VSW``      ``1.01920*woodden*(0.0000929*dbh**2.59150)``
-``THPL``   ``VSW``      ``woodden*0.23080*(HT*(0.01*dbh)**2)``
-``PIMO``   ``VSW``      ``woodden*0.36080*(HT*(0.01*dbh)**2)``
-``PIPO``   ``VSW``      ``woodden*0.36080*(HT*(0.01*dbh)**2)``
-``LIDE2``  ``VSW``      ``woodden*0.33250*(HT*(0.01*dbh)**2)``
-``ABPR``   ``VSW``      ``woodden*0.27340*(HT*(0.01*dbh)**2)``
-``ABMA``   ``VSW``      ``woodden*0.31020*(HT*(0.01*dbh)**2)``
-``CADE3``  ``VSW``      ``woodden*0.33250*(HT*(0.01*dbh)**2)``
-``CONU``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
-``ALIN``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
-``ALRU``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
-``ALSI``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
-``POTR``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
-``POTR2``  ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
-``PREM``   ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
-``PRUNU``  ``BAT``      ``1.*10**(-6)*math.exp(5.13118+2.1504600*math.log(dbh))``
-``ARME``   ``BAT``      ``1.*10**(-6)*math.exp(1.01532+0.0000380*math.log(dbh))``
-``ACGL``   ``BAT``      ``1.*10**(-6)*math.exp(3.63400+2.7520000*math.log(dbh))``
-``SASC``   ``BAT``      ``1.*10**(-6)*math.exp(3.45950+2.3891300*math.log(dbh))``
-``SEGI``   ``BSW``      ``math.exp(-11.01740+2.5907000*math.log(dbh))``
-``CACH``   ``VSW``      ``woodden*HT**0.77467*0.0000569*(dbh)**2.07202``
-=========  ===========  =============================================================================
 
-The tables below show the height equations used, by species, when necessary.
+Some equations require height, which is not otherwise documented. The tables below show the height equations used as of 2015, by species, when necessary to run an equation. No output of height is generated.
 
 
 =========  ===========  =============================================================================
@@ -146,7 +98,7 @@ This command will get you details about 1 tree and either print them to the scre
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py dtx ncna000100001
+    $ python tps_cli.py dtx ncna000100001
 
 The computer will ask if you would like to have a file, and if so to type ``Y``. If you type ``Y``, the output will go to a file named (in this case for ``ncna0001000001``) ``ncna000100001_tags_and_checks.csv``. If you don't type ``Y`` (you can even just press enter), you will see on your screen something like:
 
@@ -197,7 +149,7 @@ To compute the biomass at the stand scale for all of the stands, use this comman
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py bio stand composite --all
+    $ python tps_cli.py bio stand composite --all
 
 Your output will be in a file named ```all_stands_biomass_composite_output.csv```. It will be organized like ``DBCODE, ENTITY, STANDID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 

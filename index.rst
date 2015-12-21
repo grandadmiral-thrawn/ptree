@@ -41,7 +41,7 @@ This structure helps to organize the inputs in such a way that they can be easil
 
 .. note:: All treeid's, plots, and stands are specified programmatically in lowercase and as strings. Output to a file place them in uppercase. In debugging, checking the case to lowercase will be useful. The proper way to do this in Python is to append ``.lower()`` to the end of any string you suspect might be coming in as an uppercase.
 
----------------------------
+
 A note for future MUNA work
 ---------------------------
 

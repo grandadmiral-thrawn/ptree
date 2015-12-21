@@ -6,11 +6,6 @@ import math
 def maxref(dbh, species):
     """ Check if given dbh (in cm) and given species is bigger than the maximum for that combination. The maximum was found from determining the top 1 percent of dbh's in cm for each species from all the historical data. This function operates behind the scenes on inputs from TP00102 (dbh's) and TP00101(species). It populates the .eqns attribute of the Tree or Stand classes so that the right equation or set of equations will be called.
 
-    .. Example::
-
-    >>> maxref(20.0, 'ABAM')
-    >>> "normal"
-
     **INPUTS**
 
     :dbh: the tree's dbh, in cm
@@ -218,7 +213,7 @@ def segi_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
         biomass = round(math.exp(b1 + b2 * math.log(dbh)),11)
         jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,4))),11)
         volume = round(biomass/woodden,11)
-        return (biomass, volume, jbio, woodden)
+        return (1000000*biomass, volume, jbio, woodden)
     except ValueError:
 
         return (0., 0., 0., woodden)
