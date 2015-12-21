@@ -21,7 +21,7 @@ Main Modules
 * ``tps_cli`` <- command line interface
 * ``tps_Sample`` <- tests - queries to 'ncna' that should always work
 * SQL queries and configs in yaml files for interoperability!
-* lots of docs! ** which you can `READ at readthedocs.org <http://ptree.readthedocs.org/en/latest/>`_.
+* lots of docs! ** which you can `READ at readthedocs.org <http://ptree.readthedocs.org/en/latest/>`_.**
 
 ============
 Installation
