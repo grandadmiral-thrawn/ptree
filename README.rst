@@ -21,7 +21,7 @@ Main Modules
 * ``tps_cli`` <- command line interface
 * ``tps_Sample`` <- tests - queries to 'ncna' that should always work
 * SQL queries and configs in yaml files for interoperability!
-* lots of docs! which you can `READ at readthedocs.org <http://ptree.readthedocs.org/en/latest/>`_.
+* lots of docs! which you can `READ at readthedocs.org <http://ptree.readthedocs.org/en/dev/>`_.
 
 ============
 Installation
@@ -161,7 +161,7 @@ To compute the biomass at the stand scale for one or more stands, just add those
 
 .. code-block:: bash
 
-    $ python3 tps_cli.py bio stand composite ncna rs01 srnf ws01
+    $ python tps_cli.py bio stand composite ncna rs01 srnf ws01
 
 If you have more than one stand, your output will in a file named ``selected_stands_biomass_composite_output.csv``. It will be organized like ``DBCODE, ENTITY, STANDID, SPECIES, YEAR, PORTION, TPH_NHA, BA_M2HA, VOL_M3HA, BIO_MGHA, JENKBIO_MGHA``.
 

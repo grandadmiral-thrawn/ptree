@@ -58,7 +58,7 @@ def maxref(dbh, species):
             "quke": 60.,
             "rhpu": 30.,
             "sasc": 14.,
-            "segi": 150.,
+            "segi": 500.,
             "tabr": 80.,
             "thpl": 150.,
             "tsme": 140.,}
@@ -213,7 +213,7 @@ def segi_biopak(woodden, dbh, b1, b2, b3, j1, j2, *args):
         biomass = round(math.exp(b1 + b2 * math.log(dbh)),11)
         jbio = round(0.001*math.exp(j1 + j2*math.log(round(dbh,4))),11)
         volume = round(biomass/woodden,11)
-        return (1000000*biomass, volume, jbio, woodden)
+        return (biomass, volume, jbio, woodden)
     except ValueError:
 
         return (0., 0., 0., woodden)
